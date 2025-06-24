@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Layout from './comopents/Layout'
 import NotFound from './comopents/NotFound'
 import Home from './comopents/Home'
-import About from './comopents/About'
 import Skills from './comopents/skills'
 import Experience from './comopents/Exprecence'
 import Projects from './comopents/Project'
@@ -26,7 +25,7 @@ function App() {
               <Route index element={
                 <div className="space-y-0">
                   <section id="home"><Home /></section>
-                  <section id="about"><About /></section>
+              
                   <section id="skills"><Skills /></section>
                   <section id="experience"><Experience /></section>
                   <section id="projects"><Projects /></section>
@@ -34,7 +33,7 @@ function App() {
                   <section id="resume"><Resume /></section>
                 </div>
               } />
-              <Route path="about" element={<About />} />
+              
               <Route path="skills" element={<Skills />} />
               <Route path="experience" element={<Experience />} />
               <Route path="projects" element={<Projects />} />
