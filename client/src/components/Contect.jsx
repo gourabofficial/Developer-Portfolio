@@ -20,11 +20,11 @@ const Contect = () => {
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
             Let's <span className="text-orange-400">Connect</span>
           </h2>
-          <div className='h-2'></div>
+          <div className='h-6'></div>
         </div>
 
         {/* Contact Container - Glass Card Style */}
-        <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 shadow-2xl max-w-md w-full p-5 mx-auto relative min-h-[380px]">
+        <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 shadow-2xl max-w-md mx-auto p-4 lg:p-6 relative min-h-[280px]">
           {/* Glass grid pattern overlay */}
           <div className="absolute inset-0 bg-gradient-to-br from-gray-600/10 to-transparent opacity-20 rounded-2xl pointer-events-none" />
           
@@ -82,7 +82,9 @@ const Contect = () => {
 
             <div className='h-4'></div>
             {/* Contact Information */}
-            <div className="space-y-8 mt-6 text-gray-300">
+            <div className='flex flex-col items-center justify-center space-y-4'>
+
+              <div className="space-y-8 mt-6 text-gray-300">
               {/* Email Card */}
               <div className=" p-3 hover:border-orange-400/50 transition-colors group">
                 <div className="flex items-center gap-3">
@@ -110,6 +112,8 @@ const Contect = () => {
                   </div>
                 </div>
               </div>
+            </div>
+
             </div>
           </div>
         </div>
