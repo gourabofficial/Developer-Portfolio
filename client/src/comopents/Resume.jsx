@@ -78,15 +78,15 @@ const Resume = () => {
   }
 
   return (
-    <section className="min-h-screen py-20 px-4 sm:px-6 lg:px-8">
+    <section className="py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
             My <span className="text-orange-400">Resume</span>
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-orange-500 to-orange-300 mx-auto mb-8"></div>
-          <p className="text-gray-300 text-lg max-w-2xl mx-auto mb-8">
+          <div className="w-24 h-1 bg-gradient-to-r from-orange-500 to-orange-300 mx-auto mb-4"></div>
+          <p className="text-gray-300 text-lg max-w-2xl mx-auto mb-6">
             A comprehensive overview of my professional experience, skills, and achievements
           </p>
           

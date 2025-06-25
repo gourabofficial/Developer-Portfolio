@@ -4,8 +4,7 @@ import { Download } from "lucide-react";
 
 const Home = () => {
   const navigate = useNavigate();
-  const [text, setText] = useState("");
-  const [isTyping, setIsTyping] = useState(true);
+  
   
 
   
