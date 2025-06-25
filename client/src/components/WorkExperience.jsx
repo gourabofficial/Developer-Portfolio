@@ -1,36 +1,35 @@
 import React from 'react'
 
-const Education = () => {
-  const education = [
+const WorkExperience = () => {
+  const experiences = [
     {
       id: 1,
-      degree: 'Bachelor of Science in Computer Science',
-      institution: 'Sanaka Educational Trust',
-      duration: '2022 - 2026',
-      location: 'Durgapur, Molandighi, West Bengal',
-      description: 'Currently pursuing a comprehensive Computer Science degree with focus on software development, algorithms, and modern web technologies.',
-      current: true,
-      gpa: '8.5/10',
-      subjects: ['Data Structures', 'Algorithms', 'Web Development', 'Database Management', 'Software Engineering']
+      position: 'Full Stack Developer',
+      company: 'Zidio Development PVT LTD',
+      duration: 'March 2025 - June 2025',
+      location: 'Remote',
+      description: 'Developed and maintained full-stack web applications using modern technologies and frameworks.',
+      technologies: ['MERN Stack', 'React', 'Node.js', 'MongoDB', 'Express'],
+      current: true
     }
   ]
 
   return (
     <section className="py-4">
-      <div className="w-full ">
+      <div className="w-full">
         {/* Section Header */}
         <div className="text-center mb-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
-            My <span className="text-orange-400">Education</span>
+            Work <span className="text-orange-400">Experience</span>
           </h2>
           <div className='h-2'></div>
         </div>
-        
-        {/* Education Container */}
-        <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 shadow-2xl  max-w-lg  justify-center items-center">
+
+        {/* Experience Container */}
+        <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 shadow-2xl max-w-lg w-full mx-auto">
           {/* Inner Content Box with proper padding */}
-          <div className="bg-gray-900/30 rounded-xl border border-gray-600/30 justify-center items-center min-h-[200px]  p-6">
-            {education.map((item, index) => (
+          <div className="bg-gray-900/30 rounded-xl border border-gray-600/30 min-h-[200px] p-6">
+            {experiences.map((item, index) => (
               <div
                 key={item.id}
                 className="space-y-6"
@@ -43,10 +42,10 @@ const Education = () => {
                 <div className="space-y-3">
                   <div>
                     <h4 className="text-xl font-bold text-white leading-tight">
-                      {item.degree}
+                      {item.position}
                     </h4>
                     <p className="text-orange-400 text-base font-semibold mt-1">
-                      {item.institution}
+                      {item.company}
                     </p>
                   </div>
 
@@ -54,12 +53,6 @@ const Education = () => {
                     <span className="text-gray-300 font-medium">{item.duration}</span>
                     <span className="text-gray-500">•</span>
                     <span className="text-gray-400">{item.location}</span>
-                    {item.gpa && (
-                      <>
-                        <span className="text-gray-500">•</span>
-                        <span className="text-green-400 font-medium">GPA: {item.gpa}</span>
-                      </>
-                    )}
                     {item.current && (
                       <>
                         <span className="text-gray-500">•</span>
@@ -76,17 +69,17 @@ const Education = () => {
                   {item.description}
                 </p>
 
-                {/* Key Subjects */}
-                {item.subjects && (
+                {/* Technologies */}
+                {item.technologies && (
                   <div className="space-y-3">
-                    <h5 className="text-orange-300 font-semibold text-sm">Key Subjects</h5>
+                    <h5 className="text-orange-300 font-semibold text-sm">Technologies Used</h5>
                     <div className="flex flex-wrap gap-2">
-                      {item.subjects.map((subject, subjectIndex) => (
+                      {item.technologies.map((tech, techIndex) => (
                         <span
-                          key={subjectIndex}
+                          key={techIndex}
                           className="px-3 py-1.5 bg-orange-500/15 text-orange-300 rounded-lg text-xs font-medium border border-orange-500/20"
                         >
-                          {subject}
+                          {tech}
                         </span>
                       ))}
                     </div>
@@ -114,4 +107,4 @@ const Education = () => {
   )
 }
 
-export default Education
+export default WorkExperience

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Download } from "lucide-react";
 
-const Home = () => {
+const Hero = () => {
   const navigate = useNavigate();
   
   
@@ -96,4 +96,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Hero;
