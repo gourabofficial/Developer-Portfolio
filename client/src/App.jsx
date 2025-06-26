@@ -3,12 +3,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout'
 import NotFound from './components/NotFound'
 import Home from "./pages/Home"
-import Hero from './components/Hero'
+
 import Skills from './components/skills'
 import Experience from './components/Exprecence'
 import Projects from './components/Project'
-import Certificate from './components/Cirtificate'
-import Resume from './components/Resume'
+
 import Contact from './components/Contect'
 import Education from './components/Education'
 
@@ -30,8 +29,7 @@ function App() {
               <Route path="experience" element={<Experience />} />
               <Route path="education" element={<Education />} />
               <Route path="projects" element={<Projects />} />
-              <Route path="certificates" element={<Certificate />} />
-              <Route path="resume" element={<Resume />} />
+              
               <Route path="contact" element={<Contact />} />
             </Route>
             <Route path="*" element={<NotFound />} />

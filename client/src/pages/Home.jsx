@@ -3,8 +3,6 @@ import Hero from '../components/Hero'
 import Skills from '../components/skills'
 import Experience from '../components/Exprecence'
 import Projects from '../components/Project'
-import Certificate from '../components/Cirtificate'
-import Resume from '../components/Resume'
 import Contact from '../components/Contect'
 import Education from '../components/Education'
 
@@ -66,19 +64,7 @@ const Home = () => {
         </div>
       </section>
       
-      {/* 6. Certificates Section */}
-      <section id="certificates" className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Certificate />
-        </div>
-      </section>
       
-      {/* 7. Resume Section */}
-      <section id="resume" className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Resume />
-        </div>
-      </section>
     </div>
   )
 }
