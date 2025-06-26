@@ -2,7 +2,7 @@ import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout'
 import NotFound from './components/NotFound'
-import Home from './pages/Home'
+import Home from "./pages/Home"
 import Hero from './components/Hero'
 import Skills from './components/skills'
 import Experience from './components/Exprecence'
