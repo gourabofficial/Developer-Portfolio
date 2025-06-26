@@ -47,7 +47,7 @@ const WorkExperience = () => {
 
         {/* Experience Container */}
         <motion.div 
-          className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 shadow-2xl w-full p-6 mx-auto relative min-h-[200px]"
+          className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 shadow-2xl w-full p-6 mx-auto relative min-h-[200px] flex justify-center items-center"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
           transition={{ duration: 0.6, delay: 0.4 }}
@@ -64,7 +64,7 @@ const WorkExperience = () => {
             
             {/* Inner Content Box with proper padding */}
             <motion.div 
-              className="bg-gray-900/30 rounded-xl border border-gray-600/30 min-h-[200px] p-6"
+              className=""
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.6, delay: 0.6 }}

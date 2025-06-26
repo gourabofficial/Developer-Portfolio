@@ -22,21 +22,21 @@ const Education = () => {
   return (
     <motion.section 
       ref={ref}
-      className="mb-12 sm:mb-16"
+      className="mb-12 sm:mb-16 "
       initial={{ opacity: 0 }}
       animate={isInView ? { opacity: 1 } : { opacity: 0 }}
       transition={{ duration: 0.8 }}
     >
-      <div className="w-full">
+      <div className="w-full ">
         {/* Section Header */}
         <motion.div 
-          className="text-center mb-8 sm:mb-12"
+          className="text-center mb-8 sm:mb-12 "
           initial={{ opacity: 0, y: -30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -30 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
           <motion.h2 
-            className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2 sm:mb-4"
+            className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2 sm:mb-4 "
             initial={{ scale: 0.9 }}
             animate={isInView ? { scale: 1 } : { scale: 0.9 }}
             transition={{ duration: 0.5, delay: 0.3 }}
@@ -48,7 +48,7 @@ const Education = () => {
         
         {/* Education Container */}
         <motion.div 
-          className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 shadow-2xl w-full p-4 sm:p-6 mx-auto relative min-h-[200px]"
+          className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 shadow-2xl w-full p-4 sm:p-6 mx-auto relative min-h-[250px]  "
           initial={{ opacity: 0, scale: 0.9 }}
           animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
           transition={{ duration: 0.6, delay: 0.4 }}
@@ -58,14 +58,14 @@ const Education = () => {
           }}
         >
           {/* Glass grid pattern overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-600/10 to-transparent opacity-20 rounded-2xl pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-600/10 to-transparent opacity-20 rounded-2xl pointer-events-none " />
           
-          <div className="relative z-10">
-            <div className="h-4 sm:h-8"></div>
+          <div className="relative z-10 ">
+            <div className="h-4 sm:h-8 "></div>
             
             {/* Inner Content Box with proper padding */}
             <motion.div 
-              className="bg-gray-900/30 rounded-xl border border-gray-600/30 min-h-[200px] p-4 sm:p-6"
+              className="flex justify-center items-center"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.6, delay: 0.6 }}
@@ -73,20 +73,20 @@ const Education = () => {
               {education.map((item, index) => (
                 <motion.div
                   key={item.id}
-                  className="space-y-4 sm:space-y-6"
+                  className="space-y-4 sm:space-y-6 "
                   initial={{ opacity: 0, x: -30 }}
                   animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
                   transition={{ duration: 0.6, delay: 0.8 + index * 0.2 }}
                 >
                   {/* Header */}
                   <motion.div 
-                    className="space-y-2 sm:space-y-3"
+                    className="space-y-2 sm:space-y-3 "
                     whileHover={{ x: 5 }}
                     transition={{ duration: 0.2 }}
                   >
                     <div>
                       <motion.h4 
-                        className="text-lg sm:text-xl font-bold text-white leading-tight"
+                        className="text-lg sm:text-xl font-bold text-white leading-tight flex justify-center items-center "
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 1.0 }}
@@ -94,7 +94,7 @@ const Education = () => {
                         {item.degree}
                       </motion.h4>
                       <motion.p 
-                        className="text-orange-400 text-sm sm:text-base font-semibold mt-1"
+                        className="text-orange-400 text-sm sm:text-base font-semibold mt-1 flex justify-center items-center"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 1.1 }}
@@ -104,7 +104,7 @@ const Education = () => {
                     </div>
 
                     <motion.div 
-                      className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm"
+                      className="flex justify-center items-center gap-2 sm:gap-3 text-xs sm:text-sm "
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: 1.2 }}
@@ -114,9 +114,9 @@ const Education = () => {
                       <span className="text-gray-400">{item.location}</span>
                       {item.gpa && (
                         <>
-                          <span className="text-gray-500">•</span>
+                          <span className="text-gray-500 ">•</span>
                           <motion.span 
-                            className="text-green-400 font-medium"
+                            className="text-green-400 font-medium "
                             animate={{ 
                               color: ["#4ade80", "#22c55e", "#16a34a", "#22c55e", "#4ade80"]
                             }}
@@ -134,7 +134,7 @@ const Education = () => {
                         <>
                           <span className="text-gray-500">•</span>
                           <motion.span 
-                            className="inline-flex items-center px-2 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-semibold"
+                            className="inline-flex items-center px-2 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-semibold "
                             animate={{ 
                               scale: [1, 1.05, 1],
                               opacity: [0.8, 1, 0.8]
@@ -154,7 +154,7 @@ const Education = () => {
 
                   {/* Description */}
                   <motion.p 
-                    className="text-gray-300 leading-relaxed text-xs sm:text-sm"
+                    className="text-gray-300 leading-relaxed text-xs sm:text-sm text-center"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 1.3 }}
@@ -165,12 +165,12 @@ const Education = () => {
                   {/* Key Subjects */}
                   {item.subjects && (
                     <motion.div 
-                      className="space-y-2 sm:space-y-3"
+                      className="space-y-2 sm:space-y-3 flex justify-center items-center"
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: 1.4 }}
                     >
-                      <h5 className="text-orange-300 font-semibold text-xs sm:text-sm">Key Subjects</h5>
+                      <h5 className="text-orange-300 font-semibold text-xs sm:text-sm flex justify-center items-center">Key Subjects</h5>
                       <div className="flex flex-wrap gap-1.5 sm:gap-2">
                         {item.subjects.map((subject, subjectIndex) => (
                           <motion.span
