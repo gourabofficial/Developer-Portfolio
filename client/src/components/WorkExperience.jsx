@@ -15,20 +15,26 @@ const WorkExperience = () => {
   ]
 
   return (
-    <section className="py-4">
+    <section className="mb-16">
       <div className="w-full">
         {/* Section Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-12">
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
             Work <span className="text-orange-400">Experience</span>
           </h2>
-          <div className='h-2'></div>
+          <div className='h-4'></div>
         </div>
 
         {/* Experience Container */}
-        <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 shadow-2xl max-w-lg w-full mx-auto">
-          {/* Inner Content Box with proper padding */}
-          <div className="bg-gray-900/30 rounded-xl border border-gray-600/30 min-h-[200px] p-6">
+        <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 shadow-2xl w-full p-6 mx-auto relative min-h-[200px]">
+          {/* Glass grid pattern overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-600/10 to-transparent opacity-20 rounded-2xl pointer-events-none" />
+          
+          <div className="relative z-10">
+            <div className="h-8"></div>
+            
+            {/* Inner Content Box with proper padding */}
+            <div className="bg-gray-900/30 rounded-xl border border-gray-600/30 min-h-[200px] p-6">
             {experiences.map((item, index) => (
               <div
                 key={item.id}
@@ -87,6 +93,7 @@ const WorkExperience = () => {
                 )}
               </div>
             ))}
+            </div>
           </div>
         </div>
       </div>

@@ -16,18 +16,18 @@ const Education = () => {
   ]
 
   return (
-    <section className="py-4">
+    <section className="mb-16">
       <div className="w-full">
         {/* Section Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-12">
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
             My <span className="text-orange-400">Education</span>
           </h2>
-          <div className='h-2'></div>
+          <div className='h-4'></div>
         </div>
         
         {/* Education Container */}
-        <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 shadow-2xl max-w-lg w-full p-6 mx-auto relative min-h-[450px]">
+        <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 shadow-2xl w-full p-6 mx-auto relative min-h-[200px]">
           {/* Glass grid pattern overlay */}
           <div className="absolute inset-0 bg-gradient-to-br from-gray-600/10 to-transparent opacity-20 rounded-2xl pointer-events-none" />
           

@@ -34,39 +34,46 @@ const Home = () => {
         </div>
       </section>
       
-      {/* 3. Work Experience and Education Side by Side */}
-      <section className="py-20">
+      <div className='h-6'></div>
+
+      {/* 3. Work Experience Section */}
+      <section id="experience" className="">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
-            <div id="experience" className="flex justify-center lg:justify-end lg:pr-8">
-              <div className="w-full max-w-md">
-                <Experience />
-              </div>
+          <div className="flex justify-center items-center">
+            <div className="w-full max-w-4xl mx-auto">
+              <Experience />
             </div>
-            <div id="education" className="flex justify-center lg:justify-start lg:pl-8">
-              <div className="w-full max-w-md">
-                <Education />
-              </div>
+          </div>
+        </div>
+      </section>
+
+      <div className='h-6'></div>
+      {/* 4. Education Section */}
+      <section id="education" className="mt-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-center items-center">
+            <div className="w-full max-w-4xl mx-auto">
+              <Education />
             </div>
           </div>
         </div>
       </section>
       
-      {/* 4. Projects Section */}
+      {/* 5. Projects Section */}
       <section id="projects" className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Projects />
         </div>
       </section>
       
-      {/* 5. Certificates Section */}
+      {/* 6. Certificates Section */}
       <section id="certificates" className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Certificate />
         </div>
       </section>
       
-      {/* 6. Resume Section */}
+      {/* 7. Resume Section */}
       <section id="resume" className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Resume />
