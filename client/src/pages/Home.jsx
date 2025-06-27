@@ -5,6 +5,7 @@ import Experience from '../components/Exprecence'
 import Projects from '../components/Project'
 import Contact from '../components/Contect'
 import Education from '../components/Education'
+import Footer from '../components/footer'
 
 const Home = () => {
   return (
@@ -105,6 +106,18 @@ const Home = () => {
         </div>
       </section>
       
+      <div className='h-12'></div>
+      
+      {/* 6. Footer Section */}
+      <section 
+        id="footer" 
+        className="relative w-full"
+        data-scroll
+        data-scroll-class="slideInUp"
+        data-scroll-speed="0.05"
+      >
+        <Footer />
+      </section>
       
     </div>
   )

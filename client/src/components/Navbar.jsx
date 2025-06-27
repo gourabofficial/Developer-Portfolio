@@ -57,11 +57,22 @@ const Navbar = () => {
       // Scroll to specific section
       const element = document.getElementById(sectionId);
       if (element) {
+        // Calculate offset to account for fixed navbar height
+        const navbarHeight = 100; // Adjust this value based on your navbar height
+        const elementPosition = element.offsetTop - navbarHeight;
+        
         // Use locomotive scroll if available, otherwise fallback to regular scroll
         if (window.locomotiveScroll) {
-          window.locomotiveScroll.scrollTo(element);
+          window.locomotiveScroll.scrollTo(element, {
+            offset: -navbarHeight,
+            duration: 1000,
+            easing: [0.25, 0.0, 0.35, 1.0]
+          });
         } else {
-          element.scrollIntoView({ behavior: "smooth" });
+          window.scrollTo({ 
+            top: elementPosition, 
+            behavior: "smooth" 
+          });
         }
       }
     }
@@ -71,11 +82,22 @@ const Navbar = () => {
     setIsMobileMenuOpen(false);
     const contactElement = document.getElementById("contact");
     if (contactElement) {
+      // Calculate offset to account for fixed navbar height
+      const navbarHeight = 100;
+      const elementPosition = contactElement.offsetTop - navbarHeight;
+      
       // Use locomotive scroll if available, otherwise fallback to regular scroll
       if (window.locomotiveScroll) {
-        window.locomotiveScroll.scrollTo(contactElement);
+        window.locomotiveScroll.scrollTo(contactElement, {
+          offset: -navbarHeight,
+          duration: 1000,
+          easing: [0.25, 0.0, 0.35, 1.0]
+        });
       } else {
-        contactElement.scrollIntoView({ behavior: "smooth" });
+        window.scrollTo({ 
+          top: elementPosition, 
+          behavior: "smooth" 
+        });
       }
     }
   };
