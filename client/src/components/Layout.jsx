@@ -10,8 +10,8 @@ const Layout = () => {
       <ScrollProgress />
       <Navbar />
       <motion.main 
-        className="pt-24 lg:pt-28 pb-28 lg:pb-8"
-        style={{ position: 'relative', zIndex: 1 }}
+        className="pt-24 lg:pt-28 pb-32"
+        style={{ position: 'relative', zIndex: 0 }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}

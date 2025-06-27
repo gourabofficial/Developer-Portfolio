@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import {
   ArrowRight,
   Home,
@@ -13,13 +14,26 @@ import { motion } from "framer-motion";
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const navItems = [
+    { id: "home", label: "Home", icon: Home },
     { id: "skills", label: "Skills", icon: User },
     { id: "experience", label: "Experience", icon: Briefcase },
     { id: "education", label: "Education", icon: GraduationCap },
     { id: "projects", label: "Projects", icon: FolderOpen },
   ];
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -101,6 +115,112 @@ const Navbar = () => {
       }
     }
   };
+
+  // Mobile navbar component that will be rendered as a portal
+  const MobileNavbar = () => (
+    <div
+      id="mobile-navbar-portal"
+      style={{
+        position: 'fixed',
+        bottom: '0px',
+        left: '0px',
+        right: '0px',
+        width: '100vw',
+        height: 'auto',
+        zIndex: 2147483647, // Maximum z-index value
+        backgroundColor: 'rgba(17, 24, 39, 0.98)',
+        backdropFilter: 'blur(16px)',
+        borderTop: '1px solid rgba(55, 65, 81, 0.5)',
+        boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.2)',
+        padding: '16px 24px',
+        paddingBottom: 'max(16px, env(safe-area-inset-bottom))',
+        display: 'block',
+        visibility: 'visible',
+        opacity: '1',
+        transform: 'none',
+        pointerEvents: 'auto'
+      }}
+    >
+      <div style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'space-around', 
+        maxWidth: '448px', 
+        margin: '0 auto' 
+      }}>
+        {/* Navigation Buttons */}
+        {navItems.map((item, index) => {
+          const IconComponent = item.icon;
+          return (
+            <button
+              key={item.id}
+              onClick={() => handleNavClick(item.id)}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '12px',
+                borderRadius: '12px',
+                transition: 'all 300ms',
+                minWidth: '60px',
+                backgroundColor: 'transparent',
+                border: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              <IconComponent 
+                style={{ 
+                  width: '24px', 
+                  height: '24px', 
+                  color: 'white',
+                  marginBottom: '4px'
+                }} 
+              />
+              <span style={{ 
+                fontSize: '10px', 
+                color: 'white', 
+                fontWeight: '500' 
+              }}>
+                {item.label}
+              </span>
+            </button>
+          );
+        })}
+
+        {/* Contact Button */}
+        <button
+          onClick={handleContactClick}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '12px',
+            borderRadius: '12px',
+            minWidth: '60px',
+            backgroundColor: 'transparent',
+            border: '1px solid rgba(251, 146, 60, 0.2)',
+            cursor: 'pointer'
+          }}
+        >
+          <Mail style={{ 
+            width: '24px', 
+            height: '24px', 
+            color: 'white',
+            marginBottom: '4px'
+          }} />
+          <span style={{ 
+            fontSize: '10px', 
+            color: 'white', 
+            fontWeight: '500' 
+          }}>
+            Contact
+          </span>
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <>
@@ -248,78 +368,11 @@ const Navbar = () => {
         </div>
       </motion.nav>
 
-      {/* Mobile Bottom Navigation - ALWAYS VISIBLE */}
-      <motion.div
-        className="lg:hidden"
-        style={{
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          zIndex: 99999,
-          opacity: 1,
-          visibility: 'visible',
-          pointerEvents: 'auto',
-          transform: 'none',
-          willChange: 'auto'
-        }}
-        initial={{ y: 0, opacity: 1 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.3 }}
-      >
-        <div className="bg-gray-900/98 backdrop-blur-xl border-t border-gray-700/50 shadow-2xl shadow-black/20 px-6 py-4 pb-safe">
-          <div className="flex items-center justify-around max-w-md mx-auto">
-            {/* Navigation Buttons */}
-            {navItems.map((item, index) => {
-              const IconComponent = item.icon;
-              return (
-                <motion.button
-                  key={item.id}
-                  onClick={() => handleNavClick(item.id)}
-                  className="group relative flex flex-col items-center justify-center p-3 rounded-xl transition-all duration-300 min-w-[60px]"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                >
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-orange-600/20 rounded-xl opacity-0 group-active:opacity-100 transition-opacity duration-200"
-                    whileTap={{ scale: 0.95 }}
-                  />
-                  <IconComponent className="w-6 h-6 text-gray-400 group-hover:text-orange-400 group-active:text-orange-500 transition-colors duration-200 relative z-10" />
-                  <span className="text-[10px] text-gray-500 group-hover:text-orange-400 group-active:text-orange-500 transition-colors duration-200 mt-1 relative z-10 font-medium">
-                    {item.label}
-                  </span>
-                </motion.button>
-              );
-            })}
-
-            {/* Contact Button */}
-            <motion.button
-              onClick={handleContactClick}
-              className="relative bg-gradient-to-r from-orange-500 via-orange-600 to-orange-700 text-white p-3 rounded-xl shadow-lg shadow-orange-500/20 group min-w-[60px] border border-orange-400/20"
-              whileHover={{ 
-                scale: 1.05,
-                boxShadow: "0 20px 40px -12px rgba(251, 146, 60, 0.4)"
-              }}
-              whileTap={{ scale: 0.95 }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.3 }}
-            >
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-orange-600 via-orange-700 to-orange-800 rounded-xl opacity-0 group-active:opacity-100 transition-opacity duration-200"
-                whileTap={{ scale: 0.95 }}
-              />
-              <div className="flex flex-col items-center relative z-10">
-                <Mail className="w-6 h-6 pointer-events-none" />
-                <span className="text-[10px] mt-1 font-medium">Contact</span>
-              </div>
-            </motion.button>
-          </div>
-        </div>
-      </motion.div>
+      {/* Mobile navbar rendered as portal to bypass scroll containers */}
+      {isMobile && typeof window !== 'undefined' && createPortal(
+        <MobileNavbar />,
+        document.body
+      )}
     </>
   );
 };

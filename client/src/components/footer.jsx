@@ -61,15 +61,15 @@ const Footer = ({ year = 2025 }) => {
       data-scroll-speed="0.1"
     >
       {/* Improved glass background with better visibility */}
-      <div className="relative bg-black/80 backdrop-blur-lg border-t border-white/20 min-h-[80px]">
+      <div className="relative bg-black/80 backdrop-blur-lg border-t border-white/20 min-h-[80px] flex items-center justify-center">
         {/* Enhanced glassmorphism overlay with better contrast */}
         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-transparent to-blue-600/20"></div>
 
-        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-6">
-          <div className="flex flex-col lg:flex-row justify-between items-center gap-8 lg:gap-12">
+        <div className="relative z-10 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 flex items-center justify-center min-h-[120px]">
+          <div className="flex flex-col items-center justify-center w-full gap-4">
             {/* Left Section - Copyright */}
             <motion.div 
-              className="text-center  lg:flex-1 lg:pl-8"
+              className="text-center w-full"
               initial={{ opacity: 0, x: -50 }}
               animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -84,56 +84,8 @@ const Footer = ({ year = 2025 }) => {
                 Full Stack Developer • Crafting Digital Experiences
               </p>
             </motion.div>
-
-            {/* Center Section - Tech Stack */}
-            <motion.div 
-              className="flex flex-col  items-center gap-2 lg:flex-1"
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              <p className="text-gray-400 text-xs font-medium">Built with</p>
-              <div className="flex items-center gap-3">
-                {techStack.map((tech, index) => (
-                  <motion.div
-                    key={tech.name}
-                    className="relative group flex "
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-                    transition={{ duration: 0.3, delay: 0.4 + index * 0.1 }}
-                    whileHover={{ scale: 1.1 }}
-                  >
-                    <div className="relative bg-black/50 backdrop-blur-md border border-gray-700/40 p-3 rounded-lg hover:border-gray-500/60 transition-all duration-300 min-h-[40px] min-w-[40px] flex items-center justify-center">
-                      <tech.icon className={`w-6 h-6 ${tech.color} drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]`} />
-                    </div>
-                    {/* Tooltip */}
-                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-black/80 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                      {tech.name}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Right Section - Social Links */}
-            
-            
           </div>
-
-          {/* Bottom Section - Additional Text */}
-          <motion.div 
-            className="mt-6 pt-4 border-t border-white/10 text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-          >
-            <p className="text-gray-400 text-xs flex items-center justify-center gap-1 mb-2">
-              
-            </p>
-           
-          </motion.div>
         </div>
-
         {/* Subtle animated pattern */}
         
       </div>
