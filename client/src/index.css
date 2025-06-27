@@ -15,42 +15,313 @@ body, html {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom Scrollbar */
+/* Locomotive Scroll - Enhanced Scrollbar */
+html.has-scroll-smooth {
+  overflow: hidden;
+}
+
+html.has-scroll-dragging {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.has-scroll-smooth body {
+  overflow: hidden;
+}
+
+.has-scroll-smooth [data-scroll-container] {
+  min-height: 100vh;
+}
+
+/* FORCE NAVBAR VISIBILITY - Override all locomotive scroll effects */
+nav {
+  position: fixed !important;
+  z-index: 99999 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transform: none !important;
+  will-change: auto !important;
+}
+
+/* Prevent locomotive scroll from affecting navbar */
+nav[data-scroll] {
+  transform: none !important;
+}
+
+nav * {
+  transform: none !important;
+}
+
+/* Force desktop navbar to always be visible */
+nav.lg\:block {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 99999 !important;
+}
+
+/* Force mobile navbar to always be visible */
+.lg\:hidden[style*="bottom"] {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 99999 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+}
+
+/* Mobile Touch Optimizations */
+@media (max-width: 768px) {
+  html.has-scroll-smooth {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .has-scroll-smooth body {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Faster animations on mobile */
+  [data-scroll] {
+    transition-duration: 0.4s !important;
+  }
+  
+  [data-scroll-class] {
+    transition-duration: 0.4s !important;
+  }
+
+  /* Reduce parallax on mobile for better performance */
+  [data-scroll-speed] {
+    transform: translateY(0) !important;
+  }
+
+  /* Ensure buttons are always visible and properly sized */
+  button {
+    min-height: 44px !important;
+    min-width: 44px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: flex !important;
+    -webkit-tap-highlight-color: rgba(251, 146, 60, 0.3);
+  }
+
+  /* Mobile navigation bar always visible */
+  nav {
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 99999 !important;
+    transform: none !important;
+    will-change: auto !important;
+  }
+
+  /* Bottom navigation always visible */
+  .lg\\:hidden {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+    pointer-events: auto !important;
+    z-index: 99999 !important;
+    transform: none !important;
+  }
+
+  /* Add padding bottom to content to avoid overlap with bottom nav */
+  main {
+    padding-bottom: 80px !important;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .c-scrollbar {
+    display: none;
+  }
+  
+  /* Simpler animations for touch devices */
+  [data-scroll-class="slideInLeft"]:not(.is-revealed) {
+    transform: translateX(-20px);
+  }
+  
+  [data-scroll-class="slideInRight"]:not(.is-revealed) {
+    transform: translateX(20px);
+  }
+  
+  [data-scroll-class="slideInUp"]:not(.is-revealed) {
+    transform: translateY(20px);
+  }
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  [data-scroll],
+  [data-scroll-class] {
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  
+  .c-scrollbar {
+    display: none;
+  }
+}
+
+/* Fallback: Show content by default if locomotive scroll doesn't load */
+body:not(.has-scroll-init) [data-scroll] {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+body:not(.has-scroll-init) [data-scroll-class] {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Ensure buttons are ALWAYS visible regardless of scroll state */
+nav button,
+nav [role="button"],
+nav a {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transform: none !important;
+  position: relative !important;
+  z-index: 10000 !important;
+}
+
+/* Ensure navigation elements are always visible */
+nav button {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: flex !important;
+}
+
+/* Prevent locomotive scroll from affecting navbar */
+nav,
+nav *,
+nav button,
+nav div {
+  will-change: auto !important;
+}
+
+/* Override any data-scroll effects on navbar */
+nav[data-scroll],
+nav [data-scroll],
+nav button[data-scroll] {
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+/* Mobile bottom navigation override */
+@media (max-width: 1024px) {
+  .lg\\:hidden {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 9999 !important;
+  }
+}
+
+[data-scroll-direction="horizontal"] [data-scroll-container] {
+  height: 100vh;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+[data-scroll-direction="horizontal"] [data-scroll-section] {
+  display: inline-block;
+  vertical-align: top;
+  white-space: nowrap;
+  height: 100%;
+}
+
+.c-scrollbar {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 11px;
+  height: 100%;
+  transform-origin: center right;
+  transition: transform 0.3s, opacity 0.3s;
+  opacity: 0;
+}
+
+.c-scrollbar:hover {
+  transform: scaleX(1.45);
+}
+
+.c-scrollbar_thumb {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: linear-gradient(180deg, #f97316, #ea580c);
+  border-radius: 10px;
+  margin: 2px;
+  cursor: -webkit-grab;
+  cursor: grab;
+  width: 7px;
+}
+
+.has-scroll-scrolling .c-scrollbar {
+  opacity: 1;
+}
+
+.has-scroll-dragging .c-scrollbar {
+  opacity: 1;
+}
+
+.has-scroll-dragging .c-scrollbar_thumb {
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
+}
+
+/* Custom Scrollbar - Optimized */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
   background: #1f2937;
+  will-change: background;
 }
 
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, #f97316, #ea580c);
   border-radius: 4px;
+  will-change: background;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #ea580c, #dc2626);
 }
 
-/* Custom Animations */
+/* Custom Animations - Optimized for performance */
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translate3d(0, 30px, 0);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
 @keyframes float {
   0%, 100% {
-    transform: translateY(0px);
+    transform: translate3d(0, 0, 0);
   }
   50% {
-    transform: translateY(-20px);
+    transform: translate3d(0, -20px, 0);
   }
 }
 
@@ -66,22 +337,22 @@ body, html {
 @keyframes slideInFromLeft {
   from {
     opacity: 0;
-    transform: translateX(-50px);
+    transform: translate3d(-50px, 0, 0);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
 @keyframes slideInFromRight {
   from {
     opacity: 0;
-    transform: translateX(50px);
+    transform: translate3d(50px, 0, 0);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -121,13 +392,14 @@ body, html {
   background-clip: text;
 }
 
-/* Hover Effects */
+/* Hover Effects - Optimized */
 .hover-lift {
   transition: transform 0.3s ease;
+  will-change: transform;
 }
 
 .hover-lift:hover {
-  transform: translateY(-5px);
+  transform: translateZ(0) translateY(-5px);
 }
 
 /* Loading Animation */
@@ -165,4 +437,166 @@ body, html {
 ::selection {
   background-color: #f97316;
   color: white;
+}
+
+/* Locomotive Scroll Reveal Animations */
+[data-scroll] {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform, opacity;
+}
+
+[data-scroll]:not(.is-revealed) {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+[data-scroll].is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+[data-scroll-class="fade"] {
+  opacity: 1;
+  transition: opacity 0.8s ease-out;
+}
+
+[data-scroll-class="fade"]:not(.is-revealed) {
+  opacity: 0;
+}
+
+[data-scroll-class="fade"].is-revealed {
+  opacity: 1;
+}
+
+[data-scroll-class="slideInLeft"] {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+[data-scroll-class="slideInLeft"]:not(.is-revealed) {
+  opacity: 0;
+  transform: translateX(-50px);
+}
+
+[data-scroll-class="slideInLeft"].is-revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+[data-scroll-class="slideInRight"] {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+[data-scroll-class="slideInRight"]:not(.is-revealed) {
+  opacity: 0;
+  transform: translateX(50px);
+}
+
+[data-scroll-class="slideInRight"].is-revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+[data-scroll-class="slideInUp"] {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+[data-scroll-class="slideInUp"]:not(.is-revealed) {
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+[data-scroll-class="slideInUp"].is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+[data-scroll-class="slideInDown"] {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+[data-scroll-class="slideInDown"]:not(.is-revealed) {
+  opacity: 0;
+  transform: translateY(-50px);
+}
+
+[data-scroll-class="slideInDown"].is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+[data-scroll-class="scale"] {
+  opacity: 1;
+  transform: scale(1);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+[data-scroll-class="scale"]:not(.is-revealed) {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+[data-scroll-class="scale"].is-revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+[data-scroll-class="rotate"] {
+  opacity: 1;
+  transform: rotate(0deg);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+[data-scroll-class="rotate"]:not(.is-revealed) {
+  opacity: 0;
+  transform: rotate(-5deg);
+}
+
+[data-scroll-class="rotate"].is-revealed {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+/* Parallax elements */
+[data-scroll-speed] {
+  will-change: transform;
+}
+
+/* Smooth scroll performance optimizations */
+.scroll-container {
+  will-change: transform;
+}
+
+.scroll-container * {
+  will-change: auto;
+}
+
+/* Enhanced scroll reveal delays */
+[data-scroll-delay="0.1s"] {
+  transition-delay: 0.1s;
+}
+
+[data-scroll-delay="0.2s"] {
+  transition-delay: 0.2s;
+}
+
+[data-scroll-delay="0.3s"] {
+  transition-delay: 0.3s;
+}
+
+[data-scroll-delay="0.4s"] {
+  transition-delay: 0.4s;
+}
+
+[data-scroll-delay="0.5s"] {
+  transition-delay: 0.5s;
 }

@@ -2,13 +2,16 @@ import React from 'react'
 import { Outlet } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import Navbar from './Navbar'
+import ScrollProgress from './ScrollProgress'
 
 const Layout = () => {
   return (
     <>
+      <ScrollProgress />
       <Navbar />
       <motion.main 
-        className="pt-16 sm:pt-20"
+        className="pt-24 lg:pt-28 pb-28 lg:pb-8"
+        style={{ position: 'relative', zIndex: 1 }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}

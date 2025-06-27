@@ -49,11 +49,20 @@ const Navbar = () => {
     if (sectionId === "home") {
       // Scroll to top for home
       window.scrollTo({ top: 0, behavior: "smooth" });
+      // Also handle locomotive scroll if it exists
+      if (window.locomotiveScroll) {
+        window.locomotiveScroll.scrollTo(0);
+      }
     } else {
       // Scroll to specific section
       const element = document.getElementById(sectionId);
       if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
+        // Use locomotive scroll if available, otherwise fallback to regular scroll
+        if (window.locomotiveScroll) {
+          window.locomotiveScroll.scrollTo(element);
+        } else {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
       }
     }
   };
@@ -62,20 +71,37 @@ const Navbar = () => {
     setIsMobileMenuOpen(false);
     const contactElement = document.getElementById("contact");
     if (contactElement) {
-      contactElement.scrollIntoView({ behavior: "smooth" });
+      // Use locomotive scroll if available, otherwise fallback to regular scroll
+      if (window.locomotiveScroll) {
+        window.locomotiveScroll.scrollTo(contactElement);
+      } else {
+        contactElement.scrollIntoView({ behavior: "smooth" });
+      }
     }
   };
 
   return (
     <>
-      {/* Desktop Navigation - Only show on desktop */}
+      {/* Desktop Navigation - ALWAYS VISIBLE */}
       <motion.nav
-        className={`hidden lg:block fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        className={`hidden lg:block transition-all duration-500 ${
           isScrolled
             ? "bg-black/95 backdrop-blur-lg shadow-2xl shadow-orange-500/20 border-b border-orange-500/20"
             : "bg-gradient-to-b from-black/50 to-transparent backdrop-blur-sm"
         }`}
-        initial={{ y: -100, opacity: 0 }}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 99999,
+          opacity: 1,
+          visibility: 'visible',
+          pointerEvents: 'auto',
+          transform: 'none',
+          willChange: 'auto'
+        }}
+        initial={{ y: 0, opacity: 1 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
@@ -200,10 +226,22 @@ const Navbar = () => {
         </div>
       </motion.nav>
 
-      {/* Mobile Bottom Navigation - ONLY navigation for mobile */}
+      {/* Mobile Bottom Navigation - ALWAYS VISIBLE */}
       <motion.div
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-50"
-        initial={{ y: 100, opacity: 0 }}
+        className="lg:hidden"
+        style={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 99999,
+          opacity: 1,
+          visibility: 'visible',
+          pointerEvents: 'auto',
+          transform: 'none',
+          willChange: 'auto'
+        }}
+        initial={{ y: 0, opacity: 1 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.3 }}
       >

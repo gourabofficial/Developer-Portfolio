@@ -8,22 +8,41 @@ import Education from '../components/Education'
 
 const Home = () => {
   return (
-    <div className="w-full">
-      {/* 1. Hero Section */}
-      <section id="Hero" className="min-h-screen">
+    <div className="w-full" data-scroll-section>
+      {/* 1. Hero Section - Always visible */}
+      <section 
+        id="home" 
+        className="min-h-screen"
+        data-scroll
+        data-scroll-speed="-0.3"
+      >
         <Hero />
       </section>
       
       {/* 2. Skills and Contact Side by Side */}
-      <section className="py-20">
+      <section 
+        className="py-20"
+        data-scroll
+        data-scroll-speed="0.05"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
-            <div id="skills" className="flex justify-center lg:justify-end lg:pr-8">
+            <div 
+              id="skills" 
+              className="flex justify-center lg:justify-end lg:pr-8"
+              data-scroll
+              data-scroll-class="slideInLeft"
+            >
               <div className="w-full max-w-md">
                 <Skills />
               </div>
             </div>
-            <div id="contact" className="flex justify-center lg:justify-start lg:pl-8">
+            <div 
+              id="contact" 
+              className="flex justify-center lg:justify-start lg:pl-8"
+              data-scroll
+              data-scroll-class="slideInRight"
+            >
               <div className="w-full max-w-md">
                 <Contact />
               </div>
@@ -35,7 +54,13 @@ const Home = () => {
       <div className='h-6'></div>
 
       {/* 3. Work Experience Section */}
-      <section id="experience" className="">
+      <section 
+        id="experience" 
+        className=""
+        data-scroll
+        data-scroll-class="slideInUp"
+        data-scroll-speed="0.1"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-center items-center">
             <div className="w-full max-w-4xl mx-auto">
@@ -47,7 +72,13 @@ const Home = () => {
 
       <div className='h-6'></div>
       {/* 4. Education Section */}
-      <section id="education" className="mt-24">
+      <section 
+        id="education" 
+        className="mt-24"
+        data-scroll
+        data-scroll-class="slideInUp"
+        data-scroll-speed="0.05"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-center items-center">
             <div className="w-full max-w-4xl mx-auto">
@@ -58,9 +89,19 @@ const Home = () => {
       </section>
       
       {/* 5. Projects Section */}
-      <section id="projects" className="py-20">
+      <section 
+        id="projects" 
+        className="py-20"
+        data-scroll
+        data-scroll-class="scale"
+        data-scroll-speed="0.15"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Projects />
+          <div className="flex justify-center items-center">
+            <div className="w-full max-w-4xl mx-auto">
+              <Projects />
+            </div>
+          </div>
         </div>
       </section>
       

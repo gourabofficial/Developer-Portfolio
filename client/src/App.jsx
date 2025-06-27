@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout'
 import NotFound from './components/NotFound'
 import Home from "./pages/Home"
+import ScrollContainer from './components/ScrollContainer'
 
 import Skills from './components/skills'
 import Experience from './components/Exprecence'
@@ -21,20 +22,20 @@ function App() {
           }}></div>
         </div>
         
-        <div className="relative z-10">
+        <ScrollContainer className="relative z-10">
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
-              <Route path="skills" element={<Skills />} />
-              <Route path="experience" element={<Experience />} />
-              <Route path="education" element={<Education />} />
-              <Route path="projects" element={<Projects />} />
-              
-              <Route path="contact" element={<Contact />} />
+              {/* Redirect all section routes back to home */}
+              <Route path="skills" element={<Home />} />
+              <Route path="experience" element={<Home />} />
+              <Route path="education" element={<Home />} />
+              <Route path="projects" element={<Home />} />
+              <Route path="contact" element={<Home />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </div>
+        </ScrollContainer>
       </div>
     </Router>
   )

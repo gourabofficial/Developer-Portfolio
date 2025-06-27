@@ -131,7 +131,7 @@ const Hero = () => {
           >
             <motion.button
               onClick={() => navigate("/resume")}
-              className="group relative inline-flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all duration-300 overflow-hidden text-sm sm:text-base w-[150px] h-[30px]   "
+              className="group relative inline-flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all duration-300 overflow-hidden text-sm sm:text-base min-w-[160px] min-h-[48px]"
               whileHover={{ 
                 scale: 1.05, 
                 y: -2,
@@ -143,8 +143,7 @@ const Hero = () => {
                 whileHover={{ y: 2 }}
                 transition={{ duration: 0.2 }}
               >
-                <Download className="w-4 h-4 sm:w-5 sm:h-5 relative m-4
-                " />
+                <Download className="w-4 h-4 sm:w-5 sm:h-5 relative" />
               </motion.div>
               <span className="relative z-10">Download CV</span>
               <motion.div 
