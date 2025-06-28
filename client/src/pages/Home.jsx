@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Hero from '../components/Hero'
 import Skills from '../components/skills'
 import Experience from '../components/Exprecence'
@@ -8,6 +8,18 @@ import Education from '../components/Education'
 import Footer from '../components/footer'
 
 const Home = () => {
+  useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    
+    // Update locomotive scroll after navigation
+    setTimeout(() => {
+      if (window.locomotiveScroll) {
+        window.locomotiveScroll.scrollTo(0, { duration: 0, disableLerp: true });
+        window.locomotiveScroll.update();
+      }
+    }, 100);
+  }, []);
   return (
     <div className="w-full" data-scroll-section>
       {/* 1. Hero Section - Always visible */}

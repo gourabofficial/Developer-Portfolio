@@ -3,7 +3,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout'
 import NotFound from './components/NotFound'
 import Home from "./pages/Home"
+import AllProject from './components/AllProject'
 import ScrollContainer from './components/ScrollContainer'
+import ScrollToTop from './components/ScrollToTop'
 
 
 function App() {
@@ -17,6 +19,7 @@ function App() {
         </div>
         
         <ScrollContainer className="relative z-10">
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
@@ -27,6 +30,7 @@ function App() {
               <Route path="projects" element={<Home />} />
               <Route path="contact" element={<Home />} />
             </Route>
+            <Route path="/all-projects" element={<AllProject />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </ScrollContainer>

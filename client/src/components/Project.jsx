@@ -1,10 +1,12 @@
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import ProjectCard from "./ProjectCard";
 
 const Project = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, threshold: 0.2 });
+  const navigate = useNavigate();
 
   // Sample project data - you can replace this with actual data
   const projects = [
@@ -12,16 +14,22 @@ const Project = () => {
       title: "E-Commerce Platform",
       desc: "A full-stack e-commerce solution built with React, Node.js, and MongoDB. Features include user authentication, payment integration, and admin dashboard for complete store management.",
       img: "/assets/ecommerce.png",
+      githubLink: "https://github.com/gourabofficial/ZIDIO-PROJECT",
+      liveLink: "https://zidio-project-ivory.vercel.app/",
     },
     {
       title: "Learning Management System",
       desc: "A collaborative task management application with real-time updates, drag-and-drop functionality, and team collaboration features for enhanced productivity.",
       img: "/assets/learning.png",
+      githubLink: "https://github.com/gourabofficial/Learning-Management-System",
+      liveLink: "https://coursehub-ui.vercel.app/",
     },
     {
       title: "Password Generator",
       desc: "A secure password generator application with customizable options, strength indicators, and copy-to-clipboard functionality for enhanced security.",
       img: "/assets/password.png",
+      githubLink: "https://github.com/gourabofficial/Overpower-React/tree/main/Password_Generator",
+      liveLink: "https://password-genarator-react.vercel.app/",
     },
   ];
 
@@ -31,8 +39,7 @@ const Project = () => {
   };
 
   const handleViewAll = () => {
-    console.log("View all projects clicked");
-    // Add navigation to projects page
+    navigate("/all-projects");
   };
 
   return (
@@ -108,6 +115,8 @@ const Project = () => {
                   title={project.title}
                   desc={project.desc}
                   img={project.img}
+                  githubLink={project.githubLink}
+                  liveLink={project.liveLink}
                   index={idx}
                   onClick={() => handleCardClick(project.title)}
                 />
