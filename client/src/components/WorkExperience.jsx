@@ -12,9 +12,9 @@ const WorkExperience = () => {
       company: 'Zidio Development PVT LTD',
       duration: 'March 2025 - June 2025',
       location: 'Remote',
-      description: 'Developed and maintained full-stack web applications using modern technologies and frameworks.',
-      technologies: ['MERN Stack', 'React', 'Node.js', 'MongoDB', 'Express'],
-      current: true
+      description: 'Developed and maintained full-stack T-Shirt Selling Web applications using modern technologies and frameworks.',
+      technologies: ['MERN Stack',],
+      current: false
     }
   ]
 
@@ -121,9 +121,9 @@ const WorkExperience = () => {
                       </motion.p>
                     </motion.div>
                   </div>
-
+                        <div className='h-4 '></div>
                   <motion.div 
-                    className="flex flex-wrap justify-center items-center gap-1 sm:gap-2 md:gap-3 text-xs sm:text-sm"
+                    className="flex flex-wrap  justify-center items-center gap-1  sm:gap-2 md:gap-3 text-xs sm:text-sm"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 1.2 }}
@@ -171,8 +171,10 @@ const WorkExperience = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 1.4 }}
                   >
-                    <h5 className="text-orange-300 font-semibold text-xs sm:text-sm text-center">Technologies Used</h5>
+                    <h5 className="text-orange-400 font-semibold text-xs sm:text-sm text-center">Technologies Used</h5>
+                     <div className='h-2'></div>
                     <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center">
+                     
                       {item.technologies.map((tech, techIndex) => (
                         <motion.span
                           key={techIndex}

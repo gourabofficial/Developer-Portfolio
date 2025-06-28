@@ -12,10 +12,7 @@ const Education = () => {
       institution: 'Sanaka Educational Trust',
       duration: '2022 - 2026',
       location: 'Durgapur, Molandighi, West Bengal',
-      description: 'Currently pursuing a comprehensive Computer Science degree with focus on software development, algorithms, and modern web technologies.',
-      current: true,
-      gpa: '8.5/10',
-      subjects: ['Data Structures', 'Algorithms', 'Web Development', 'Database Management', 'Software Engineering']
+      description: 'Currently pursuing a comprehensive Computer Science degree with focus on software development, algorithms, and modern web technologies.'
     }
   ]
 
@@ -79,6 +76,8 @@ const Education = () => {
                   animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
                   transition={{ duration: 0.6, delay: 0.8 + index * 0.2 }}
                 >
+
+                  
                   {/* Header */}
                   <motion.div 
                     className="space-y-2 sm:space-y-3"
@@ -103,6 +102,7 @@ const Education = () => {
                         {item.institution}
                       </motion.p>
                     </div>
+                  <div className='h-3'></div>
 
                     <motion.div 
                       className="flex flex-wrap justify-center items-center gap-1 sm:gap-2 md:gap-3 text-xs sm:text-sm"
@@ -113,46 +113,10 @@ const Education = () => {
                       <span className="text-gray-300 font-medium">{item.duration}</span>
                       <span className="text-gray-500 hidden sm:inline">•</span>
                       <span className="text-gray-400 text-center break-words">{item.location}</span>
-                      {item.gpa && (
-                        <>
-                          <span className="text-gray-500 hidden sm:inline">•</span>
-                          <motion.span 
-                            className="text-green-400 font-medium"
-                            animate={{ 
-                              color: ["#4ade80", "#22c55e", "#16a34a", "#22c55e", "#4ade80"]
-                            }}
-                            transition={{ 
-                              duration: 3, 
-                              repeat: Infinity,
-                              ease: "easeInOut"
-                            }}
-                          >
-                            GPA: {item.gpa}
-                          </motion.span>
-                        </>
-                      )}
-                      {item.current && (
-                        <>
-                          <span className="text-gray-500 hidden sm:inline">•</span>
-                          <motion.span 
-                            className="inline-flex items-center px-2 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-semibold"
-                            animate={{ 
-                              scale: [1, 1.05, 1],
-                              opacity: [0.8, 1, 0.8]
-                            }}
-                            transition={{ 
-                              duration: 2, 
-                              repeat: Infinity,
-                              ease: "easeInOut"
-                            }}
-                          >
-                            Current
-                          </motion.span>
-                        </>
-                      )}
                     </motion.div>
                   </motion.div>
 
+                  <div className='h-3'></div>
                   {/* Description */}
                   <motion.p 
                     className="text-gray-300 leading-relaxed text-xs sm:text-sm text-center px-2 sm:px-4"
@@ -162,41 +126,6 @@ const Education = () => {
                   >
                     {item.description}
                   </motion.p>
-
-                  {/* Key Subjects */}
-                  {item.subjects && (
-                    <motion.div 
-                      className="space-y-2 sm:space-y-3"
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.6, delay: 1.4 }}
-                    >
-                      <h5 className="text-orange-300 font-semibold text-xs sm:text-sm text-center">Key Subjects</h5>
-                      <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center">
-                        {item.subjects.map((subject, subjectIndex) => (
-                          <motion.span
-                            key={subjectIndex}
-                            className="px-2 sm:px-3 py-1 sm:py-1.5 bg-orange-500/15 text-orange-300 rounded-lg text-xs font-medium border border-orange-500/20"
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ 
-                              duration: 0.3, 
-                              delay: 1.5 + subjectIndex * 0.1,
-                              ease: "easeOut"
-                            }}
-                            whileHover={{ 
-                              scale: 1.05,
-                              backgroundColor: "rgba(251, 146, 60, 0.3)",
-                              borderColor: "rgba(251, 146, 60, 0.5)"
-                            }}
-                            whileTap={{ scale: 0.95 }}
-                          >
-                            {subject}
-                          </motion.span>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
                 </motion.div>
               ))}
             </motion.div>

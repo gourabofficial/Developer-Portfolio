@@ -5,12 +5,6 @@ import NotFound from './components/NotFound'
 import Home from "./pages/Home"
 import ScrollContainer from './components/ScrollContainer'
 
-import Skills from './components/skills'
-import Experience from './components/Exprecence'
-import Projects from './components/Project'
-
-import Contact from './components/Contect'
-import Education from './components/Education'
 
 function App() {
   return (
