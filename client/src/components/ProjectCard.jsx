@@ -42,15 +42,15 @@ const ProjectCard = ({ title, desc, img, githubLink, liveLink, index, onClick })
           loading="lazy"
         />
         
-        {/* Hover Overlay with Icons */}
-        <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
+        {/* Mobile: Always visible icons, Desktop: Hover overlay */}
+        <div className="absolute inset-0 bg-black/70 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
           {/* GitHub Icon */}
           {githubLink && (
             <a
               href={githubLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full p-2 hover:bg-white/20 transition-all duration-300 hover:scale-110"
+              className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full p-2 hover:bg-white/20 transition-all duration-300 hover:scale-110 active:scale-95"
               onClick={(e) => e.stopPropagation()}
             >
               <svg
@@ -70,7 +70,7 @@ const ProjectCard = ({ title, desc, img, githubLink, liveLink, index, onClick })
               href={liveLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full p-2 hover:bg-white/20 transition-all duration-300 hover:scale-110"
+              className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full p-2 hover:bg-white/20 transition-all duration-300 hover:scale-110 active:scale-95"
               onClick={(e) => e.stopPropagation()}
             >
               <svg

@@ -129,13 +129,14 @@ const Hero = () => {
           <div className="h-3 sm:h-5"></div>
           {/* Download CV Button */}
           <motion.div
+            className="flex justify-center lg:justify-start"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 1.2 }}
           >
             <motion.button
               onClick={handleDownloadCV}
-              className="group relative inline-flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all duration-300 overflow-hidden text-sm sm:text-base min-w-[160px] min-h-[48px]"
+              className="group relative inline-flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all duration-300 overflow-hidden text-sm sm:text-base w-full max-w-[200px] min-h-[48px] sm:min-h-[52px]"
               whileHover={{ 
                 scale: 1.05, 
                 y: -2,
