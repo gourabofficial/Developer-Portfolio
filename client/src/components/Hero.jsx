@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import { Download } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 
 const Hero = () => {
-  const navigate = useNavigate();
   const ref = useRef(null)
   const isInView = useInView(ref, { once: false, threshold: 0.2 })
+  
+  const handleDownloadCV = () => {
+    // Replace this URL with your actual Google Drive file sharing link
+    const googleDriveURL = "https://drive.google.com/file/d/1g0rJL4vqHYk0yGU5o93aHcjzqdof0_-7/view";
+    window.open(googleDriveURL, '_blank');
+  };
   
   
 
@@ -130,7 +134,7 @@ const Hero = () => {
             transition={{ duration: 0.6, delay: 1.2 }}
           >
             <motion.button
-              onClick={() => navigate("/resume")}
+              onClick={handleDownloadCV}
               className="group relative inline-flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all duration-300 overflow-hidden text-sm sm:text-base min-w-[160px] min-h-[48px]"
               whileHover={{ 
                 scale: 1.05, 

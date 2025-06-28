@@ -100,7 +100,7 @@ const WorkExperience = () => {
                       transition={{ duration: 0.5, delay: 1.1 }}
                     >
                       <motion.img 
-                        src="/public/assets/logo.jpg" 
+                        src="/assets/logo.jpg" 
                         alt="Zidio Development Logo" 
                         className="w-12 h-12 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full object-cover border border-orange-400/30"
                         initial={{ opacity: 0, scale: 0.8 }}
