@@ -7,6 +7,7 @@ const ProjectCard = ({ title, desc, img, index, onClick }) => {
         backgroundColor: "bg-orange-500/20",
         borderColor: "border-orange-400",
         textColor: "text-orange-400"
+        
       };
     } else if (idx % 3 === 1) {
       return {
@@ -27,25 +28,37 @@ const ProjectCard = ({ title, desc, img, index, onClick }) => {
 
   return (
     <div
-      className="glass-card rounded-xl p-3 flex flex-col h-64 transition cursor-pointer relative overflow-hidden bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 hover:border-gray-600/60 hover:bg-gray-800/40"
+      className="glass-card rounded-xl p-4 flex flex-col h-80 transition cursor-pointer relative overflow-hidden bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 hover:border-gray-600/60 hover:bg-gray-800/40"
       onClick={onClick}
     >
       <div className="glass-grid-pattern opacity-10 absolute inset-0 bg-gradient-to-br from-gray-600/10 to-transparent pointer-events-none" />
-      <div className="rounded-lg overflow-hidden w-full mb-3 bg-gray-900 flex items-center justify-center relative z-10 h-32">
+      
+      {/* Thumbnail Section */}
+      <div className="rounded-lg overflow-hidden w-full mb-4 bg-gray-900 flex items-center justify-center relative z-10 h-40">
         <img
           src={img}
           alt={title}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
           loading="lazy"
         />
       </div>
-      <div className="relative z-10 flex-1">
-        <h4 className="font-semibold mb-2 text-white">
-          <div className={`inline-block p-2 rounded border ${highlightProps.backgroundColor} ${highlightProps.borderColor}`}>
-            <span className={`relative z-10 ${highlightProps.textColor}`}>{title}</span>
-          </div>
-        </h4>
-        <p className="text-gray-300 text-sm leading-relaxed">{desc}...</p>
+      
+      <div className='h-4'></div>
+      {/* Content Section */}
+      <div className="relative z-10 flex-1 flex flex-col gap-3">
+        {/* Title Section */}
+        <div className="mb-2 ml-4 text-center ">
+          <h4 className="font-semibold text-white ">
+            <div className={`inline-block px-3 py-2 rounded-lg border  ${highlightProps.backgroundColor} ${highlightProps.borderColor}`}>
+              <span className={`relative z-10 text-sm font-medium  ${highlightProps.textColor}`}>{title}</span>
+            </div>
+          </h4>
+        </div>
+        
+        {/* Description Section */}
+        <div className="flex-1 text-center ">
+          <p className="text-gray-300 text-sm leading-relaxed line-clamp-3">{desc}</p>
+        </div>
       </div>
     </div>
   );

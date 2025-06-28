@@ -65,7 +65,7 @@ const Footer = ({ year = 2025 }) => {
         {/* Enhanced glassmorphism overlay with better contrast */}
         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-transparent to-blue-600/20"></div>
 
-        <div className="relative z-10 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 flex items-center justify-center min-h-[120px]">
+        <div className="relative z-10 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 flex items-center justify-center min-h-[0px]">
           <div className="flex flex-col items-center justify-center w-full gap-4">
             {/* Left Section - Copyright */}
             <motion.div 
