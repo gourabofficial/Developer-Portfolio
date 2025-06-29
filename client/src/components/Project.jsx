@@ -97,7 +97,7 @@ const Project = () => {
           </motion.div>
           <div className="h-4"></div>
           <motion.div
-            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5"
+            className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-5"
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
             transition={{ duration: 0.6, delay: 1.0 }}
