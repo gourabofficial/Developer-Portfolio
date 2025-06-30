@@ -8,7 +8,7 @@ const Education = () => {
   const education = [
     {
       id: 1,
-      degree: 'Bachelor of Science in Computer Science',
+      degree: 'Bachelor of Technology in Computer Science',
       institution: 'Sanaka Educational Trust',
       duration: '2022 - 2026',
       location: 'Durgapur, Molandighi, West Bengal',
@@ -93,6 +93,7 @@ const Education = () => {
                       >
                         {item.degree}
                       </motion.h4>
+                      <div className='h-4'></div>
                       <motion.p 
                         className="text-orange-400 text-sm sm:text-base font-semibold mt-1"
                         initial={{ opacity: 0, y: 20 }}

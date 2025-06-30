@@ -28,13 +28,13 @@ const ProjectCard = ({ title, desc, img, githubLink, liveLink, index, onClick })
 
   return (
     <div
-      className="glass-card rounded-xl p-3 flex flex-col h-64 transition cursor-pointer relative overflow-hidden bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 hover:border-gray-600/60 hover:bg-gray-800/40"
+      className="glass-card rounded-xl p-2 flex flex-col h-52 w-full max-w-xs sm:max-w-sm md:max-w-full transition cursor-pointer relative overflow-hidden bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 hover:border-gray-600/60 hover:bg-gray-800/40"
       onClick={onClick}
     >
       <div className="glass-grid-pattern opacity-10 absolute inset-0 bg-gradient-to-br from-gray-600/10 to-transparent pointer-events-none" />
       
       {/* Thumbnail Section */}
-      <div className="rounded-lg overflow-hidden w-full mb-3 bg-gray-900 flex items-center justify-center relative z-10 h-28 group">
+      <div className="rounded-lg overflow-hidden w-full mb-2 bg-gray-900 flex items-center justify-center relative z-10 h-20 group">
         <img
           src={img}
           alt={title}
@@ -96,10 +96,10 @@ const ProjectCard = ({ title, desc, img, githubLink, liveLink, index, onClick })
       {/* Content Section */}
       <div className="relative z-10 flex-1 flex flex-col gap-2">
         {/* Title Section */}
-        <div className="mb-1 ml-2 text-center ">
-          <h4 className="font-semibold text-white ">
-            <div className={`inline-block px-2 py-1 rounded-md border  ${highlightProps.backgroundColor} ${highlightProps.borderColor}`}>
-              <span className={`relative z-10 text-xs font-medium  ${highlightProps.textColor}`}>{title}</span>
+        <div className="mb-1 text-center w-full flex justify-center">
+          <h4 className="font-semibold text-white w-full max-w-[180px] sm:max-w-[220px] mx-auto">
+            <div className={`inline-block w-full px-3 py-1 rounded-md border ${highlightProps.backgroundColor} ${highlightProps.borderColor}`}>
+              <span className={`relative z-10 text-xs font-medium break-words ${highlightProps.textColor}`}>{title}</span>
             </div>
           </h4>
         </div>

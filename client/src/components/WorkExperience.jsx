@@ -8,7 +8,7 @@ const WorkExperience = () => {
   const experiences = [
     {
       id: 1,
-      position: 'Full Stack Developer',
+      position: 'Intern – Full Stack Developer',
       company: 'Zidio Development PVT LTD',
       duration: 'March 2025 - June 2025',
       location: 'Remote',
@@ -93,6 +93,7 @@ const WorkExperience = () => {
                     >
                       {item.position}
                     </motion.h4>
+                    <div className='h-4'></div>
                     <motion.div 
                       className="flex items-center justify-center gap-2 sm:gap-3 mt-1"
                       initial={{ opacity: 0, y: 20 }}
