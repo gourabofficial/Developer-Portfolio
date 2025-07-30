@@ -38,26 +38,28 @@ const Home = () => {
         data-scroll
         data-scroll-speed="0.05"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
-            <div 
-              id="skills" 
-              className="flex justify-center lg:justify-end lg:pr-8"
-              data-scroll
-              data-scroll-class="slideInLeft"
-            >
-              <div className="w-full max-w-md">
-                <Skills />
+        <div className="w-full flex justify-center items-center px-4 sm:px-6 lg:px-8">
+          <div className="w-full max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+              <div 
+                id="skills" 
+                className="flex justify-center items-center"
+                data-scroll
+                data-scroll-class="slideInLeft"
+              >
+                <div className="w-full max-w-md">
+                  <Skills />
+                </div>
               </div>
-            </div>
-            <div 
-              id="contact" 
-              className="flex justify-center lg:justify-start lg:pl-8"
-              data-scroll
-              data-scroll-class="slideInRight"
-            >
-              <div className="w-full max-w-md">
-                <Contact />
+              <div 
+                id="contact" 
+                className="flex justify-center items-center"
+                data-scroll
+                data-scroll-class="slideInRight"
+              >
+                <div className="w-full max-w-md">
+                  <Contact />
+                </div>
               </div>
             </div>
           </div>

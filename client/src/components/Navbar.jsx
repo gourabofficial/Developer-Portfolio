@@ -249,9 +249,9 @@ const Navbar = () => {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-18 lg:h-20 py-2">
-            {/* Logo */}
+            {/* Logo - Left Side */}
             <motion.div
-              className="flex-shrink-0 group z-10 ml-4"
+              className="flex-shrink-0 group z-10"
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -282,9 +282,9 @@ const Navbar = () => {
               </button>
             </motion.div>
 
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation - Right Side */}
             <motion.div
-              className="flex"
+              className="flex items-center"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
@@ -317,52 +317,6 @@ const Navbar = () => {
                   </motion.div>
                 ))}
               </div>
-            </motion.div>
-
-            {/* Contact Button - Desktop */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-            >
-              <motion.button
-                onClick={handleContactClick}
-                className="group relative px-6 xl:px-8 py-3 xl:py-4 bg-gradient-to-r from-orange-500 via-orange-600 to-orange-700 text-white font-bold rounded-2xl shadow-xl shadow-orange-500/30 overflow-hidden text-sm xl:text-base border border-orange-400/20"
-                whileHover={{
-                  scale: 1.08,
-                  boxShadow: "0 25px 50px -12px rgba(251, 146, 60, 0.6)",
-                  borderColor: "rgba(251, 146, 60, 0.5)"
-                }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <div className="relative z-10 flex items-center justify-center gap-3">
-                  <Mail className="w-4 h-4 xl:w-5 xl:h-5 pointer-events-none transform translate-x-3 " />
-                   Contact Me
-                  <motion.div
-                    whileHover={{ x: 6 }}
-                    transition={{ duration: 0.3 }}
-                    className="pointer-events-none"
-                  >
-                    <ArrowRight className="w-4 h-4 xl:w-5 xl:h-5 pointer-events-none" />
-                  </motion.div>
-                </div>
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-orange-600 via-orange-700 to-orange-800 opacity-0"
-                  whileHover={{ opacity: 1 }}
-                  transition={{ duration: 0.4 }}
-                />
-                <motion.div
-                  className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                  animate={{
-                    x: ["-100%", "100%"],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "linear"
-                  }}
-                />
-              </motion.button>
             </motion.div>
           </div>
         </div>

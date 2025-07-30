@@ -25,11 +25,11 @@ const Project = () => {
       liveLink: "https://coursehub-ui.vercel.app/",
     },
     {
-      title: "Password Generator",
-      desc: "A secure password generator application with customizable options, strength indicators, and copy-to-clipboard functionality for enhanced security.",
-      img: "/assets/password.png",
-      githubLink: "https://github.com/gourabofficial/Overpower-React/tree/main/Password_Generator",
-      liveLink: "https://password-genarator-react.vercel.app/",
+      title: "Url Shortener",
+      desc: "A URL shortening service that allows users to create short links for long URLs, with analytics and tracking features.",
+      img: "/assets/urlshort.png",
+      githubLink: "https://github.com/gourabofficial/URL-Shortener",
+      liveLink: "https://url-shortener-nu-ashen.vercel.app/",
     },
   ];
 
