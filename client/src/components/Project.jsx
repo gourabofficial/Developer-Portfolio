@@ -19,10 +19,10 @@ const Project = () => {
     },
     {
       title: "Learning Management System",
-      desc: "A collaborative task management application with real-time updates, drag-and-drop functionality, and team collaboration features for enhanced productivity.",
+      desc: "A web application for managing online courses, allowing instructors to create and manage courses, and students to enroll and track their progress.",
       img: "/assets/learning.png",
-      githubLink: "https://github.com/gourabofficial/Learning-Management-System",
-      liveLink: "https://coursehub-ui.vercel.app/",
+      githubLink: "https://github.com/gourabofficial/",
+      liveLink: "https://advanced-lms.vercel.app/",
     },
     {
       title: "Url Shortener",
