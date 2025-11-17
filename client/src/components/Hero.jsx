@@ -8,7 +8,8 @@ const Hero = () => {
   
   const handleDownloadCV = () => {
     // Replace this URL with your actual Google Drive file sharing link
-    const googleDriveURL = "https://drive.google.com/file/d/1fZzzOW2st2Rk8IGp1m5hl0oprrNyXRT1/view";
+    const googleDriveURL = "https://drive.google.com/file/d/1lQr-hDxwzOQThpEe-uT6CtnFb-d23Mz1/view";
+    
     window.open(googleDriveURL, '_blank');
   };
   

@@ -25,11 +25,11 @@ const Project = () => {
       liveLink: "https://advanced-lms.vercel.app/",
     },
     {
-      title: "Url Shortener",
-      desc: "A URL shortening service that allows users to create short links for long URLs, with analytics and tracking features.",
-      img: "/assets/urlshort.png",
-      githubLink: "https://github.com/gourabofficial/URL-Shortener",
-      liveLink: "https://url-shortener-nu-ashen.vercel.app/",
+      title: "PlanMyTrip",
+      desc: "A full-stack travel planning app. All-in-one travel planner SaaS  web app that brings everything you need for trip planning — all in one place!",
+      img: "/assets/travel.png",
+       githubLink: "https://github.com/gourabofficial",
+      liveLink: "https://plan-my-trip-saas-product.vercel.app/",
     },
   ];
 

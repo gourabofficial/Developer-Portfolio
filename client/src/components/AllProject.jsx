@@ -16,6 +16,13 @@ const AllProject = () => {
   // Extended project data - you can add more projects here
   const allProjects = [
     {
+      title: "PlanMyTrip",
+      desc: "A full-stack travel planning app. All-in-one travel planner SaaS  web app that brings everything you need for trip planning — all in one place!",
+      img: "/assets/travel.png",
+       githubLink: "https://github.com/gourabofficial",
+      liveLink: "https://plan-my-trip-saas-product.vercel.app/",
+    },
+    {
       title: "E-Commerce Platform",
       desc: "A full-stack e-commerce solution built with React, Node.js, and MongoDB. Features include user authentication, payment integration, and admin dashboard for complete store management.",
       img: "/assets/ecommerce.png",
