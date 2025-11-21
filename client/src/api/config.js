@@ -1,14 +1,37 @@
 import axios from 'axios';
 
+// Get backend URL from environment or use production URL
+const getBackendURL = () => {
+  const envURL = import.meta.env.VITE_BACKEND_URL;
+  const productionURL = 'https://developer-portfolio-pi-six.vercel.app/api';
+  const localURL = 'http://localhost:3000/api';
+  
+  // If environment variable exists and is valid, use it
+  if (envURL && envURL.startsWith('http')) {
+    return envURL;
+  }
+  
+  // Check if we're in development
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return localURL;
+  }
+  
+  // Default to production
+  return productionURL;
+};
+
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL || 'https://developer-portfolio-pi-six.vercel.app/api', // Your backend server URL
+  baseURL: getBackendURL(),
   withCredentials: false, // Set to false for production CORS
   headers: {
     'Content-Type': 'application/json',
   },
   timeout: 30000, 
 });
+
+// Log the base URL for debugging
+console.log('API Base URL:', api.defaults.baseURL);
 
 // Request interceptor to add auth token to requests
 api.interceptors.request.use(
