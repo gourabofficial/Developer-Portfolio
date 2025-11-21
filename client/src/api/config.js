@@ -2,8 +2,8 @@ import axios from 'axios';
 
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000/api', // Your backend server URL
-  withCredentials: import.meta.env.NODE_ENV === 'development', // Only use credentials in development
+  baseURL: import.meta.env.VITE_BACKEND_URL || 'https://developer-portfolio-pi-six.vercel.app/api', // Your backend server URL
+  withCredentials: false, // Set to false for production CORS
   headers: {
     'Content-Type': 'application/json',
   },
