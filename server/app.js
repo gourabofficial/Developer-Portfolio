@@ -42,12 +42,42 @@ app.use(express.json());
 const PORT = process.env.PORT || 3000;
 
 app.get("/", (req, res) => {
-  res.send("Hello from Express server!");
+  res.json({ 
+    message: "Developer Portfolio API is running!",
+    status: "success",
+    endpoints: {
+      auth: "/api/auth/login",
+      cv: "/api/cv/active"
+    }
+  });
+});
+
+// Health check endpoint
+app.get("/api/health", (req, res) => {
+  res.json({ status: "OK", timestamp: new Date().toISOString() });
 });
 
 //api endpoints
 app.use("/api/auth", authRouter);
 app.use("/api/cv", cvRouter);
+
+// 404 handler - must be after all routes
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `Route ${req.originalUrl} not found`,
+    availableRoutes: ["/api/auth/login", "/api/cv/active", "/api/cv/all"]
+  });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error("Error:", err);
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message || "Internal server error"
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on Port: ${PORT}`);
