@@ -14,7 +14,7 @@ const Contect = () => {
   }
 
   const email = 'gourabofficial702@gmail.com'
-  const location = 'Durgapur, West Bengal, India'
+  const location = 'Kolkata, West Bengal, India'
 
   // Custom X Logo component
   const XLogo = ({ className }) => (

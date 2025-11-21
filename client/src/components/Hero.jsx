@@ -1,16 +1,37 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Download } from "lucide-react";
 import { motion, useInView } from "framer-motion";
+import api from "../api/config";
 
 const Hero = () => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: false, threshold: 0.2 })
+  const [cvUrl, setCvUrl] = useState("");
+  const [cvLoading, setCvLoading] = useState(true);
+
+  useEffect(() => {
+    fetchActiveCV();
+  }, []);
+
+  const fetchActiveCV = async () => {
+    try {
+      const response = await api.get('/cv/active');
+      if (response.success && response.cv) {
+        setCvUrl(response.cv.fileUrl);
+      }
+    } catch (error) {
+      console.error('Failed to fetch CV:', error);
+    } finally {
+      setCvLoading(false);
+    }
+  };
   
   const handleDownloadCV = () => {
-    // Replace this URL with your actual Google Drive file sharing link
-    const googleDriveURL = "https://drive.google.com/file/d/1lQr-hDxwzOQThpEe-uT6CtnFb-d23Mz1/view";
-    
-    window.open(googleDriveURL, '_blank');
+    if (cvUrl) {
+      window.open(cvUrl, '_blank');
+    } else {
+      alert('Resume not available at the moment. Please try again later.');
+    }
   };
   
   
@@ -137,13 +158,14 @@ const Hero = () => {
           >
             <motion.button
               onClick={handleDownloadCV}
-              className="group relative inline-flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all duration-300 overflow-hidden text-sm sm:text-base w-full max-w-[200px] min-h-[48px] sm:min-h-[52px]"
-              whileHover={{ 
+              disabled={cvLoading || !cvUrl}
+              className="group relative inline-flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all duration-300 overflow-hidden text-sm sm:text-base w-full max-w-[200px] min-h-[48px] sm:min-h-[52px] disabled:opacity-50 disabled:cursor-not-allowed"
+              whileHover={!cvLoading && cvUrl ? { 
                 scale: 1.05, 
                 y: -2,
                 boxShadow: "0 20px 25px -5px rgba(251, 146, 60, 0.4)"
-              }}
-              whileTap={{ scale: 0.95 }}
+              } : {}}
+              whileTap={!cvLoading && cvUrl ? { scale: 0.95 } : {}}
             >
               <motion.div
                 whileHover={{ y: 2 }}
@@ -151,7 +173,9 @@ const Hero = () => {
               >
                 <Download className="w-4 h-4 sm:w-5 sm:h-5 relative" />
               </motion.div>
-              <span className="relative z-10">Download CV</span>
+              <span className="relative z-10">
+                {cvLoading ? 'Loading...' : cvUrl ? 'Download CV' : 'CV Unavailable'}
+              </span>
               <motion.div 
                 className="absolute inset-0 bg-gradient-to-r from-orange-600 to-orange-700 rounded-lg"
                 initial={{ opacity: 0 }}

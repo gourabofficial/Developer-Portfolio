@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { useNavigate } from "react-router-dom";
 import {
   ArrowRight,
   Home,
@@ -8,10 +9,12 @@ import {
   FolderOpen,
   Mail,
   GraduationCap,
+  ShieldCheck,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -218,6 +221,37 @@ const Navbar = () => {
             Contact
           </span>
         </button>
+
+        {/* Admin Button */}
+        <button
+          onClick={() => navigate('/login')}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '12px',
+            borderRadius: '12px',
+            minWidth: '60px',
+            backgroundColor: 'rgba(31, 41, 55, 0.5)',
+            border: '1px solid rgba(107, 114, 128, 0.3)',
+            cursor: 'pointer'
+          }}
+        >
+          <ShieldCheck style={{ 
+            width: '24px', 
+            height: '24px', 
+            color: 'rgb(156, 163, 175)',
+            marginBottom: '4px'
+          }} />
+          <span style={{ 
+            fontSize: '10px', 
+            color: 'rgb(156, 163, 175)', 
+            fontWeight: '500' 
+          }}>
+            Admin
+          </span>
+        </button>
       </div>
     </div>
   );
@@ -284,7 +318,7 @@ const Navbar = () => {
 
             {/* Desktop Navigation - Right Side */}
             <motion.div
-              className="flex items-center"
+              className="flex items-center gap-4"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
@@ -317,6 +351,36 @@ const Navbar = () => {
                   </motion.div>
                 ))}
               </div>
+
+              {/* Divider */}
+              <div className="w-px h-8 bg-gray-700/50 mx-2"></div>
+
+              {/* Admin Login Button */}
+              <motion.div className="relative">
+                <motion.button
+                  onClick={() => navigate('/login')}
+                  className="relative inline-flex items-center justify-center w-10 h-10 lg:w-11 lg:h-11 rounded-xl bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 hover:border-orange-500/60 text-gray-400 hover:text-white transition-all duration-300 group hover:bg-gradient-to-r hover:from-orange-500/20 hover:to-orange-600/20 hover:shadow-lg hover:shadow-orange-500/20"
+                  whileHover={{ 
+                    scale: 1.05,
+                    y: -2
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.9 }}
+                >
+                  <ShieldCheck className="w-4 h-4 lg:w-[18px] lg:h-[18px] transition-all duration-300 group-hover:scale-110" />
+                  
+                  {/* Tooltip */}
+                  <motion.div
+                    className="absolute -bottom-12 right-0 px-3 py-1.5 bg-gray-900/95 backdrop-blur-sm text-white text-xs font-medium rounded-lg border border-orange-500/30 shadow-lg whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    initial={{ opacity: 0, y: -5 }}
+                  >
+                    Admin Panel
+                    <div className="absolute -top-1 right-4 w-2 h-2 bg-gray-900 border-t border-l border-orange-500/30 transform rotate-45"></div>
+                  </motion.div>
+                </motion.button>
+              </motion.div>
             </motion.div>
           </div>
         </div>
