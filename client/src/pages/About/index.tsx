@@ -8,7 +8,6 @@ const BORDER = "border-orange-200 dark:border-[#3d2410]"
 const TEXT_PRI = "text-[#1c0a00] dark:text-[#fef3e2]"
 const TEXT_SEC = "text-[#7c2d12] dark:text-[#fcd9a0]"
 const TEXT_MUTED = "text-orange-400 dark:text-amber-700"
-const ACCENT = "text-orange-600 dark:text-orange-400"
 const GRAD_TEXT = "bg-gradient-to-r from-orange-600 to-amber-600 dark:from-orange-400 dark:to-amber-300 bg-clip-text text-transparent"
 const CARD = `${SURFACE} border ${BORDER} rounded-2xl transition-all duration-300 hover:border-orange-400 dark:hover:border-orange-500`
 const PILL = "bg-orange-50 dark:bg-orange-950 border border-orange-200 dark:border-[#3d2410] text-orange-700 dark:text-orange-300 text-xs px-3 py-1 rounded-full font-medium"
