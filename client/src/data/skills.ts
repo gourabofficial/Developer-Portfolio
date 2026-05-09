@@ -1,23 +1,49 @@
+export type SkillItem = {
+   name: string
+   icon: string // Icon name from simple-icons (react-icons/si)
+}
+
 export type SkillCategory = {
    category: string
-   items: string[]
+   items: SkillItem[]
 }
 
 export const skills: SkillCategory[] = [
    {
       category: "Frontend",
-      items: ["React", "TypeScript", "Tailwind CSS", "HTML", "CSS"],
+      items: [
+         { name: "React", icon: "SiReact" },
+         { name: "TypeScript", icon: "SiTypescript" },
+         { name: "Tailwind CSS", icon: "SiTailwindcss" },
+         { name: "HTML", icon: "SiHtml5" },
+         { name: "CSS", icon: "SiCss3" },
+      ],
    },
    {
       category: "Backend",
-      items: ["Node.js", "Express", ".NET 10", "ASP.NET", "C#"],
+      items: [
+         { name: "Node.js", icon: "SiNodedotjs" },
+         { name: "Express", icon: "SiExpress" },
+         { name: ".NET 10", icon: "SiDotnet" },
+         { name: "ASP.NET", icon: "SiDotnet" },
+         { name: "C#", icon: "SiCsharp" },
+      ],
    },
    {
       category: "Database",
-      items: ["MongoDB", "SQL Server"],
+      items: [
+         { name: "MongoDB", icon: "SiMongodb" },
+         { name: "SQL Server", icon: "SiMicrosoftsqlserver" },
+      ],
    },
    {
       category: "Tools",
-      items: ["Git", "GitHub", "Postman", "VS Code", "Visual Studio"],
+      items: [
+         { name: "Git", icon: "SiGit" },
+         { name: "GitHub", icon: "SiGithub" },
+         { name: "Postman", icon: "SiPostman" },
+         { name: "VS Code", icon: "SiVisualstudiocode" },
+         { name: "Visual Studio", icon: "SiVisualstudio" },
+      ],
    },
 ]

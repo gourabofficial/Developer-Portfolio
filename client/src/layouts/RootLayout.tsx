@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom"
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 
-const PAGE_BG = "bg-[#fefaf4] dark:bg-[#1a1008]"
+const PAGE_BG = "bg-[#0f172a]"
 const TEXT_PRI = "text-[#1c0a00] dark:text-[#fef3e2]"
 
 export const RootLayout = () => {

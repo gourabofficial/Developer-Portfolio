@@ -1,32 +1,50 @@
 import { MapPin, Code2, Lightbulb, BookOpen, User } from "lucide-react"
 import { GithubIcon, LinkedinIcon } from "@/components/Icons"
+import { SkillIcon } from "@/components/SkillIcon"
 import { personal, skills } from "@/data"
+import { useTheme } from "@/components/theme-provider"
 
-const PAGE_BG = "bg-[#fefaf4] dark:bg-[#1a1008]"
-const SURFACE = "bg-[#fff8ed] dark:bg-[#231509]"
-const BORDER = "border-orange-200 dark:border-[#3d2410]"
-const TEXT_PRI = "text-[#1c0a00] dark:text-[#fef3e2]"
-const TEXT_SEC = "text-[#7c2d12] dark:text-[#fcd9a0]"
-const TEXT_MUTED = "text-orange-400 dark:text-amber-700"
-const GRAD_TEXT = "bg-gradient-to-r from-orange-600 to-amber-600 dark:from-orange-400 dark:to-amber-300 bg-clip-text text-transparent"
-const CARD = `${SURFACE} border ${BORDER} rounded-2xl transition-all duration-300 hover:border-orange-400 dark:hover:border-orange-500`
-const PILL = "bg-orange-50 dark:bg-orange-950 border border-orange-200 dark:border-[#3d2410] text-orange-700 dark:text-orange-300 text-xs px-3 py-1 rounded-full font-medium"
+const PAGE_BG = "bg-background"
+const SURFACE = "bg-card"
+const BORDER = "border-border"
+const TEXT_PRI = "text-foreground"
+const TEXT_SEC = "text-muted-foreground"
+const TEXT_MUTED = "text-muted-foreground"
+const GRAD_TEXT = "bg-gradient-to-r from-primary via-primary/90 to-primary/80 bg-clip-text text-transparent"
+const CARD = `${SURFACE} border ${BORDER} rounded-2xl transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10`
+const PILL = "bg-primary/10 border border-primary/20 text-foreground text-xs px-3 py-1.5 rounded-full font-medium hover:bg-primary/15 hover:border-primary/30 transition-all duration-200 flex items-center gap-1.5"
 
 export const About = () => {
+  const { theme } = useTheme()
+  const isDark = theme === "dark"
+
   return (
-    <div className={`${PAGE_BG} animate-fadeIn`}>
+    <div className={`${PAGE_BG} animate-fadeIn relative`}>
+      {/* Glow Layer */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: isDark 
+            ? 'radial-gradient(circle 800px at 50% 20%, oklch(0.28 0.15 265 / 0.25), transparent)'
+            : 'radial-gradient(circle 800px at 50% 20%, oklch(0.75 0.12 265 / 0.15), transparent)',
+          zIndex: 0
+        }}
+      />
+      
+      {/* Content Layer */}
+      <div className="relative z-10">
       <div className="max-w-6xl mx-auto px-6 py-20">
         {/* Page heading */}
         <h1 className={`${GRAD_TEXT} text-4xl font-extrabold mb-2`}>
           About Me
         </h1>
-        <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-amber-500 rounded-full mb-12" />
+        <div className="w-16 h-1 bg-gradient-to-r from-primary to-primary/80 rounded-full mb-12" />
 
         {/* Two-column grid */}
         <div className="grid lg:grid-cols-[300px_1fr] gap-16 mb-20">
           {/* LEFT — Avatar + socials */}
           <div>
-            <div className="w-full aspect-square rounded-2xl bg-[#fff3e0] dark:bg-[#2e1c0e] border-2 border-orange-200 dark:border-[#3d2410] flex items-center justify-center shadow-xl shadow-orange-500/10">
+            <div className="w-full aspect-square rounded-2xl bg-secondary border-2 border-border flex items-center justify-center shadow-xl shadow-primary/10">
               <User size={80} className={TEXT_MUTED} />
             </div>
 
@@ -35,7 +53,7 @@ export const About = () => {
                 href={personal.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`flex items-center gap-3 ${TEXT_SEC} hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-200`}
+                className={`flex items-center gap-3 ${TEXT_SEC} hover:text-primary transition-colors duration-200`}
               >
                 <GithubIcon width={18} height={18} />
                 gourabofficial
@@ -44,7 +62,7 @@ export const About = () => {
                 href={personal.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`flex items-center gap-3 ${TEXT_SEC} hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-200`}
+                className={`flex items-center gap-3 ${TEXT_SEC} hover:text-primary transition-colors duration-200`}
               >
                 <LinkedinIcon width={18} height={18} />
                 gourab-ganguly
@@ -58,7 +76,7 @@ export const About = () => {
 
           {/* RIGHT — Info */}
           <div>
-            <span className="bg-orange-50 dark:bg-orange-950 border border-orange-200 dark:border-orange-900 text-orange-700 dark:text-orange-300 text-sm px-4 py-2 rounded-full inline-block mb-6 font-medium">
+            <span className="bg-primary/10 border border-primary/30 text-foreground text-sm px-4 py-2 rounded-full inline-block mb-6 font-medium shadow-sm">
               {personal.headline}
             </span>
 
@@ -85,8 +103,9 @@ export const About = () => {
               </p>
               <div className="flex flex-wrap gap-2">
                 {cat.items.map((item) => (
-                  <span key={item} className={PILL}>
-                    {item}
+                  <span key={item.name} className={PILL}>
+                    <SkillIcon iconName={item.icon} size={14} />
+                    {item.name}
                   </span>
                 ))}
               </div>
@@ -101,8 +120,8 @@ export const About = () => {
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
             {/* Card 1 — Clean Code */}
-            <div className={`${CARD} p-6 border-l-4 border-l-orange-500`}>
-              <Code2 size={32} className="text-orange-500 dark:text-orange-400 mb-4" />
+            <div className={`${CARD} p-6 border-l-4 border-l-primary`}>
+              <Code2 size={32} className="text-primary mb-4" />
               <h3 className={`${TEXT_PRI} font-bold text-lg mb-2`}>
                 Clean Code
               </h3>
@@ -113,8 +132,8 @@ export const About = () => {
             </div>
 
             {/* Card 2 — Problem Solving */}
-            <div className={`${CARD} p-6 border-l-4 border-l-orange-500`}>
-              <Lightbulb size={32} className="text-orange-500 dark:text-orange-400 mb-4" />
+            <div className={`${CARD} p-6 border-l-4 border-l-primary`}>
+              <Lightbulb size={32} className="text-primary mb-4" />
               <h3 className={`${TEXT_PRI} font-bold text-lg mb-2`}>
                 Problem Solving
               </h3>
@@ -125,8 +144,8 @@ export const About = () => {
             </div>
 
             {/* Card 3 — Continuous Learning */}
-            <div className={`${CARD} p-6 border-l-4 border-l-orange-500`}>
-              <BookOpen size={32} className="text-orange-500 dark:text-orange-400 mb-4" />
+            <div className={`${CARD} p-6 border-l-4 border-l-primary`}>
+              <BookOpen size={32} className="text-primary mb-4" />
               <h3 className={`${TEXT_PRI} font-bold text-lg mb-2`}>
                 Continuous Learning
               </h3>
@@ -137,6 +156,7 @@ export const About = () => {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   )

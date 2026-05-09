@@ -8,21 +8,22 @@ import {
   Star,
 } from "lucide-react"
 import { GithubIcon, LinkedinIcon } from "@/components/Icons"
+import { SkillIcon } from "@/components/SkillIcon"
 import { personal, skills, experiences, projects } from "@/data"
 import { useTheme } from "@/components/theme-provider"
 
-const PAGE_BG = "bg-[#fefaf4] dark:bg-[#1a1008]"
-const SURFACE = "bg-[#fff8ed] dark:bg-[#231509]"
-const BORDER = "border-orange-200 dark:border-[#3d2410]"
-const TEXT_PRI = "text-[#1c0a00] dark:text-[#fef3e2]"
-const TEXT_SEC = "text-[#7c2d12] dark:text-[#fcd9a0]"
-const TEXT_MUTED = "text-orange-400 dark:text-amber-700"
-const ACCENT = "text-orange-600 dark:text-orange-400"
-const GRAD_TEXT = "bg-gradient-to-r from-orange-600 to-amber-600 dark:from-orange-400 dark:to-amber-300 bg-clip-text text-transparent"
-const CARD = `${SURFACE} border ${BORDER} rounded-2xl transition-all duration-300 hover:border-orange-400 dark:hover:border-orange-500`
-const PILL = "bg-orange-50 dark:bg-orange-950 border border-orange-200 dark:border-[#3d2410] text-orange-700 dark:text-orange-300 text-xs px-3 py-1 rounded-full font-medium"
-const BTN_FILL = "bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-full px-6 py-2.5 font-semibold transition-all duration-200 shadow-lg shadow-orange-500/20"
-const BTN_OUT = "border border-orange-500 dark:border-orange-400 text-orange-600 dark:text-orange-300 hover:bg-orange-500 dark:hover:bg-orange-500 hover:text-white rounded-full px-6 py-2.5 font-semibold transition-all duration-200"
+const PAGE_BG = "bg-background"
+const SURFACE = "bg-card"
+const BORDER = "border-border"
+const TEXT_PRI = "text-foreground"
+const TEXT_SEC = "text-muted-foreground"
+const TEXT_MUTED = "text-muted-foreground"
+const ACCENT = "text-primary"
+const GRAD_TEXT = "bg-gradient-to-r from-primary via-primary/90 to-primary/80 bg-clip-text text-transparent"
+const CARD = `${SURFACE} border ${BORDER} rounded-2xl transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10`
+const PILL = "bg-primary/10 border border-primary/20 text-foreground text-xs px-3 py-1 rounded-full font-medium hover:bg-primary/15 hover:border-primary/30 transition-all duration-200"
+const BTN_FILL = "bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground rounded-full px-6 py-2.5 font-semibold transition-all duration-200 shadow-lg shadow-primary/20"
+const BTN_OUT = "border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-full px-6 py-2.5 font-semibold transition-all duration-200"
 
 const featuredProjects = projects.filter((p) => p.featured)
 
@@ -30,16 +31,27 @@ export const Home = () => {
   const { theme } = useTheme()
   const isDark = theme === "dark"
 
-  const [allSkills] = useState(() => skills.flatMap((cat) => cat.items))
-
   const heroBg = isDark
-    ? "radial-gradient(ellipse 80% 60% at 20% 30%, rgba(249,115,22,0.07) 0%, transparent 70%)"
-    : "radial-gradient(ellipse 80% 60% at 20% 30%, rgba(249,115,22,0.10) 0%, transparent 70%)"
+    ? "radial-gradient(ellipse 80% 60% at 20% 30%, oklch(0.22 0.10 265 / 0.3) 0%, transparent 70%)"
+    : "radial-gradient(ellipse 80% 60% at 20% 30%, oklch(0.75 0.10 265 / 0.12) 0%, transparent 70%)"
 
   return (
-    <div className={`${PAGE_BG} animate-fadeIn`}>
-      {/* ── SECTION 1 — Hero ────────────────────────────── */}
-      <section className="min-h-screen flex items-center relative">
+    <div className={`${PAGE_BG} animate-fadeIn relative`}>
+      {/* Glow Layer */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: isDark 
+            ? 'radial-gradient(circle 800px at 50% 20%, oklch(0.28 0.15 265 / 0.25), transparent)'
+            : 'radial-gradient(circle 800px at 50% 20%, oklch(0.75 0.12 265 / 0.15), transparent)',
+          zIndex: 0
+        }}
+      />
+      
+      {/* Content Layer */}
+      <div className="relative z-10">
+        {/* ── SECTION 1 — Hero ────────────────────────────── */}
+        <section className="min-h-screen flex items-center relative">
         {/* Background effect */}
         <div
           className="absolute inset-0 pointer-events-none -z-10"
@@ -50,7 +62,7 @@ export const Home = () => {
           {/* LEFT column */}
           <div className="flex flex-col gap-6">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 self-start bg-orange-50 dark:bg-orange-950 border border-orange-200 dark:border-orange-900 text-orange-700 dark:text-orange-300 text-sm px-4 py-2 rounded-full font-medium">
+            <div className="inline-flex items-center gap-2 self-start bg-primary/10 border border-primary/30 text-foreground text-sm px-4 py-2 rounded-full font-medium shadow-sm">
               <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
               Available for opportunities
             </div>
@@ -88,7 +100,7 @@ export const Home = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="GitHub"
-                className={`${TEXT_MUTED} hover:text-orange-600 dark:hover:text-orange-400 transition-colors`}
+                className={`${TEXT_MUTED} hover:text-primary transition-colors`}
               >
                 <GithubIcon width={22} height={22} />
               </a>
@@ -97,7 +109,7 @@ export const Home = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn"
-                className={`${TEXT_MUTED} hover:text-orange-600 dark:hover:text-orange-400 transition-colors`}
+                className={`${TEXT_MUTED} hover:text-primary transition-colors`}
               >
                 <LinkedinIcon width={22} height={22} />
               </a>
@@ -106,13 +118,13 @@ export const Home = () => {
 
           {/* RIGHT column — Terminal card */}
           <div className="hidden lg:flex items-center justify-center">
-            <div className="w-full max-w-md bg-[#fff3e0] dark:bg-[#231509] border border-orange-200 dark:border-[#3d2410] rounded-2xl overflow-hidden shadow-2xl shadow-orange-500/10 dark:shadow-orange-500/20 animate-glow">
+            <div className="w-full max-w-md bg-card border border-border rounded-2xl overflow-hidden shadow-2xl shadow-primary/10 hover:shadow-primary/20 transition-shadow duration-300">
               {/* Terminal header bar */}
-              <div className={`flex items-center gap-2 px-4 py-3 bg-orange-100 dark:bg-[#2e1c0e] border-b ${BORDER}`}>
+              <div className={`flex items-center gap-2 px-4 py-3 bg-secondary border-b ${BORDER}`}>
                 <span className="w-3 h-3 rounded-full bg-red-400" />
                 <span className="w-3 h-3 rounded-full bg-yellow-400" />
                 <span className="w-3 h-3 rounded-full bg-green-400" />
-                <span className="text-xs text-orange-400 dark:text-amber-700 ml-2">
+                <span className="text-xs text-muted-foreground ml-2">
                   portfolio.tsx
                 </span>
               </div>
@@ -120,30 +132,30 @@ export const Home = () => {
               {/* Code body */}
               <div className="p-6 font-mono text-sm leading-relaxed">
                 <div className="flex">
-                  <span className="text-orange-500 dark:text-orange-400">const</span>
+                  <span className="text-primary">const</span>
                   <span className={TEXT_PRI}>&nbsp;developer = {"{"}</span>
                 </div>
                 <div className="flex">
                   <span className={TEXT_MUTED}>&nbsp;&nbsp;name:</span>
-                  <span className="text-amber-600 dark:text-amber-300">&nbsp;&quot;Gourab Ganguly&quot;</span>
+                  <span className="text-primary/80">&nbsp;&quot;Gourab Ganguly&quot;</span>
                   <span className={TEXT_PRI}>,</span>
                 </div>
                 <div className="flex">
                   <span className={TEXT_MUTED}>&nbsp;&nbsp;role:</span>
-                  <span className="text-amber-600 dark:text-amber-300">&nbsp;&quot;Full Stack Dev&quot;</span>
+                  <span className="text-primary/80">&nbsp;&quot;Full Stack Dev&quot;</span>
                   <span className={TEXT_PRI}>,</span>
                 </div>
                 <div className="flex flex-wrap">
                   <span className={TEXT_MUTED}>&nbsp;&nbsp;stack:</span>
                   <span className={TEXT_PRI}>&nbsp;[</span>
-                  <span className="text-amber-600 dark:text-amber-300">&quot;React&quot;</span>
+                  <span className="text-primary/80">&quot;React&quot;</span>
                   <span className={TEXT_PRI}>,&nbsp;</span>
-                  <span className="text-amber-600 dark:text-amber-300">&quot;.NET&quot;</span>
+                  <span className="text-primary/80">&quot;.NET&quot;</span>
                   <span className={TEXT_PRI}>],</span>
                 </div>
                 <div className="flex">
                   <span className={TEXT_MUTED}>&nbsp;&nbsp;passion:</span>
-                  <span className="text-amber-600 dark:text-amber-300">&nbsp;&quot;Clean Code&quot;</span>
+                  <span className="text-primary/80">&nbsp;&quot;Clean Code&quot;</span>
                   <span className={TEXT_PRI}>,</span>
                 </div>
                 <div className="flex">
@@ -151,7 +163,7 @@ export const Home = () => {
                 </div>
                 <div className="h-4" />
                 <div className="flex">
-                  <span className="text-orange-400 dark:text-orange-300">
+                  <span className="text-primary/70">
                     {"// Currently upgrading ERP to .NET 10"}
                   </span>
                 </div>
@@ -169,22 +181,29 @@ export const Home = () => {
         </div>
       </section>
 
-      {/* ── SECTION 2 — Tech Stack Teaser ────────────── */}
-      <section className="max-w-6xl mx-auto px-6 py-16 border-t border-orange-100 dark:border-[#3d2410]">
+      {/* ── SECTION 2 — Tech Stack ────────────── */}
+      <section className="max-w-6xl mx-auto px-6 py-16 border-t border-border">
         <div className="flex items-center justify-between mb-8">
           <h2 className={`${GRAD_TEXT} text-2xl font-bold`}>Tech Stack</h2>
         </div>
-        <div className="flex flex-wrap gap-3">
-          {allSkills.map((item) => (
-            <span key={item} className={PILL}>
-              {item}
-            </span>
-          ))}
+        <div className="flex flex-wrap gap-3 justify-center">
+          {skills.flatMap((category) =>
+            category.items.map((item) => (
+              <span
+                key={item.name}
+                className={`${PILL} flex items-center gap-2`}
+                title={`${category.category}: ${item.name}`}
+              >
+                <SkillIcon iconName={item.icon} size={16} />
+                {item.name}
+              </span>
+            ))
+          )}
         </div>
       </section>
 
       {/* ── SECTION 3 — Experience Teaser ────────────── */}
-      <section className="max-w-6xl mx-auto px-6 py-16 border-t border-orange-100 dark:border-[#3d2410]">
+      <section className="max-w-6xl mx-auto px-6 py-16 border-t border-border">
         <div className="flex justify-between items-center mb-8">
           <h2 className={`${GRAD_TEXT} text-2xl font-bold`}>Experience</h2>
           <Link
@@ -228,7 +247,7 @@ export const Home = () => {
       </section>
 
       {/* ── SECTION 4 — Featured Projects Teaser ──── */}
-      <section className="max-w-6xl mx-auto px-6 py-16 border-t border-orange-100 dark:border-[#3d2410]">
+      <section className="max-w-6xl mx-auto px-6 py-16 border-t border-border">
         <div className="flex justify-between items-center mb-8">
           <h2 className={`${GRAD_TEXT} text-2xl font-bold`}>
             Featured Projects
@@ -247,7 +266,7 @@ export const Home = () => {
               className={`${CARD} p-6 flex flex-col gap-4 relative`}
             >
               {/* Featured badge */}
-              <span className="absolute top-4 right-4 bg-gradient-to-r from-orange-500 to-amber-500 text-white text-xs px-2.5 py-1 rounded-full font-semibold flex items-center gap-1">
+              <span className="absolute top-4 right-4 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground text-xs px-2.5 py-1 rounded-full font-semibold flex items-center gap-1">
                 <Star size={10} />
                 Featured
               </span>
@@ -271,14 +290,14 @@ export const Home = () => {
               </div>
 
               {/* Bottom row */}
-              <div className="flex justify-between items-center mt-auto pt-2 border-t border-orange-100 dark:border-[#3d2410]">
+              <div className="flex justify-between items-center mt-auto pt-2 border-t border-border">
                 <div className="flex gap-3">
                   {proj.repoUrl ? (
                     <a
                       href={proj.repoUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`${TEXT_MUTED} hover:text-orange-600 dark:hover:text-orange-400 transition-colors p-1`}
+                      className={`${TEXT_MUTED} hover:text-primary transition-colors p-1`}
                       aria-label="GitHub repo"
                     >
                       <GithubIcon width={18} height={18} />
@@ -293,7 +312,7 @@ export const Home = () => {
                       href={proj.liveUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`${TEXT_MUTED} hover:text-orange-600 dark:hover:text-orange-400 transition-colors p-1`}
+                      className={`${TEXT_MUTED} hover:text-primary transition-colors p-1`}
                       aria-label="Live site"
                     >
                       <ExternalLink size={18} />
@@ -309,6 +328,7 @@ export const Home = () => {
           ))}
         </div>
       </section>
+      </div>
     </div>
   )
 }

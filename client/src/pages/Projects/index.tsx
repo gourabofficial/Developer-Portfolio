@@ -3,7 +3,7 @@ import { ExternalLink, Star } from "lucide-react"
 import { GithubIcon } from "@/components/Icons"
 import { projects } from "@/data"
 
-const PAGE_BG = "bg-[#fefaf4] dark:bg-[#1a1008]"
+const PAGE_BG = "bg-[#0f172a]"
 const SURFACE = "bg-[#fff8ed] dark:bg-[#231509]"
 const BORDER = "border-orange-200 dark:border-[#3d2410]"
 const TEXT_PRI = "text-[#1c0a00] dark:text-[#fef3e2]"
@@ -24,8 +24,19 @@ export const Projects = () => {
       : projects.filter((p) => p.category === activeFilter)
 
   return (
-    <div className={`${PAGE_BG} animate-fadeIn`}>
-      <div className="max-w-6xl mx-auto px-6 py-20">
+    <div className={`${PAGE_BG} animate-fadeIn relative`}>
+      {/* Glow Layer */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle 600px at 50% 50%, rgba(59,130,246,0.3), transparent)',
+          zIndex: 0
+        }}
+      />
+      
+      {/* Content Layer */}
+      <div className="relative z-10">
+        <div className="max-w-6xl mx-auto px-6 py-20">
         {/* Heading block */}
         <div className="mb-12">
           <h1 className={`${GRAD_TEXT} text-4xl font-extrabold mb-2`}>
@@ -129,6 +140,7 @@ export const Projects = () => {
             </div>
           ))}
         </div>
+      </div>
       </div>
     </div>
   )
