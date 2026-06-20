@@ -1,49 +1,41 @@
-export type SkillItem = {
-   name: string
-   icon: string // Icon name from simple-icons (react-icons/si)
-}
-
-export type SkillCategory = {
-   category: string
-   items: SkillItem[]
-}
+export type SkillItem = { name: string; icon: string; level: number }
+export type SkillCategory = { category: string; description: string; items: SkillItem[] }
 
 export const skills: SkillCategory[] = [
-   {
-      category: "Frontend",
-      items: [
-         { name: "React", icon: "SiReact" },
-         { name: "TypeScript", icon: "SiTypescript" },
-         { name: "Tailwind CSS", icon: "SiTailwindcss" },
-         { name: "HTML", icon: "SiHtml5" },
-         { name: "CSS", icon: "SiCss3" },
-      ],
-   },
-   {
-      category: "Backend",
-      items: [
-         { name: "Node.js", icon: "SiNodedotjs" },
-         { name: "Express", icon: "SiExpress" },
-         { name: ".NET 10", icon: "SiDotnet" },
-         { name: "ASP.NET", icon: "SiDotnet" },
-         { name: "C#", icon: "SiCsharp" },
-      ],
-   },
-   {
-      category: "Database",
-      items: [
-         { name: "MongoDB", icon: "SiMongodb" },
-         { name: "SQL Server", icon: "SiMicrosoftsqlserver" },
-      ],
-   },
-   {
-      category: "Tools",
-      items: [
-         { name: "Git", icon: "SiGit" },
-         { name: "GitHub", icon: "SiGithub" },
-         { name: "Postman", icon: "SiPostman" },
-         { name: "VS Code", icon: "SiVisualstudiocode" },
-         { name: "Visual Studio", icon: "SiVisualstudio" },
-      ],
-   },
+  {
+    category: "Backend",
+    description: "Enterprise APIs and distributed services",
+    items: [
+      { name: "ASP.NET Core", icon: "SiDotnet", level: 92 }, { name: ".NET 8 / 9 / 10", icon: "SiDotnet", level: 90 },
+      { name: "C#", icon: "SiCsharp", level: 92 }, { name: "Dapper", icon: "SiDotnet", level: 86 },
+      { name: "EF Core", icon: "SiDotnet", level: 84 }, { name: "Redis", icon: "SiRedis", level: 78 },
+      { name: "JWT", icon: "SiJsonwebtokens", level: 86 }, { name: "SignalR", icon: "SiDotnet", level: 76 },
+    ],
+  },
+  {
+    category: "Frontend",
+    description: "Fast, accessible product interfaces",
+    items: [
+      { name: "React", icon: "SiReact", level: 88 }, { name: "Next.js", icon: "SiNextdotjs", level: 82 },
+      { name: "TypeScript", icon: "SiTypescript", level: 86 }, { name: "Tailwind CSS", icon: "SiTailwindcss", level: 90 },
+      { name: "Redux Toolkit", icon: "SiRedux", level: 82 },
+    ],
+  },
+  {
+    category: "Database",
+    description: "Reliable data models and tuned queries",
+    items: [
+      { name: "SQL Server", icon: "SiMicrosoftsqlserver", level: 90 }, { name: "MongoDB", icon: "SiMongodb", level: 82 },
+      { name: "PostgreSQL", icon: "SiPostgresql", level: 76 },
+    ],
+  },
+  {
+    category: "Tools & DevOps",
+    description: "From local workflow to delivery",
+    items: [
+      { name: "Git", icon: "SiGit", level: 90 }, { name: "Docker", icon: "SiDocker", level: 80 },
+      { name: "GitHub Actions", icon: "SiGithubactions", level: 78 }, { name: "Postman", icon: "SiPostman", level: 92 },
+      { name: "Visual Studio", icon: "SiVisualstudio", level: 90 },
+    ],
+  },
 ]

@@ -2,15 +2,7 @@ import type { FC } from "react"
 import { RouterProvider, createBrowserRouter } from "react-router-dom"
 
 import RootLayout from "@/layouts/RootLayout"
-import {
-  About,
-  Blog,
-  Education,
-  Events,
-  Experience,
-  Home,
-  Projects,
-} from "@/pages"
+import { Home } from "@/pages/Home"
 
 const router = createBrowserRouter([
   {
@@ -20,30 +12,6 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
-      },
-      {
-        path: "/about",
-        element: <About />,
-      },
-      {
-        path: "/projects",
-        element: <Projects />,
-      },
-      {
-        path: "/experience",
-        element: <Experience />,
-      },
-      {
-        path: "/blog",
-        element: <Blog />,
-      },
-      {
-        path: "/education",
-        element: <Education />,
-      },
-      {
-        path: "/events",
-        element: <Events />,
       },
     ],
   },

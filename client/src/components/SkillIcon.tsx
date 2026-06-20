@@ -1,56 +1,19 @@
-import * as SimpleIcons from "simple-icons"
+import type { IconType } from "react-icons"
+import {
+  SiSharp, SiCss, SiDocker, SiDotnet, SiExpress, SiGit, SiGithub,
+  SiGithubactions, SiHtml5, SiJsonwebtokens, SiSqlite,
+  SiMongodb, SiNextdotjs, SiNodedotjs, SiPostgresql, SiPostman, SiReact,
+  SiRedis, SiRedux, SiTailwindcss, SiTypescript, SiVscodium,
+} from "react-icons/si"
 
-interface SkillIconProps {
-  iconName: string
-  size?: number
-  className?: string
+const icons: Record<string, IconType> = {
+  SiCsharp: SiSharp, SiCss3: SiCss, SiDocker, SiDotnet, SiExpress, SiGit, SiGithub,
+  SiGithubactions, SiHtml5, SiJsonwebtokens, SiMicrosoftsqlserver: SiSqlite, SiMongodb,
+  SiNextdotjs, SiNodedotjs, SiPostgresql, SiPostman, SiReact, SiRedis, SiRedux,
+  SiTailwindcss, SiTypescript, SiVisualstudio: SiVscodium, SiVisualstudiocode: SiVscodium,
 }
 
-// Map of icon names to simple-icons slugs
-const iconSlugMap: Record<string, string> = {
-  SiReact: "react",
-  SiTypescript: "typescript",
-  SiTailwindcss: "tailwindcss",
-  SiHtml5: "html5",
-  SiCss3: "css3",
-  SiNodedotjs: "nodedotjs",
-  SiExpress: "express",
-  SiDotnet: "dotnet",
-  SiCsharp: "csharp",
-  SiMongodb: "mongodb",
-  SiMicrosoftsqlserver: "microsoftsqlserver",
-  SiGit: "git",
-  SiGithub: "github",
-  SiPostman: "postman",
-  SiVisualstudiocode: "visualstudiocode",
-  SiVisualstudio: "visualstudio",
-}
-
-export const SkillIcon = ({ iconName, size = 16, className = "" }: SkillIconProps) => {
-  const slug = iconSlugMap[iconName]
-  
-  if (!slug) {
-    return null
-  }
-
-  const icon = SimpleIcons[`si${slug.charAt(0).toUpperCase()}${slug.slice(1)}` as keyof typeof SimpleIcons]
-  
-  if (!icon) {
-    return null
-  }
-
-  return (
-    <svg
-      role="img"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-      width={size}
-      height={size}
-      className={className}
-      fill={`#${icon.hex}`}
-    >
-      <title>{icon.title}</title>
-      <path d={icon.path} />
-    </svg>
-  )
+export const SkillIcon = ({ iconName, size = 16, className = "" }: { iconName: string; size?: number; className?: string }) => {
+  const Icon = icons[iconName]
+  return Icon ? <Icon size={size} className={className} aria-hidden="true" /> : null
 }
