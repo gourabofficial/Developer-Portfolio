@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react"
-import type { CSSProperties, ComponentType, FormEvent } from "react"
+import { useEffect, useState } from "react"
+import type { CSSProperties, ComponentType } from "react"
 import { motion } from "framer-motion"
 import {
   ArrowRight,
@@ -10,7 +10,6 @@ import {
   Code2,
   Database,
   Download,
-  GitBranch,
   Layers3,
   Mail,
   MapPin,
@@ -19,6 +18,7 @@ import {
 } from "lucide-react"
 import {
   SiClaude,
+  SiCss,
   SiDocker,
   SiDotnet,
   SiExpress,
@@ -41,10 +41,12 @@ import {
   SiSharp,
   SiTailwindcss,
   SiTypescript,
+  
 } from "react-icons/si"
 import { siCursor } from "simple-icons"
 import { GithubIcon, LinkedinIcon } from "@/components/Icons"
 import { personal, projects } from "@/data"
+import profilePhoto from "@/assets/profil.jpg"
 
 const ease = [0.22, 1, 0.36, 1] as const
 const reveal = {
@@ -53,12 +55,6 @@ const reveal = {
   viewport: { once: true, margin: "-80px" },
   transition: { duration: 0.65, ease },
 }
-
-const heroWords = [
-  "Scalable backend systems.",
-  "Clean interfaces with intent.",
-  "Enterprise software that lasts.",
-]
 
 function SectionHeading({ eyebrow, title, body }: { eyebrow: string; title: string; body: string }) {
   return (
@@ -73,90 +69,42 @@ function SectionHeading({ eyebrow, title, body }: { eyebrow: string; title: stri
   )
 }
 
-function TypeLine() {
-  const [index, setIndex] = useState(0)
-  const [text, setText] = useState("")
-  const [deleting, setDeleting] = useState(false)
-
-  useEffect(() => {
-    const target = heroWords[index]
-    const delay = deleting ? 28 : text === target ? 1400 : 42
-
-    const timer = window.setTimeout(() => {
-      if (!deleting && text === target) {
-        setDeleting(true)
-        return
-      }
-
-      if (deleting && text === "") {
-        setDeleting(false)
-        setIndex((current) => (current + 1) % heroWords.length)
-        return
-      }
-
-      setText(target.slice(0, text.length + (deleting ? -1 : 1)))
-    }, delay)
-
-    return () => window.clearTimeout(timer)
-  }, [deleting, index, text])
+// Floating Particles Component
+function FloatingParticles() {
+  const particles = Array.from({ length: 8 }, (_, i) => ({
+    id: i,
+    size: Math.random() * 4 + 2,
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    duration: Math.random() * 10 + 15,
+    delay: Math.random() * 5,
+  }))
 
   return (
-    <span className="hero-type-line">
-      {text}
-      <i />
-    </span>
-  )
-}
-
-function KineticName() {
-  const letters = personal.name.split("")
-  return (
-    <h1 className="hero-name" aria-label={personal.name}>
-      {letters.map((letter, index) => (
-        <motion.span
-          key={`${letter}-${index}`}
-          initial={{ opacity: 0, y: 18, filter: "blur(8px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.45, delay: 0.04 * index, ease }}
-        >
-          {letter === " " ? "\u00A0" : letter}
-        </motion.span>
+    <div className="floating-particles">
+      {particles.map((particle) => (
+        <motion.div
+          key={particle.id}
+          className="particle"
+          style={{
+            width: particle.size,
+            height: particle.size,
+            left: `${particle.x}%`,
+            top: `${particle.y}%`,
+          }}
+          animate={{
+            y: [-20, 20, -20],
+            x: [-10, 10, -10],
+            opacity: [0.2, 0.5, 0.2],
+          }}
+          transition={{
+            duration: particle.duration,
+            delay: particle.delay,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
       ))}
-    </h1>
-  )
-}
-
-function ProjectVisual({ project, index }: { project: (typeof projects)[number]; index: number }) {
-  return (
-    <div className={`project-visual visual-${index % 3}`}>
-      <div className="preview-top">
-        <span>{project.accent}</span>
-        <span>● LIVE</span>
-      </div>
-      <div className="preview-grid">
-        <aside>
-          <i />
-          <i />
-          <i />
-          <i />
-        </aside>
-        <div className="preview-main">
-          <div className="preview-title" />
-          <div className="preview-stats">
-            <i />
-            <i />
-            <i />
-          </div>
-          <div className="preview-chart">
-            <b />
-            <b />
-            <b />
-            <b />
-            <b />
-            <b />
-          </div>
-        </div>
-      </div>
     </div>
   )
 }
@@ -183,24 +131,12 @@ const techStacks: Array<{
 }> = [
   {
     title: "Languages",
-    description: "The core programming languages I reach for most.",
+    description: "Core programming languages for building enterprise systems.",
     icon: Braces,
     items: [
-      { name: "C#", Icon: SiSharp, color: "#9b9bff" },
+      { name: "C#", Icon: SiSharp, color: "#9b59b6" },
       { name: "JavaScript", Icon: SiJavascript, color: "#f7df1e" },
       { name: "TypeScript", Icon: SiTypescript, color: "#3178c6" },
-      { name: "HTML5", Icon: SiHtml5, color: "#e34f26" },
-    ],
-  },
-  {
-    title: "Backend",
-    description: "Application services, APIs and the plumbing behind them.",
-    icon: Database,
-    items: [
-      { name: ".NET", Icon: SiDotnet, color: "#512bd4" },
-      { name: "Node.js", Icon: SiNodedotjs, color: "#5fa04e" },
-      { name: "Express", Icon: SiExpress, color: "#ffffff" },
-      { name: "JWT", Icon: SiJsonwebtokens, color: "#d6b3ff" },
     ],
   },
   {
@@ -209,9 +145,19 @@ const techStacks: Array<{
     icon: Code2,
     items: [
       { name: "React", Icon: SiReact, color: "#61dafb" },
-      { name: "Next.js", Icon: SiNextdotjs, color: "#ffffff" },
       { name: "Tailwind CSS", Icon: SiTailwindcss, color: "#38bdf8" },
-      { name: "GitHub", Icon: SiGithub, color: "#ffffff" },
+      { name: "HTML5", Icon: SiHtml5, color: "#e34f26" },
+      { name: "CSS3", Icon: SiCss, color: "#1572b6" },
+    ],
+  },
+  {
+    title: "Backend",
+    description: "Application services, APIs and the plumbing behind them.",
+    icon: Database,
+    items: [
+      { name: "ASP.NET", Icon: SiDotnet, color: "#512bd4" },
+      { name: "Node.js", Icon: SiNodedotjs, color: "#5fa04e" },
+      { name: "Express", Icon: SiExpress, color: "#ffffff" },
     ],
   },
   {
@@ -219,32 +165,24 @@ const techStacks: Array<{
     description: "Structured and document stores that stay dependable at scale.",
     icon: Database,
     items: [
+      { name: "SQL Server", Icon: SiMysql, color: "#cc2927" },
+      { name: "PostgreSQL", Icon: SiPostgresql, color: "#4169e1" },
       { name: "MySQL", Icon: SiMysql, color: "#4479a1" },
       { name: "MongoDB", Icon: SiMongodb, color: "#47a248" },
-      { name: "PostgreSQL", Icon: SiPostgresql, color: "#4169e1" },
       { name: "Redis", Icon: SiRedis, color: "#dc382d" },
     ],
   },
   {
-    title: "Tools",
-    description: "Daily workflow, shipping, validation and release tools.",
-    icon: Workflow,
-    items: [
-      { name: "Git", Icon: SiGit, color: "#f05032" },
-      { name: "Docker", Icon: SiDocker, color: "#2496ed" },
-      { name: "Postman", Icon: SiPostman, color: "#ff6c37" },
-      { name: "Actions", Icon: SiGithubactions, color: "#2088ff" },
-    ],
-  },
-  {
-    title: "AI Tools",
-    description: "Thoughtful AI support for building, validating and iterating faster.",
+    title: "Tools & AI",
+    description: "Daily workflow, AI assistants and development tools.",
     icon: Sparkles,
     items: [
-      { name: "GitHub Copilot", Icon: SiGithubcopilot, color: "#8b5cf6" },
-      { name: "ChatGPT", Icon: SiOpenai, color: "#74aa9c" },
-      { name: "Claude", Icon: SiClaude, color: "#d97757" },
+      { name: "Postman", Icon: SiPostman, color: "#ff6c37" },
+      { name: "Git", Icon: SiGit, color: "#f05032" },
+      // { name: "VS Code", Icon: SiVscode, color: "#007acc" },
+      { name: "Copilot", Icon: SiGithubcopilot, color: "#8b5cf6" },
       { name: "Cursor", Icon: CursorGlyph, color: "#111111", lightBg: true },
+      { name: "Claude", Icon: SiClaude, color: "#d97757" },
     ],
   },
 ]
@@ -259,9 +197,33 @@ function CursorGlyph({ size = 20, className = "", style }: { size?: number; clas
 
 function BioTerminal() {
   const lines = [
-    { command: "whoami", output: ["Gourab Ganguly", "Software Developer"] },
-    { command: "cat about.txt", output: ["Building enterprise software with .NET, React and SQL.", "Focused on clean architecture, product thinking, and reliable delivery."] },
-    { command: "pwd", output: ["West Bengal, India"] },
+    { 
+      command: "whoami", 
+      output: [
+        { text: "Gourab Ganguly", color: "#64d9ff" },
+        { text: "Software Developer", color: "#9b9bff" }
+      ] 
+    },
+    { 
+      command: "cat about.txt", 
+      output: [
+        { text: "Building enterprise software with ", color: "#b8cce8" },
+        { text: ".NET", color: "#a897ff" },
+        { text: ", ", color: "#b8cce8" },
+        { text: "React", color: "#61dafb" },
+        { text: " and ", color: "#b8cce8" },
+        { text: "SQL", color: "#ffa657" },
+        { text: ".", color: "#b8cce8" },
+        { text: "Focused on clean architecture, product thinking, and reliable delivery.", color: "#8fa3c1" }
+      ] 
+    },
+    { 
+      command: "pwd", 
+      output: [
+        { text: "/home/gourab/", color: "#4ba2ff" },
+        { text: "West Bengal, India", color: "#70dcff" }
+      ] 
+    },
   ]
 
   const [visible, setVisible] = useState(1)
@@ -275,21 +237,24 @@ function BioTerminal() {
   return (
     <div className="bio-terminal">
       <div className="bio-terminal-bar">
-        <span />
-        <span />
-        <span />
-        <p>about.sh</p>
+        <span className="dot-red" />
+        <span className="dot-yellow" />
+        <span className="dot-green" />
+        <p>~/about.sh</p>
       </div>
       <div className="bio-terminal-body">
         {lines.slice(0, visible).map((entry, index) => (
           <div key={entry.command} className="bio-terminal-block">
             <div className="bio-terminal-command">
-              <span>$</span>
-              <code>{entry.command}</code>
+              <span className="prompt-symbol">➜</span>
+              <span className="prompt-dir">~</span>
+              <code className="command-text">{entry.command}</code>
             </div>
             <div className="bio-terminal-output">
-              {entry.output.map((line) => (
-                <p key={`${entry.command}-${line}`}>{line}</p>
+              {entry.output.map((line, i) => (
+                <p key={i} style={{ color: line.color }}>
+                  {line.text}
+                </p>
               ))}
             </div>
             {index === visible - 1 ? <span className="bio-terminal-cursor" aria-hidden="true" /> : null}
@@ -309,7 +274,7 @@ function StackIcon({ item }: { item: StackItem }) {
 }
 
 export const Home = () => {
-  const handleContact = (event: FormEvent<HTMLFormElement>) => {
+  const handleContact = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
     const subject = encodeURIComponent(`Portfolio inquiry from ${String(data.get("name"))}`)
@@ -317,74 +282,107 @@ export const Home = () => {
     window.location.href = `mailto:${personal.email}?subject=${subject}&body=${body}`
   }
 
-  const nameAccent = useMemo<CSSProperties>(
-    () => ({
-      "--name-photo": `url(${personal.photo})`,
-    } as CSSProperties),
-    [],
-  )
-
   return (
     <main>
-      <section id="home" className="section-shell hero-portfolio">
-        <div className="hero-portfolio-copy">
-          <p className="eyebrow">
-            <span />
-            Portfolio
-          </p>
-          <div className="hero-role-pill">
-            <span>Software Developer</span>
-            <small>SDE-1 @ Ancile Services</small>
-          </div>
-          <KineticName />
-          <TypeLine />
-          <p className="hero-description">
-            I design and build scalable software products with a backend-first mindset, pairing clean architecture with modern React interfaces.
-          </p>
-          <div className="hero-actions">
-            <a className="button primary" href="#projects">
-              View Projects <ArrowRight size={17} />
-            </a>
-            <a className="button secondary" href="/Gourab-Ganguly-Resume.html" download>
-              Resume <Download size={16} />
-            </a>
-            <a className="button ghost" href="#contact">
-              Contact <ArrowUpRight size={16} />
-            </a>
-          </div>
-          <div className="hero-facts">
-            <div>
-              <MapPin size={15} />
-              <span>{personal.location}</span>
-            </div>
-            <div>
-              <GitBranch size={15} />
-              <span>Enterprise engineering</span>
-            </div>
-            <div>
-              <BriefcaseBusiness size={15} />
-              <span>Ancile Services</span>
-            </div>
-          </div>
-        </div>
+      {/* Clean Premium Hero Section */}
+      <section id="home" className="clean-hero-section">
+        <div className="section-shell">
+          <div className="clean-hero-grid">
+            {/* Left Side - Content */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="clean-hero-content"
+            >
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3, delay: 0.25 }}
+                className="hero-greeting"
+              >
+                Hello, I'm
+              </motion.div>
 
-        <motion.div {...reveal} className="hero-portfolio-visual" style={nameAccent}>
-          <div className="hero-photo-frame">
-            <div className="hero-photo-glow" aria-hidden="true" />
-            <img src={personal.photo} alt="Gourab Ganguly portrait" className="hero-photo" />
+              <motion.h1
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.35 }}
+                className="hero-name-clean"
+              >
+                Gourab Ganguly
+              </motion.h1>
+
+              <motion.h2
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.4, delay: 0.5 }}
+                className="hero-role-clean"
+              >
+                Building enterprise <span className="hero-keyword">ERP systems</span> with <span className="hero-keyword dotnet">.NET</span>, SQL & React
+              </motion.h2>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.4, delay: 0.6 }}
+                className="hero-bio-clean"
+              >
+                Specialized in <span className="bio-highlight">.NET Core</span> and enterprise architecture. I engineer <span className="bio-highlight">ERP solutions</span> and scalable backend systems with a focus on clean code, performance optimization, and maintainable software design.
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3, delay: 0.75 }}
+                className="hero-actions-clean"
+              >
+                <a 
+                  href="#projects" 
+                  className="btn-primary"
+                >
+                  <span>View Projects</span>
+                  <ArrowRight size={16} />
+                </a>
+                <a 
+                  href="/Gourab-Ganguly-Resume.html" 
+                  download 
+                  className="btn-secondary"
+                >
+                  <Download size={16} />
+                  <span>Download Resume</span>
+                </a>
+                <a 
+                  href="#contact" 
+                  className="btn-ghost"
+                >
+                  <Mail size={16} />
+                  <span>Let's Connect</span>
+                </a>
+              </motion.div>
+            </motion.div>
+
+            {/* Right Side - Profile Image */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="clean-hero-image"
+            >
+              <div className="profile-wrapper">
+                <div className="profile-glow-effect" />
+                <div className="profile-image-frame">
+                  <img src={profilePhoto} alt="Gourab Ganguly" className="profile-img" />
+                </div>
+              </div>
+            </motion.div>
           </div>
-          <div className="hero-portrait-card">
-            <span className="online-dot" />
-            <div>
-              <p>Currently building</p>
-              <b>Enterprise ERP systems</b>
-            </div>
-          </div>
-          <div className="hero-caption-stack">
-            <span>Gourab Ganguly</span>
-            <p>Software Developer</p>
-          </div>
-        </motion.div>
+
+          {/* Background Effects */}
+          <div className="hero-bg-gradient" />
+          <div className="hero-grid-pattern" />
+          <FloatingParticles />
+        </div>
       </section>
 
       <section id="about" className="section-shell content-section">
@@ -443,33 +441,51 @@ export const Home = () => {
         </div>
       </section>
 
-      <section id="stack" className="section-shell content-section stack-section-clean">
+      <section id="stack" className="section-shell content-section stack-section-beautiful">
         <SectionHeading
           eyebrow="Technology stack"
-          title="A clean view of the tools I use most often."
-          body="Grouped by category and kept intentionally simple — no motion gimmicks, just the stack itself." 
+          title="Tools that power enterprise solutions."
+          body="A carefully chosen collection of technologies for building scalable, maintainable software." 
         />
-        <div className="stack-grid-clean">
-          {techStacks.map((category) => (
-            <article className="stack-category-card-clean" key={category.title}>
-              <header>
-                <span className="stack-category-icon-clean">
-                  <category.icon size={18} />
-                </span>
-                <div>
+        
+        <div className="stack-beautiful-grid">
+          {techStacks.map((category, categoryIndex) => (
+            <motion.article
+              key={category.title}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: categoryIndex * 0.1 }}
+              className="stack-beautiful-card"
+            >
+              <div className="stack-card-header">
+                <div className="stack-icon-wrapper">
+                  <category.icon size={20} />
+                </div>
+                <div className="stack-card-title">
                   <h3>{category.title}</h3>
                   <p>{category.description}</p>
                 </div>
-              </header>
-              <div className="stack-tech-grid">
-                {category.items.map((item) => (
-                  <div className="stack-tech-chip" key={item.name}>
-                    <StackIcon item={item} />
-                    <span>{item.name}</span>
-                  </div>
+              </div>
+              
+              <div className="stack-tech-flow">
+                {category.items.map((item, itemIndex) => (
+                  <motion.div
+                    key={item.name}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.3, delay: categoryIndex * 0.1 + itemIndex * 0.05 }}
+                    className="stack-tech-badge"
+                  >
+                    <div className="tech-badge-icon" style={{ color: item.color }}>
+                      <StackIcon item={item} />
+                    </div>
+                    <span className="tech-badge-name">{item.name}</span>
+                  </motion.div>
                 ))}
               </div>
-            </article>
+            </motion.article>
           ))}
         </div>
       </section>
@@ -481,7 +497,7 @@ export const Home = () => {
           body="Each step has added more scope, more ownership, and more confidence in building software for real-world use."
         />
         <div className="journey-timeline-modern">
-          <motion.div {...reveal} transition={{ duration: 0.95, ease }} className="journey-line-modern" />
+          <motion.div {...reveal} transition={{ duration: 0.7, ease }} className="journey-line-modern" />
           {[
             {
               type: "Current role",
@@ -504,18 +520,18 @@ export const Home = () => {
           ].map((job, index) => (
             <motion.article
               key={job.company}
-              initial={{ opacity: 0, y: 28 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-90px" }}
-              transition={{ delay: index * 0.14, duration: 0.7, ease }}
+              transition={{ delay: index * 0.1, duration: 0.5, ease }}
               className={`journey-item-modern ${index === 0 ? "current" : ""}`}
             >
               <motion.div
                 className="journey-node-modern"
-                initial={{ scale: 0.7, opacity: 0 }}
+                initial={{ scale: 0.85, opacity: 0 }}
                 whileInView={{ scale: 1, opacity: 1 }}
                 viewport={{ once: true, margin: "-90px" }}
-                transition={{ delay: index * 0.16 + 0.1, duration: 0.45, ease }}
+                transition={{ delay: index * 0.12 + 0.1, duration: 0.35, ease }}
               >
                 <BriefcaseBusiness />
               </motion.div>
@@ -555,28 +571,153 @@ export const Home = () => {
         </div>
       </section>
 
-    <section id="projects" className="section-shell content-section">
-      <SectionHeading eyebrow="Selected work" title="Projects with systems thinking." body="A selection of enterprise, AI and full-stack products—from operational platforms to focused developer tools." />
-      <div className="projects-grid">{projects.map((project, index) => <motion.article {...reveal} whileHover={{ y: -7 }} transition={{ duration: .45, ease }} className={`project-card ${project.featured ? "featured" : ""}`} key={project.id}>
-        <ProjectVisual project={project} index={index}/><div className="project-content"><p className="project-eyebrow">{project.eyebrow}</p><h3>{project.title}</h3><p>{project.description}</p>
-        <div className="feature-list">{project.features.map(x=><span key={x}><Check size={12}/>{x}</span>)}</div><div className="project-tags">{project.techStack.map(x=><span key={x}>{x}</span>)}</div>
-        <div className="project-links"><a href={project.liveUrl || "#contact"}>Live Demo <ArrowUpRight size={14}/></a><a href={project.repoUrl || personal.github} target="_blank" rel="noreferrer"><GithubIcon width={14} height={14}/> GitHub</a></div></div>
-      </motion.article>)}</div>
+    <section id="projects" className="section-shell content-section projects-section-redis">
+      <div className="projects-header-redis">
+        <span className="projects-dot" aria-hidden="true" />
+        <SectionHeading 
+          eyebrow="Selected work" 
+          title="Deploy anywhere. Scale any way." 
+          body="A selection of enterprise, AI and full-stack products—from operational platforms to focused developer tools." 
+        />
+      </div>
+      
+      <div className="projects-grid-redis">
+        {/* Primary Featured Projects */}
+        <div className="projects-primary-row">
+          {projects.slice(0, 3).map((project, index) => (
+            <motion.article
+              key={project.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: index * 0.1 }}
+              className="project-card-redis primary"
+            >
+              <div className="project-icon-row">
+                <div className="project-icon-wrapper">
+                  <div className="project-icon">
+                    {project.category === "Enterprise" && <Database size={20} />}
+                    {project.category === "Full Stack" && <Code2 size={20} />}
+                    {project.category === "AI" && <Sparkles size={20} />}
+                    {project.category === "Utility" && <Workflow size={20} />}
+                  </div>
+                  <span className="project-dot-indicator" aria-hidden="true" />
+                </div>
+              </div>
+              
+              <div className="project-primary-content">
+                <span className="project-category">{project.category}</span>
+                <h3>{project.title}</h3>
+                <p>{project.description}</p>
+              </div>
+              
+              <div className="project-tech-stack">
+                {project.techStack.slice(0, 3).map((tech) => (
+                  <span key={tech} className="tech-pill">{tech}</span>
+                ))}
+              </div>
+              
+              <a 
+                href={project.liveUrl || project.repoUrl || "#contact"} 
+                className="project-link-redis"
+                target={project.liveUrl ? "_blank" : "_self"}
+                rel="noreferrer"
+              >
+                <span>View Project</span>
+                <span className="link-arrows">
+                  <span className="link-arrow">
+                    <ArrowRight size={16} />
+                  </span>
+                  <span className="link-arrow">
+                    <ArrowRight size={16} />
+                  </span>
+                </span>
+              </a>
+            </motion.article>
+          ))}
+        </div>
+        
+        {/* Secondary Projects */}
+        {projects.length > 3 && (
+          <div className="projects-secondary-row">
+            {projects.slice(3).map((project, index) => (
+              <motion.article
+                key={project.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+                className="project-card-redis secondary"
+              >
+                <div className="project-icon-row">
+                  <div className="project-icon-wrapper">
+                    <div className="project-icon">
+                      {project.category === "Enterprise" && <Database size={18} />}
+                      {project.category === "Full Stack" && <Code2 size={18} />}
+                      {project.category === "AI" && <Sparkles size={18} />}
+                      {project.category === "Utility" && <Workflow size={18} />}
+                    </div>
+                    <span className="project-dot-indicator" aria-hidden="true" />
+                  </div>
+                  <span className="project-label">{project.category.toUpperCase()}</span>
+                </div>
+                
+                <div className="project-secondary-content">
+                  <h3>{project.title}</h3>
+                  <p>{project.description}</p>
+                </div>
+                
+                <a 
+                  href={project.liveUrl || project.repoUrl || "#contact"}
+                  className="project-link-redis secondary"
+                  target={project.liveUrl ? "_blank" : "_self"}
+                  rel="noreferrer"
+                >
+                  <span>View Project</span>
+                  <ArrowRight size={14} />
+                </a>
+              </motion.article>
+            ))}
+          </div>
+        )}
+      </div>
     </section>
 
     <section id="services" className="section-shell content-section">
-      <SectionHeading eyebrow="What I do" title="Engineering across the stack." body="Focused capabilities for building dependable products, from architecture and data to the last interaction." />
-      <div className="services-grid">{services.map(({icon:Icon,title,text},i)=><motion.article {...reveal} transition={{delay:i*.06,duration:.6,ease}} className="service-card" key={title}><span>0{i+1}</span><Icon size={23}/><h3>{title}</h3><p>{text}</p><i/></motion.article>)}</div>
+      <SectionHeading 
+        eyebrow="What I do" 
+        title="Engineering across the stack." 
+        body="Focused capabilities for building dependable products, from architecture and data to the last interaction." 
+      />
+      
+      <div className="services-grid">
+        {services.map(({ icon: Icon, title, text }, i) => (
+          <motion.article
+            key={title}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: i * 0.08 }}
+            className="service-card"
+          >
+            <span>0{i + 1}</span>
+            <Icon size={22} />
+            <h3>{title}</h3>
+            <p>{text}</p>
+            <i />
+          </motion.article>
+        ))}
+      </div>
     </section>
 
     <section className="principles-section content-section"><div className="section-shell">
       <SectionHeading eyebrow="Engineering principles" title="How I think about building software." body="Technology changes. The principles behind dependable products endure." />
-      <div className="principle-cloud">{["Clean Code","Performance First","Scalable Architecture","Security Focused","Continuous Learning","Problem Solving"].map((x,i)=><motion.div initial={{opacity:0,scale:.9,y:18}} whileInView={{opacity:1,scale:1,y:0}} whileHover={{y:-7,scale:1.03}} viewport={{once:true}} transition={{delay:i*.06,duration:.5,ease}} className={`principle pcard-${i+1}`} key={x}><span>0{i+1}</span><b>{x}</b><i/></motion.div>)}</div>
+      <div className="principle-cloud">{["Clean Code","Performance First","Scalable Architecture","Security Focused","Continuous Learning","Problem Solving"].map((x,i)=><motion.div initial={{opacity:0,scale:.95,y:15}} whileInView={{opacity:1,scale:1,y:0}} viewport={{once:true}} transition={{delay:i*.05,duration:.4,ease}} className={`principle pcard-${i+1}`} key={x}><span>0{i+1}</span><b>{x}</b><i/></motion.div>)}</div>
     </div></section>
 
     <section className="section-shell content-section focus-section">
       <SectionHeading eyebrow="Current focus" title="Exploring what comes next." body="The ideas and technologies currently sharpening how I design and deliver software." />
-      <motion.div {...reveal} className="focus-orbit"><div className="focus-core"><span>NOW</span><b>Building<br/>better systems</b><i/></div>{["System Design","Redis","Enterprise Software",".NET Ecosystem","Modern React","AI-assisted Development"].map((x,i)=><motion.div animate={{y:[0,i%2?7:-7,0]}} transition={{duration:4+i*.35,repeat:Infinity,ease:"easeInOut"}} className={`focus-node focus-${i+1}`} key={x}><span/><b>{x}</b></motion.div>)}<i className="focus-ring ring-a"/><i className="focus-ring ring-b"/></motion.div>
+      <motion.div {...reveal} className="focus-orbit"><div className="focus-core"><span>NOW</span><b>Building<br/>better systems</b><i/></div>{["System Design","Redis","Enterprise Software",".NET Ecosystem","Modern React","AI-assisted Development"].map((x,i)=><motion.div animate={{y:[0,i%2?4:-4,0]}} transition={{duration:5+i*.4,repeat:Infinity,ease:"easeInOut"}} className={`focus-node focus-${i+1}`} key={x}><span/><b>{x}</b></motion.div>)}<i className="focus-ring ring-a"/><i className="focus-ring ring-b"/></motion.div>
     </section>
 
     <section id="contact" className="section-shell content-section contact-section">
