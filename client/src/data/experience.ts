@@ -19,15 +19,17 @@ export const experiences: Experience[] = [
       id: "exp-001",
       role: ".NET Developer",
       company: "Ancile Services",
-      type: "Internship",
+      type: "SDE-1",
       startDate: "Feb 2026",
       endDate: "Present",
-      duration: "3 mos",
+      duration: "5 mos",
       location: "Kolkata, West Bengal, India",
       locationType: "On-site",
       description:
-         "Contributing to ERP modernization by upgrading legacy modules to .NET 10, improving maintainability, performance, and deployment workflows.",
-      skills: ["C#", "ASP.NET", ".NET 10", "ERP Systems"],
+         "Developing enterprise ERP systems with a focus on backend architecture, secure APIs, performance optimization and clean service boundaries.",
+      skills: ["C#", "ASP.NET Core", ".NET 10", "SQL Server", "Redis", "Dapper"],
+      projects: ["Tea ERP System Modernization"],
+      companyUrl: "https://www.ancile.in",
    },
    {
       id: "exp-002",
@@ -40,8 +42,8 @@ export const experiences: Experience[] = [
       location: "Durgapur, West Bengal, India",
       locationType: "Remote",
       description:
-         "Worked on MERN stack development, building responsive React interfaces, Node/Express APIs, and MongoDB data models while collaborating in agile sprint cycles.",
-      skills: ["React", "Node.js", "Express", "MongoDB", "MERN Stack", "Postman API"],
-      projects: ["Fullstack E-commerce Website"],
+         "Built end-to-end web products and learned to connect responsive interfaces with secure, maintainable services.",
+      skills: ["React", "Node.js", "Express", "MongoDB", "MERN Stack", "JWT"],
+      projects: ["E-commerce Platform", "Learning Management System"],
    },
 ]

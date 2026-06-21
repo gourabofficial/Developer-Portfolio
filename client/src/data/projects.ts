@@ -14,25 +14,16 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    id: "tea-erp",
-    title: "Tea ERP",
-    eyebrow: "Enterprise ERP application",
-    description: "A large-scale business platform unifying payroll, production, sales, stores, attendance, accounts and inventory in one secure system.",
-    techStack: [".NET Core", "React", "SQL Server", "Dapper", "Redis"],
-    features: ["Role-based access", "Operational dashboards", "Advanced reports", "Caching & optimization"],
-    featured: true,
-    accent: "ERP // 01",
-    category: "Enterprise",
-  },
-  {
     id: "advanced-lms",
     title: "Advanced LMS",
     eyebrow: "Learning management system",
     description: "A full-featured course platform designed around secure learning, video delivery and measurable student progress.",
     techStack: ["MongoDB", "Express", "React", "Node.js"],
     features: ["JWT authentication", "Video lectures", "Course progress", "Cloudinary media"],
-    accent: "LMS // 02",
+    featured: true,
+    accent: "LMS // 01",
     category: "Full Stack",
+    liveUrl: "#contact",
   },
   {
     id: "plan-my-trip",
@@ -41,8 +32,9 @@ export const projects: Project[] = [
     description: "A responsive travel planning experience that turns complex itineraries into a simple, visual workflow.",
     techStack: ["MongoDB", "Express", "React", "Node.js"],
     features: ["Trip builder", "Responsive UI", "Saved itineraries"],
-    accent: "TRIP // 03",
+    accent: "TRIP // 02",
     category: "Full Stack",
+    liveUrl: "#contact",
   },
   {
     id: "career-sensei",
@@ -51,8 +43,9 @@ export const projects: Project[] = [
     description: "An AI-powered preparation workspace delivering focused practice, guided feedback and role-specific interview support.",
     techStack: ["React", "Node.js", "Gemini AI"],
     features: ["AI feedback", "Practice sessions", "Role-based prompts"],
-    accent: "AI // 04",
+    accent: "AI // 03",
     category: "AI",
+    liveUrl: "#contact",
   },
   {
     id: "url-shortener",
@@ -61,7 +54,8 @@ export const projects: Project[] = [
     description: "A fast link management service with a clean interface and useful traffic analytics.",
     techStack: ["React", "Node.js"],
     features: ["Short links", "Click analytics", "Fast redirects"],
-    accent: "URL // 05",
+    accent: "URL // 04",
     category: "Utility",
+    liveUrl: "#contact",
   },
 ]
