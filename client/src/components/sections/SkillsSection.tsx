@@ -3,7 +3,6 @@ import { Braces, Code2, Database, Server, Sparkles } from 'lucide-react'
 import { skills } from '@/data'
 import { SkillIcon } from '@/components/SkillIcon'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
-import { getTechColor } from '@/lib/theme'
 
 const categoryIcons = {
   Languages: Braces,
