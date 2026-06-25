@@ -1,7 +1,0 @@
-export * from "./personal"
-export * from "./experience"
-export * from "./projects"
-export * from "./education"
-export * from "./skills"
-export * from "./blog"
-export * from "./events"

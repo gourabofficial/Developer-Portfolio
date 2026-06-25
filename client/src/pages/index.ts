@@ -1,7 +1,0 @@
-export { Home } from "./Home"
-export { About } from "./About"
-export { Projects } from "./Projects"
-export { Experience } from "./Experience"
-export { Blog } from "./Blog"
-export { Education } from "./Education"
-export { Events } from "./Events"
