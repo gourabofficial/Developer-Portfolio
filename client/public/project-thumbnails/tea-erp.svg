@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#09111F"/>
+      <stop offset="1" stop-color="#112B4E"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="240" y1="140" x2="920" y2="760" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#64D9FF" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#4A8FFB" stop-opacity="0.15"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" rx="48" fill="url(#bg)"/>
+  <circle cx="1320" cy="150" r="220" fill="#64D9FF" fill-opacity="0.08"/>
+  <circle cx="340" cy="720" r="260" fill="#4A8FFB" fill-opacity="0.12"/>
+  <rect x="140" y="170" width="430" height="430" rx="42" fill="#0E1A30" stroke="#2F5D93" stroke-opacity="0.55"/>
+  <rect x="670" y="170" width="780" height="430" rx="42" fill="#0A1427" stroke="#2F5D93" stroke-opacity="0.35"/>
+  <rect x="140" y="650" width="1310" height="130" rx="32" fill="#0A1427" stroke="#2F5D93" stroke-opacity="0.28"/>
+  <text x="200" y="270" fill="#8EC9FF" font-family="Arial, Helvetica, sans-serif" font-size="30" letter-spacing="8">ENTERPRISE</text>
+  <text x="200" y="355" fill="#F4F8FF" font-family="Arial, Helvetica, sans-serif" font-size="58" font-weight="700">Tea ERP System</text>
+  <text x="200" y="430" fill="#9AB0D6" font-family="Arial, Helvetica, sans-serif" font-size="26">Operations, finance, inventory</text>
+  <text x="200" y="470" fill="#9AB0D6" font-family="Arial, Helvetica, sans-serif" font-size="26">and reporting in one platform.</text>
+  <rect x="885" y="250" width="150" height="150" rx="24" fill="url(#glow)"/>
+  <rect x="1080" y="250" width="150" height="150" rx="24" fill="#101F36" stroke="#64D9FF" stroke-opacity="0.25"/>
+  <rect x="1275" y="250" width="150" height="150" rx="24" fill="#101F36" stroke="#64D9FF" stroke-opacity="0.25"/>
+  <rect x="885" y="430" width="540" height="90" rx="20" fill="#101F36" stroke="#64D9FF" stroke-opacity="0.2"/>
+  <text x="915" y="485" fill="#C9E4FF" font-family="Arial, Helvetica, sans-serif" font-size="28">Payroll • Sales • Stores • Accounts</text>
+</svg>

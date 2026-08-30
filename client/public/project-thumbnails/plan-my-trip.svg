@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0A1220"/>
+      <stop offset="1" stop-color="#264B72"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="250" y1="120" x2="980" y2="760" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#34D399" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#60A5FA" stop-opacity="0.18"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" rx="48" fill="url(#bg)"/>
+  <path d="M225 690C420 560 540 530 650 610C760 690 900 620 1095 430C1235 293 1345 240 1410 210" stroke="#7DD3FC" stroke-width="14" stroke-linecap="round" stroke-dasharray="1 28" opacity="0.55"/>
+  <circle cx="250" cy="690" r="34" fill="#34D399"/>
+  <circle cx="1410" cy="210" r="34" fill="#60A5FA"/>
+  <rect x="160" y="170" width="520" height="560" rx="44" fill="#0E1D33" stroke="#7DD3FC" stroke-opacity="0.25"/>
+  <rect x="750" y="170" width="710" height="560" rx="44" fill="#0B172B" stroke="#7DD3FC" stroke-opacity="0.25"/>
+  <text x="220" y="270" fill="#8CFAE3" font-family="Arial, Helvetica, sans-serif" font-size="30" letter-spacing="8">TRAVEL PLATFORM</text>
+  <text x="220" y="360" fill="#F4F8FF" font-family="Arial, Helvetica, sans-serif" font-size="60" font-weight="700">PlanMyTrip</text>
+  <text x="220" y="435" fill="#9AB0D6" font-family="Arial, Helvetica, sans-serif" font-size="26">Plan routes, stops, and schedules</text>
+  <rect x="850" y="240" width="560" height="120" rx="24" fill="url(#accent)"/>
+  <rect x="850" y="390" width="560" height="120" rx="24" fill="#101F36" stroke="#7DD3FC" stroke-opacity="0.24"/>
+  <rect x="850" y="540" width="560" height="120" rx="24" fill="#101F36" stroke="#7DD3FC" stroke-opacity="0.24"/>
+  <text x="895" y="310" fill="#D7F7FF" font-family="Arial, Helvetica, sans-serif" font-size="32">Itinerary • destinations • saved trips</text>
+</svg>
