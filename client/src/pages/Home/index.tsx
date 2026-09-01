@@ -4,7 +4,7 @@ import { SkillsSection } from "@/components/sections/SkillsSection"
 import { ProjectsSection } from "@/components/sections/ProjectsSection"
 import { ServicesSection } from "@/components/sections/ServicesSection"
 // import { PrinciplesSection } from "@/components/sections/PrinciplesSection"
-import { FocusSection } from "@/components/sections/FocusSection"
+// import { FocusSection } from "@/components/sections/FocusSection"
 import { ContactSection } from "@/components/sections/ContactSection"
 
 

@@ -11,9 +11,9 @@ const PAGE_BG = "bg-[#050914]"
 const SURFACE = "bg-[rgba(12,22,40,.72)]"
 const BORDER = "border-[rgba(126,161,214,.16)]"
 const TEXT_PRI = "text-[#f3f7ff]"
-const TEXT_SEC = "text-[#9aaac0]"
+// const TEXT_SEC = "text-[#9aaac0]"
 const TEXT_MUTED = "text-[#64d9ff]"
-const GRAD_TEXT = "bg-linear-to-r from-white via-[#87a6ff] to-[#69ddff] bg-clip-text text-transparent"
+// const GRAD_TEXT = "bg-linear-to-r from-white via-[#87a6ff] to-[#69ddff] bg-clip-text text-transparent"
 const CARD = `${SURFACE} border ${BORDER} rounded-3xl transition-all duration-300`
 const PILL = "bg-[rgba(27,54,91,.11)] border border-[rgba(105,150,219,.17)] text-[#8fa3c1] text-xs px-3 py-1.5 rounded-full font-medium"
 

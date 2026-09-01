@@ -27,7 +27,7 @@ export function ProjectTechIcon({ tech, size = 14, className = "" }: ProjectTech
   const iconName = getIconName(tech)
 
   if (iconName) {
-    const normalized = tech.toLowerCase().trim()
+    // const normalized = tech.toLowerCase().trim()
 
     if (iconName === SiReact) {
       return <SiReact size={size} className={className} style={brandIconStyle("#61DAFB")} aria-hidden="true" />
