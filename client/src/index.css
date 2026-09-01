@@ -224,6 +224,125 @@ main{display:block;position:relative}
   }
 }
 
+/* ── AboutExperience component ─────────────────────────────── */
+.about-exp-root {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  padding-left: 20px; /* space for the connector line */
+}
+
+/* Vertical connector line – animated via framer-motion scaleY */
+.about-exp-line {
+  position: absolute;
+  left: 20px;
+  top: 21px; /* align with first badge centre */
+  bottom: 21px;
+  width: 1px;
+  transform-origin: top center;
+  background: linear-gradient(
+    to bottom,
+    rgba(108, 166, 255, 0.55),
+    rgba(100, 217, 255, 0.7),
+    rgba(108, 166, 255, 0.15)
+  );
+  pointer-events: none;
+}
+
+.about-exp-card {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+  padding: 16px 18px;
+  border: 1px solid rgba(102, 148, 215, 0.12);
+  border-radius: 16px;
+  background: rgba(8, 18, 35, 0.55);
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+  /* pull card out to overlap the line */
+  margin-left: 10px;
+}
+
+.about-exp-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(100, 180, 255, 0.3);
+  background: rgba(10, 22, 42, 0.72);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.16);
+}
+
+.about-exp-card--current {
+  border-color: rgba(100, 217, 255, 0.28);
+  box-shadow: inset 0 0 0 1px rgba(100, 217, 255, 0.07);
+}
+
+/* Numbered badge – framer-motion handles scale-in */
+.about-exp-badge {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(101, 160, 250, 0.24);
+  background: linear-gradient(145deg, rgba(48, 103, 193, 0.24), rgba(14, 32, 57, 0.14));
+  color: #72aeff;
+  font: 700 12px/1 ui-monospace, monospace;
+  letter-spacing: 0.04em;
+}
+
+.about-exp-badge--current {
+  border-color: rgba(100, 217, 255, 0.45);
+  color: #64d9ff;
+  background: linear-gradient(145deg, rgba(30, 100, 180, 0.3), rgba(14, 32, 57, 0.14));
+  box-shadow: 0 0 14px rgba(100, 217, 255, 0.15);
+}
+
+.about-exp-body {
+  min-width: 0;
+}
+
+.about-exp-period {
+  margin: 3px 0 6px;
+  color: #7fb8ff;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+}
+
+.about-exp-role {
+  margin: 0 0 6px;
+  font-size: 15px;
+  color: #eef4ff;
+  letter-spacing: -0.01em;
+}
+
+.about-exp-desc {
+  display: block;
+  color: #8b9fb8;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+@media (max-width: 640px) {
+  .about-exp-root {
+    padding-left: 0;
+    gap: 10px;
+  }
+  .about-exp-line {
+    display: none;
+  }
+  .about-exp-card {
+    margin-left: 0;
+  }
+}
+
+/* ── end AboutExperience ─────────────────────────────────── */
+
 .stack-section-clean{position:relative}
 .stack-grid-clean{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 .stack-category-card-clean{padding:22px;border:1px solid rgba(103,150,223,.14);border-radius:20px;background:linear-gradient(145deg,rgba(14,28,50,.76),rgba(7,15,28,.66));transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}

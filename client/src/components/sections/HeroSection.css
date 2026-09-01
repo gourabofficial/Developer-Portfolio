@@ -1,0 +1,105 @@
+/* --- New classes introduced in the enhanced HeroSection --- */
+/* Merge into your existing hero stylesheet, alongside .clean-hero-*,
+   .btn-primary/.btn-secondary/.btn-ghost, .profile-wrapper, etc. */
+
+.hero-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  margin-bottom: 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(100, 217, 255, 0.22);
+  background: rgba(100, 217, 255, 0.06);
+  font-family: monospace;
+  font-size: 12px;
+  color: #8fc0ff;
+  width: fit-content;
+}
+
+.hero-status-dot {
+  position: relative;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #34d399;
+  flex-shrink: 0;
+}
+
+.hero-status-dot::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 999px;
+  background: #34d399;
+  opacity: 0.5;
+  animation: hero-status-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes hero-status-pulse {
+  0% { transform: scale(1); opacity: 0.5; }
+  70%, 100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* Floating badge on the profile photo */
+.hero-role-badge {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(100, 217, 255, 0.25);
+  background: rgba(8, 16, 32, 0.85);
+  backdrop-filter: blur(8px);
+  font-family: monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: #e8f2ff;
+  white-space: nowrap;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* Primary button arrow wrapper — no size/layout of its own, motion handles the slide */
+.hero-btn-arrow {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Scroll cue */
+.hero-scroll-cue {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-family: monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #5f7a9e;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  z-index: 2;
+}
+
+.hero-scroll-cue:hover {
+  color: #8fc0ff;
+}
+
+.hero-scroll-chevron {
+  display: inline-flex;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-status-dot::after {
+    animation: none;
+    opacity: 0.5;
+  }
+}

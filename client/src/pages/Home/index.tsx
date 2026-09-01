@@ -7,6 +7,7 @@ import { ServicesSection } from "@/components/sections/ServicesSection"
 import { FocusSection } from "@/components/sections/FocusSection"
 import { ContactSection } from "@/components/sections/ContactSection"
 
+
 export const Home = () => {
   return (
     <main>

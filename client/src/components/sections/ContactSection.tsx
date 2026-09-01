@@ -2,6 +2,7 @@ import { motion } from "framer-motion"
 import { ArrowUpRight, Mail, MapPin } from "lucide-react"
 import { GithubIcon, LinkedinIcon } from "@/components/Icons"
 import { personal } from "@/data"
+import { useState } from "react"
 
 const ease = [0.22, 1, 0.36, 1] as const
 
@@ -13,12 +14,38 @@ const reveal = {
 }
 
 export function ContactSection() {
+  const [showMessage, setShowMessage] = useState(false)
+  const whatsappNumber = "919144721050" // WhatsApp number in international format (91 is India code)
+
   const handleContact = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
-    const subject = encodeURIComponent(`Portfolio inquiry from ${String(data.get("name"))}`)
-    const body = encodeURIComponent(`${String(data.get("message"))}\n\nFrom: ${String(data.get("email"))}`)
-    window.location.href = `mailto:${personal.email}?subject=${subject}&body=${body}`
+    
+    const name = String(data.get("name"))
+    const email = String(data.get("email"))
+    const message = String(data.get("message"))
+    
+    // Format message for WhatsApp
+    const whatsappMessage = encodeURIComponent(
+      `*New Portfolio Inquiry*\n\n` +
+      `*Name:* ${name}\n` +
+      `*Email:* ${email}\n\n` +
+      `*Message:*\n${message}`
+    )
+    
+    // Open WhatsApp with the message
+    window.open(`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`, "_blank")
+    
+    // Show success message
+    setShowMessage(true)
+    
+    // Reset form
+    event.currentTarget.reset()
+    
+    // Hide message after 5 seconds
+    setTimeout(() => {
+      setShowMessage(false)
+    }, 5000)
   }
 
   return (
@@ -64,6 +91,20 @@ export function ContactSection() {
           </div>
         </div>
         <form onSubmit={handleContact}>
+          {showMessage && (
+            <div className="success-message" style={{
+              padding: "12px 16px",
+              marginBottom: "16px",
+              backgroundColor: "#10b981",
+              color: "white",
+              borderRadius: "8px",
+              fontSize: "14px",
+              fontWeight: "500",
+              textAlign: "center"
+            }}>
+              ✓ Opening WhatsApp... Your message is ready to send!
+            </div>
+          )}
           <label>
             Name
             <input name="name" required placeholder="Your name" />
@@ -84,7 +125,7 @@ export function ContactSection() {
           <button className="button primary" type="submit">
             Send Message <ArrowUpRight size={16} />
           </button>
-          <small>Your mail app will open with the message ready to send.</small>
+          <small>Your message will be sent via WhatsApp.</small>
         </form>
       </motion.div>
     </section>

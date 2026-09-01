@@ -1,299 +1,141 @@
 import { motion } from 'framer-motion'
-import { Braces, Code2, Database, Server, Sparkles } from 'lucide-react'
-import { skills } from '@/data'
-import { SkillIcon } from '@/components/SkillIcon'
+import type { IconType } from 'react-icons'
+import {
+  SiJavascript,
+  SiOpenjdk,
+  SiPython,
+  SiC,
+  SiDotnet,
+  SiNodedotjs,
+  SiExpress,
+  SiMongodb,
+  SiReact,
+  SiHtml5,
+  SiCss,
+  SiTailwindcss,
+  SiBootstrap,
+  SiRedis,
+  SiMysql,
+  SiPostgresql,
+  SiJsonwebtokens,
+  SiClaude,
+  SiGithubcopilot,
+  SiGooglegemini,
+  SiHuggingface,
+  SiLangchain,
+} from 'react-icons/si'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 
-const categoryIcons = {
-  Languages: Braces,
-  Frontend: Code2,
-  Backend: Server,
-  Databases: Database,
-  'Tools & AI': Sparkles,
-}
+const EASE = [0.16, 1, 0.3, 1] as const
 
-const categoryAccents = {
-  Languages: {
-    border: 'rgba(168, 85, 247, 0.3)',
-    glow: 'rgba(168, 85, 247, 0.15)',
-    icon: '#a855f7',
-  },
-  Frontend: {
-    border: 'rgba(6, 182, 212, 0.3)',
-    glow: 'rgba(6, 182, 212, 0.15)',
-    icon: '#06b6d4',
-  },
-  Backend: {
-    border: 'rgba(20, 184, 166, 0.3)',
-    glow: 'rgba(20, 184, 166, 0.15)',
-    icon: '#14b8a6',
-  },
-  Databases: {
-    border: 'rgba(16, 185, 129, 0.3)',
-    glow: 'rgba(16, 185, 129, 0.15)',
-    icon: '#10b981',
-  },
-  'Tools & AI': {
-    border: 'rgba(245, 158, 11, 0.3)',
-    glow: 'rgba(245, 158, 11, 0.15)',
-    icon: '#f59e0b',
-  },
+// Icons confirmed to exist in Simple Icons via the installed react-icons package.
+type StackEntry =
+  | { name: string; kind: 'icon'; Icon: IconType; color: string; chip?: string }
+  | { name: string; kind: 'badge'; label: string; color: string }
+
+// Simple Icons has no official mark for these — Microsoft/AWS trademark
+// restrictions, or the library is too small (Dapper) — so they render as
+// colored text badges instead of a fabricated logo.
+const stack: StackEntry[] = [
+  { name: 'C#', kind: 'badge', label: 'C#', color: '#68217A' },
+  { name: 'JavaScript', kind: 'icon', Icon: SiJavascript, color: '#F7DF1E' },
+  { name: 'Java', kind: 'icon', Icon: SiOpenjdk, color: '#ED8B00' },
+  { name: 'Python', kind: 'icon', Icon: SiPython, color: '#3776AB' },
+  { name: 'C', kind: 'icon', Icon: SiC, color: '#A8B9CC' },
+  { name: 'SQL', kind: 'badge', label: 'SQL', color: '#4A9EDB' },
+  { name: '.NET', kind: 'icon', Icon: SiDotnet, color: '#512BD4' },
+  { name: 'Node.js', kind: 'icon', Icon: SiNodedotjs, color: '#339933' },
+  { name: 'Express.js', kind: 'icon', Icon: SiExpress, color: '#000000', chip: '#F3F7FF' },
+  { name: 'MongoDB', kind: 'icon', Icon: SiMongodb, color: '#47A248' },
+  { name: 'React.js', kind: 'icon', Icon: SiReact, color: '#61DAFB' },
+  { name: 'HTML', kind: 'icon', Icon: SiHtml5, color: '#E34F26' },
+  { name: 'CSS', kind: 'icon', Icon: SiCss, color: '#1572B6' },
+  { name: 'Tailwind CSS', kind: 'icon', Icon: SiTailwindcss, color: '#06B6D4' },
+  { name: 'Bootstrap', kind: 'icon', Icon: SiBootstrap, color: '#7952B3' },
+  { name: 'Redis', kind: 'icon', Icon: SiRedis, color: '#DC382D' },
+  { name: 'SQL Server', kind: 'badge', label: 'MSSQL', color: '#CC2927' },
+  { name: 'MySQL', kind: 'icon', Icon: SiMysql, color: '#4479A1' },
+  { name: 'PostgreSQL', kind: 'icon', Icon: SiPostgresql, color: '#336791' },
+  { name: 'EF Core', kind: 'badge', label: 'EF', color: '#512BD4' },
+  { name: 'Dapper', kind: 'badge', label: 'Dap', color: '#3AAFA9' },
+  { name: 'JWT', kind: 'icon', Icon: SiJsonwebtokens, color: '#FB015B' },
+  { name: 'Claude', kind: 'icon', Icon: SiClaude, color: '#D97757' },
+  { name: 'GitHub Copilot', kind: 'icon', Icon: SiGithubcopilot, color: '#000000', chip: '#F3F7FF' },
+  { name: 'Gemini', kind: 'icon', Icon: SiGooglegemini, color: '#8E75B2' },
+  { name: 'Hugging Face', kind: 'icon', Icon: SiHuggingface, color: '#FFD21E' },
+  { name: 'LangChain', kind: 'icon', Icon: SiLangchain, color: '#1C3C3C', chip: '#F3F7FF' },
+]
+
+function StackChip({ entry }: { entry: StackEntry }) {
+  return (
+    <div className="group flex shrink-0 flex-col items-center gap-2" title={entry.name}>
+      <span
+        className="grid h-16 w-16 place-items-center rounded-2xl border border-[rgba(105,150,220,.14)] bg-[rgba(10,20,38,.55)] transition-all duration-300 group-hover:-translate-y-1 group-hover:border-[rgba(100,217,255,.32)]"
+        style={entry.kind === 'icon' && entry.chip ? { background: entry.chip } : undefined}
+      >
+        {entry.kind === 'icon' ? (
+          <entry.Icon size={28} color={entry.color} />
+        ) : (
+          <span
+            className="font-mono text-[13px] font-bold"
+            style={{ color: entry.color }}
+          >
+            {entry.label}
+          </span>
+        )}
+      </span>
+      <span className="font-mono text-[10px] text-[#5f7a9e] opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+        {entry.name}
+      </span>
+    </div>
+  )
 }
 
 export const SkillsSection = () => {
   const prefersReducedMotion = useReducedMotion()
-  const totalTools = skills.reduce((acc, cat) => acc + cat.items.length, 0)
-  const coreTools = skills.reduce((acc, cat) => acc + cat.items.filter(item => item.core).length, 0)
+
+  const totalTools = stack.length
 
   return (
     <section id="stack" className="section-shell content-section">
-      {/* Eyebrow with stats */}
+      {/* Eyebrow with stats — unchanged */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+        whileInView={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-80px' }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.5, ease: EASE }}
         className="section-heading"
       >
-        <p className="eyebrow" style={{ fontFamily: 'ui-monospace, monospace', fontSize: '11px' }}>
-          <span />
-          // {skills.length} categories · {totalTools} tools · {coreTools} core
+        <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-[#64d9ff]">
+          <span className="w-4 h-px bg-[#4f8cff]" />
+          stack --list · {totalTools} tools
         </p>
         <h2>Technology Stack</h2>
         <p>A carefully chosen collection of technologies for building scalable, maintainable enterprise software.</p>
       </motion.div>
 
-      {/* Category cards grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))',
-        gap: '18px',
-      }}>
-        {skills.map((category, categoryIndex) => {
-          const Icon = categoryIcons[category.category as keyof typeof categoryIcons] || Code2
-          const accent = categoryAccents[category.category as keyof typeof categoryAccents]
-
-          return (
-            <motion.article
-              key={category.category}
-              initial={prefersReducedMotion ? {} : { opacity: 0, y: 30 }}
-              whileInView={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 0.5, delay: categoryIndex * 0.08 }}
-              style={{
-                position: 'relative',
-                padding: '26px',
-                border: `1px solid ${accent.border}`,
-                borderRadius: '18px',
-                background: 'linear-gradient(145deg, rgba(15, 30, 53, 0.78), rgba(7, 16, 30, 0.68))',
-                backdropFilter: 'blur(12px)',
-                boxShadow: `inset 0 1px rgba(255, 255, 255, 0.02)`,
-                overflow: 'hidden',
-                transition: 'transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease',
-              }}
-              whileHover={prefersReducedMotion ? {} : {
-                translateY: -4,
-                borderColor: accent.border,
-                boxShadow: `0 20px 50px rgba(0, 0, 0, 0.2), inset 0 1px rgba(255, 255, 255, 0.03)`,
-              }}
-            >
-              {/* Glow effect */}
-              <div style={{
-                position: 'absolute',
-                top: '-100px',
-                right: '-100px',
-                width: '250px',
-                height: '250px',
-                borderRadius: '50%',
-                background: `radial-gradient(circle, ${accent.glow}, transparent 65%)`,
-                pointerEvents: 'none',
-                transition: 'opacity 0.3s ease',
-              }} />
-
-              {/* Header */}
-              <header style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '14px',
-                marginBottom: '20px',
-                position: 'relative',
-              }}>
-                <motion.div
-                  whileHover={prefersReducedMotion ? {} : { scale: 1.05, rotate: 3 }}
-                  style={{
-                    width: '48px',
-                    height: '48px',
-                    display: 'grid',
-                    placeItems: 'center',
-                    border: `1px solid ${accent.border}`,
-                    borderRadius: '13px',
-                    background: `linear-gradient(145deg, ${accent.glow}, rgba(10, 20, 40, 0.3))`,
-                    color: accent.icon,
-                    flexShrink: 0,
-                  }}
-                >
-                  <Icon size={22} />
-                </motion.div>
-
-                <div>
-                  <h3 style={{
-                    margin: '0 0 6px 0',
-                    fontSize: '17px',
-                    fontWeight: 700,
-                    letterSpacing: '-0.01em',
-                  }}>
-                    {category.category}
-                  </h3>
-                  <p style={{
-                    margin: 0,
-                    fontSize: '12px',
-                    color: '#7a8fae',
-                    lineHeight: 1.6,
-                  }}>
-                    {category.description}
-                  </p>
-                </div>
-              </header>
-
-              {/* Skills grid */}
-              <div style={{
-                display: 'grid',
-                gap: '10px',
-              }}>
-                {category.items.map((skill, skillIndex) => (
-                  <motion.div
-                    key={skill.name}
-                    initial={prefersReducedMotion ? {} : { opacity: 0, scale: 0.9 }}
-                    whileInView={prefersReducedMotion ? {} : { opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.3, delay: categoryIndex * 0.08 + skillIndex * 0.03 }}
-                    whileHover={prefersReducedMotion ? {} : { translateX: 4 }}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '12px',
-                      padding: '12px 14px',
-                      border: '1px solid rgba(105, 150, 220, 0.12)',
-                      borderRadius: '11px',
-                      background: 'rgba(8, 18, 35, 0.55)',
-                      transition: 'border-color 0.2s ease, background 0.2s ease, transform 0.2s ease',
-                      cursor: 'default',
-                    }}
-                  >
-                    {/* Icon with glow */}
-                    <span style={{
-                      width: '36px',
-                      height: '36px',
-                      display: 'grid',
-                      placeItems: 'center',
-                      borderRadius: '10px',
-                      background: 'rgba(255, 255, 255, 0.03)',
-                      flexShrink: 0,
-                      position: 'relative',
-                    }}>
-                      <SkillIcon iconName={skill.icon} size={20} />
-                      {skill.core && (
-                        <span style={{
-                          position: 'absolute',
-                          top: '-4px',
-                          right: '-4px',
-                          width: '10px',
-                          height: '10px',
-                          borderRadius: '50%',
-                          background: 'linear-gradient(135deg, #f59e0b, #f97316)',
-                          boxShadow: '0 0 12px rgba(245, 158, 11, 0.6)',
-                          border: '2px solid rgba(8, 18, 35, 0.8)',
-                        }} />
-                      )}
-                    </span>
-
-                    {/* Name & level */}
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        marginBottom: '6px',
-                      }}>
-                        <span style={{
-                          fontSize: '13px',
-                          fontWeight: 600,
-                          color: '#d4e2f5',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                        }}>
-                          {skill.name}
-                        </span>
-                        {skill.years && (
-                          <span style={{
-                            fontSize: '9px',
-                            fontFamily: 'ui-monospace, monospace',
-                            color: '#5f7a9e',
-                            marginLeft: '8px',
-                          }}>
-                            {skill.years}y
-                          </span>
-                        )}
-                      </div>
-                      {/* Progress bar */}
-                      <div style={{
-                        height: '3px',
-                        background: 'rgba(30, 50, 85, 0.6)',
-                        borderRadius: '3px',
-                        overflow: 'hidden',
-                      }}>
-                        <motion.div
-                          initial={{ width: 0 }}
-                          whileInView={{ width: `${skill.level}%` }}
-                          viewport={{ once: true }}
-                          transition={{ duration: 0.8, delay: categoryIndex * 0.1 + skillIndex * 0.05, ease: 'easeOut' }}
-                          style={{
-                            height: '100%',
-                            background: `linear-gradient(90deg, ${accent.icon}, ${accent.border})`,
-                            borderRadius: '3px',
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Footer stats */}
-              <footer style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                marginTop: '18px',
-                paddingTop: '16px',
-                borderTop: '1px solid rgba(105, 150, 220, 0.08)',
-              }}>
-                <span style={{
-                  fontSize: '9px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.1em',
-                  color: '#5f7a9e',
-                }}>
-                  {category.items.length} tools
-                </span>
-                <div style={{
-                  flex: 1,
-                  height: '1px',
-                  background: 'rgba(105, 150, 220, 0.08)',
-                }} />
-                <span style={{
-                  fontSize: '10px',
-                  fontWeight: 600,
-                  color: accent.icon,
-                }}>
-                  {category.items.filter(i => i.core).length} core
-                </span>
-              </footer>
-            </motion.article>
-          )
-        })}
+      {/* Continuous scrolling icon strip */}
+      <div className="relative mt-10 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
+        <div
+          className={`flex w-max items-start gap-10 ${
+            prefersReducedMotion ? 'flex-wrap justify-center gap-x-6 gap-y-6' : 'stack-marquee-track hover:[animation-play-state:paused]'
+          }`}
+        >
+          {(prefersReducedMotion ? stack : [...stack, ...stack]).map((entry, i) => (
+            <StackChip key={`${entry.name}-${i}`} entry={entry} />
+          ))}
+        </div>
       </div>
+
+      <style>{`
+        @keyframes stack-marquee-scroll {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
+        .stack-marquee-track {
+          animation: stack-marquee-scroll 34s linear infinite;
+        }
+      `}</style>
     </section>
   )
 }

@@ -1,0 +1,121 @@
+/* --- Additions for the upgraded BioTerminal --- */
+/* Merge these into your existing terminal stylesheet. Assumes .bio-terminal,
+   .bio-terminal-bar, .dot-red/.dot-yellow/.dot-green, .bio-terminal-body,
+   .bio-terminal-block, .bio-terminal-command, .prompt-symbol, .prompt-dir,
+   .command-text, .bio-terminal-output, and .bio-terminal-cursor already exist. */
+
+/* Status pill in the title bar */
+.bio-terminal-bar {
+  position: relative;
+}
+
+.bio-terminal-status {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: #6ee7b7;
+  text-transform: uppercase;
+}
+
+.bio-terminal-status-dot {
+  position: relative;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #34d399;
+}
+
+.bio-terminal-status-dot::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 999px;
+  background: #34d399;
+  opacity: 0.5;
+  animation: status-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes status-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  70% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+/* Subtle glow while a command is actively being typed */
+.bio-terminal {
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+.bio-terminal.is-typing {
+  box-shadow: 0 0 0 1px rgba(100, 217, 255, 0.18), 0 0 32px rgba(79, 140, 255, 0.12);
+}
+
+/* Inline typing cursor — sits right after the last typed character */
+.bio-terminal-cursor--inline {
+  display: inline-block;
+  width: 7px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -2px;
+  background: #64d9ff;
+  animation: cursor-blink 0.9s step-end infinite;
+}
+
+@keyframes cursor-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Staggered fade-up for each output line */
+.bio-terminal-output-line {
+  opacity: 0;
+  transform: translateY(4px);
+  animation: output-line-in 0.35s ease forwards;
+}
+
+@keyframes output-line-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Respect reduced motion: no blinking, no pulsing, no line stagger */
+@media (prefers-reduced-motion: reduce) {
+  .bio-terminal-status-dot::after {
+    animation: none;
+    opacity: 0.5;
+  }
+  .bio-terminal-cursor,
+  .bio-terminal-cursor--inline {
+    animation: none;
+    opacity: 1;
+  }
+  .bio-terminal-output-line {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+  .bio-terminal.is-typing {
+    box-shadow: none;
+  }
+}
