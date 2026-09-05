@@ -282,7 +282,7 @@ export function InteractiveTerminal() {
       if (charIndex === 0 && typingText === "") {
         const timer = setTimeout(() => {
           // Add complete line immediately
-          setLines((prev) => [...prev, { type: currentSeq.type, text: currentSeq.text }])
+          setLines((prev) => [...prev, { type: currentSeq.type as TerminalLine["type"], text: currentSeq.text }])
           setBootSequenceIndex((prev) => prev + 1)
         }, currentSeq.delay)
         return () => clearTimeout(timer)
@@ -312,7 +312,7 @@ export function InteractiveTerminal() {
     // Line fully typed, add to lines and move to next
     if (charIndex === currentSeq.text.length) {
       const timer = setTimeout(() => {
-        setLines((prev) => [...prev, { type: currentSeq.type, text: typingText }])
+        setLines((prev) => [...prev, { type: currentSeq.type as TerminalLine["type"], text: typingText }])
         setTypingText("")
         setCharIndex(0)
         setBootSequenceIndex((prev) => prev + 1)
@@ -326,7 +326,7 @@ export function InteractiveTerminal() {
     if (isBootSequenceComplete && isTyping) {
       setIsTyping(false)
       setTimeout(() => {
-        inputRef.current?.focus()
+        inputRef.current?.focus({ preventScroll: true })
       }, 300)
     }
   }, [isBootSequenceComplete, isTyping])
@@ -335,7 +335,7 @@ export function InteractiveTerminal() {
   useEffect(() => {
     if (prefersReducedMotion && bootSequenceIndex === 0) {
       BOOT_SEQUENCE.forEach((seq) => {
-        setLines((prev) => [...prev, { type: seq.type, text: seq.text }])
+        setLines((prev) => [...prev, { type: seq.type as TerminalLine["type"], text: seq.text }])
       })
       setBootSequenceIndex(BOOT_SEQUENCE.length)
       setIsTyping(false)
@@ -378,7 +378,7 @@ export function InteractiveTerminal() {
   // Focus input when clicking terminal body
   const handleTerminalClick = () => {
     if (isBootSequenceComplete && !isTyping) {
-      inputRef.current?.focus()
+      inputRef.current?.focus({ preventScroll: true })
     }
   }
 

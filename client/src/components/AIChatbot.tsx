@@ -31,6 +31,7 @@ export function AIChatbot() {
   const [showTooltip, setShowTooltip] = useState(false);
   const [showExpandedBanner, setShowExpandedBanner] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const sessionId = useRef(getSessionId());
 
@@ -128,19 +129,21 @@ export function AIChatbot() {
     }
   }, [messages]);
 
-  // Auto-scroll to bottom
+  // Auto-scroll to bottom — scoped to chat container, never touches page scroll
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight
+    }
   };
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
-  // Focus input when chat opens
+  // Focus input when chat opens — preventScroll so it doesn't jump the page
   useEffect(() => {
     if (isOpen && !isLoading) {
-      setTimeout(() => inputRef.current?.focus(), 100);
+      setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 100);
     }
   }, [isOpen, isLoading]);
 
@@ -405,7 +408,7 @@ export function AIChatbot() {
             </div>
 
             {/* Messages */}
-            <div className="chatbot-messages">
+            <div className="chatbot-messages" ref={messagesContainerRef}>
               {messages.map((message, index) => (
                 <motion.div
                   key={index}

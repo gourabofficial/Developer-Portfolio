@@ -3,13 +3,14 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom"
 
 import RootLayout from "@/layouts/RootLayout"
 import { About } from "@/pages/About"
-import { Blog } from "@/pages/Blog"
+import { SkillsSection } from "./components/sections/SkillsSection"
 import { Education } from "@/pages/Education"
 import { Events } from "@/pages/Events"
 import { Experience } from "@/pages/Experience"
 import { Home } from "@/pages/Home"
 import { Projects } from "@/pages/Projects"
 import { ProjectDetail } from "@/pages/Projects/ProjectDetail"
+import { ContactSection } from "./components/sections/ContactSection"
 
 const router = createBrowserRouter([
   {
@@ -33,12 +34,12 @@ const router = createBrowserRouter([
         element: <Projects />,
       },
       {
-        path: "blog",
-        element: <Blog />,
+        path: "skills",
+        element: <SkillsSection />,
       },
       {
-        path: "education",
-        element: <Education />,
+        path: "contact",
+        element: <ContactSection />,
       },
       {
         path: "events",

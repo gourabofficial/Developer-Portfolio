@@ -7,6 +7,7 @@ import { personal } from "@/data"
 const links = [
   { label: "Home", to: "/" },
   { label: "About", to: "/about" },
+  {label: "Skills", to: "/skills"},
   { label: "Experience", to: "/experience" },
   { label: "My Work", to: "/projects" },
 ]
@@ -76,7 +77,7 @@ export const Navbar = () => {
           >
             <LinkedinIcon width={17} height={17} />
           </a>
-          <Link className="nav-cta" to="/#contact">
+          <Link className="nav-cta" to="/contact" onClick={() => setOpen(false)}>
             Let's talk <span>↗</span>
           </Link>
           <button
