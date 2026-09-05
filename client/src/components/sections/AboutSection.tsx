@@ -1,6 +1,6 @@
 import { motion } from "framer-motion"
 import { SectionHeading } from "@/components/SectionHeading"
-import { BioTerminal } from "@/components/BioTerminal"
+import { InteractiveTerminal } from "@/components/InteractiveTerminal"
 import { AboutExperience, type ExperienceMilestone } from "@/components/about/AboutExperience"
 
 // Terminal reveals 3 lines at ~820ms each; right column enters on scroll
@@ -60,9 +60,9 @@ export function AboutSection() {
         body="From student projects to professional engineering work, the goal has stayed the same: build software that is dependable, useful, and clear to work on."
       />
       <div className="about-grid">
-        {/* Left column — terminal card; untouched */}
+        {/* Left column — interactive terminal card */}
         <motion.div {...terminalReveal} className="about-terminal-card">
-          <BioTerminal />
+          <InteractiveTerminal />
         </motion.div>
 
         {/* Right column — animated experience timeline */}

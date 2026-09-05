@@ -29,3 +29,9 @@ bun.lockb
 *.local
 *.sublime-workspace
 *.sublime-project
+
+
+# Environment variables
+.env
+.env.*
+!.env.example

@@ -1,0 +1,425 @@
+/* Interactive Terminal Component */
+.interactive-terminal {
+  border: 1px solid rgba(103, 151, 224, 0.22);
+  border-radius: 14px;
+  background: linear-gradient(145deg, rgba(14, 26, 47, 0.9), rgba(7, 14, 27, 0.88));
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.35), 0 0 70px rgba(48, 113, 219, 0.08);
+  overflow: hidden;
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+.interactive-terminal.is-typing {
+  box-shadow: 0 0 0 1px rgba(100, 217, 255, 0.18), 0 0 32px rgba(79, 140, 255, 0.12);
+}
+
+/* Terminal Bar */
+.interactive-terminal-bar {
+  height: 44px;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgba(109, 144, 197, 0.13);
+  background: rgba(21, 37, 61, 0.55);
+}
+
+.terminal-dots {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.dot-red,
+.dot-yellow,
+.dot-green {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.dot-red {
+  background: #ff5f56;
+  box-shadow: 0 0 8px rgba(255, 95, 86, 0.4);
+}
+
+.dot-yellow {
+  background: #ffbd2e;
+  box-shadow: 0 0 8px rgba(255, 189, 46, 0.4);
+}
+
+.dot-green {
+  background: #27c93f;
+  box-shadow: 0 0 8px rgba(39, 201, 63, 0.4);
+}
+
+.terminal-title {
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
+  font-size: 10px;
+  color: #647693;
+  margin: 0;
+  flex: 1;
+}
+
+.terminal-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: #6ee7b7;
+  text-transform: uppercase;
+}
+
+.terminal-status-dot {
+  position: relative;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.6);
+}
+
+.terminal-status-dot::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: #34d399;
+  opacity: 0.5;
+  animation: status-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes status-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  70% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+/* Terminal Body */
+.interactive-terminal-body {
+  padding: 20px 16px 24px;
+  font-family: ui-monospace, "SF Mono", Consolas, "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.8;
+  color: #a8b7cc;
+  min-height: 380px;
+  max-height: 480px;
+  overflow-y: auto;
+  cursor: text;
+}
+
+/* Custom scrollbar */
+.interactive-terminal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.interactive-terminal-body::-webkit-scrollbar-track {
+  background: rgba(12, 22, 40, 0.3);
+  border-radius: 4px;
+}
+
+.interactive-terminal-body::-webkit-scrollbar-thumb {
+  background: rgba(79, 140, 255, 0.2);
+  border-radius: 4px;
+}
+
+.interactive-terminal-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(79, 140, 255, 0.3);
+}
+
+/* Terminal Lines */
+.terminal-line {
+  margin-bottom: 4px;
+}
+
+.terminal-command {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.prompt-symbol {
+  color: #27c93f;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.command-text {
+  color: #e8f1ff;
+  font-weight: 500;
+}
+
+/* Boot Sequence Styling */
+.terminal-boot-init {
+  color: #647693;
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+
+.terminal-boot-check {
+  color: #9fb8d9;
+  font-weight: 400;
+  margin-bottom: 2px;
+  padding-left: 2px;
+}
+
+.terminal-boot-check::first-letter {
+  color: #27c93f;
+  font-weight: 700;
+}
+
+.terminal-boot-divider {
+  color: #647693;
+  opacity: 0.5;
+  margin: 12px 0;
+  font-weight: 300;
+}
+
+.terminal-boot-title {
+  color: #e8f1ff;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.terminal-boot-welcome {
+  color: #a8b7cc;
+  font-weight: 400;
+  margin-bottom: 2px;
+}
+
+.terminal-boot-help {
+  color: #64d9ff;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.terminal-output {
+  color: #9fb8d9;
+  padding-left: 20px;
+  margin-bottom: 8px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.terminal-error {
+  color: #ff8a80;
+  font-weight: 500;
+  position: relative;
+  padding-left: 24px;
+  animation: error-shake 0.4s ease;
+}
+
+.terminal-error::before {
+  content: "✗";
+  position: absolute;
+  left: 20px;
+  color: #ff5f56;
+  font-weight: 700;
+}
+
+@keyframes error-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+/* Suggestion styling */
+.terminal-suggestion {
+  color: #64d9ff;
+  font-weight: 500;
+  position: relative;
+  padding-left: 24px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: inline-block;
+  border-radius: 4px;
+  padding: 2px 8px 2px 24px;
+  margin: 2px 0;
+}
+
+.terminal-suggestion:hover {
+  color: #8fedff;
+  background: rgba(100, 217, 255, 0.08);
+  padding-left: 28px;
+}
+
+.terminal-suggestion:active {
+  background: rgba(100, 217, 255, 0.15);
+  transform: scale(0.98);
+}
+
+.terminal-suggestion::before {
+  content: "→";
+  position: absolute;
+  left: 8px;
+  color: #4f8cff;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.terminal-suggestion:hover::before {
+  left: 10px;
+  color: #64d9ff;
+  animation: arrow-bounce 0.6s ease infinite;
+}
+
+@keyframes arrow-bounce {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+}
+
+/* Add a subtle pulse effect to draw attention */
+.terminal-suggestion {
+  animation: suggestion-appear 0.4s ease forwards;
+}
+
+@keyframes suggestion-appear {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Interactive Input */
+.terminal-input-form {
+  margin-top: 12px;
+}
+
+.terminal-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #e8f1ff;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 500;
+  flex: 1;
+  padding: 0;
+  caret-color: transparent;
+  width: 100%;
+}
+
+.terminal-input::selection {
+  background: rgba(100, 217, 255, 0.3);
+}
+
+/* Cursors */
+.terminal-cursor,
+.terminal-cursor-inline {
+  display: inline-block;
+  width: 8px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -2px;
+  background: #64d9ff;
+  animation: cursor-blink 0.9s step-end infinite;
+}
+
+.terminal-cursor-inline {
+  width: 7px;
+}
+
+@keyframes cursor-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .interactive-terminal-body {
+    font-size: 12px;
+    padding: 16px 12px 20px;
+    min-height: 320px;
+    max-height: 400px;
+  }
+
+  .terminal-title {
+    font-size: 9px;
+  }
+
+  .terminal-status {
+    font-size: 8px;
+  }
+
+  .dot-red,
+  .dot-yellow,
+  .dot-green {
+    width: 10px;
+    height: 10px;
+  }
+
+  .terminal-output {
+    padding-left: 16px;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .terminal-status-dot::after {
+    animation: none;
+    opacity: 0.5;
+  }
+
+  .terminal-cursor,
+  .terminal-cursor-inline {
+    animation: none;
+    opacity: 1;
+  }
+
+  .interactive-terminal.is-typing {
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.35), 0 0 70px rgba(48, 113, 219, 0.08);
+  }
+
+  .terminal-suggestion:hover::before {
+    animation: none;
+  }
+
+  .terminal-suggestion {
+    animation: none;
+  }
+
+  .terminal-error {
+    animation: none;
+  }
+}
+
+/* Focus state for accessibility */
+.terminal-input:focus {
+  outline: none;
+}
+
+.interactive-terminal-body:focus-within {
+  outline: 2px solid rgba(100, 217, 255, 0.3);
+  outline-offset: -2px;
+}

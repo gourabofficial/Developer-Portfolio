@@ -1,9 +1,13 @@
-// import React from 'react'
+import { AboutSection } from "@/components/sections/AboutSection"
+import { SkillsSection } from "@/components/sections/SkillsSection"
 
-const index = () => {
+export const About = () => {
   return (
-    <div>index</div>
+    <main>
+      <AboutSection />
+      <SkillsSection />
+    </main>
   )
 }
 
-export default index
+export default About

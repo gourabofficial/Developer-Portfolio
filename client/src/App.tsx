@@ -2,6 +2,7 @@ import type { FC } from "react"
 import { RouterProvider, createBrowserRouter } from "react-router-dom"
 
 import RootLayout from "@/layouts/RootLayout"
+import { About } from "@/pages/About"
 import { Blog } from "@/pages/Blog"
 import { Education } from "@/pages/Education"
 import { Events } from "@/pages/Events"
@@ -19,7 +20,10 @@ const router = createBrowserRouter([
         index: true,
         element: <Home />,
       },
-      
+      {
+        path: "about",
+        element: <About />,
+      },
       {
         path: "experience",
         element: <Experience />,
