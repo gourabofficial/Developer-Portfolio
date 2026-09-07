@@ -1,0 +1,123 @@
+/* Terminal Preview — Small inline component in hero */
+.terminal-preview-wrapper {
+  width: 100%;
+  max-width: 560px;
+  border: 1px solid rgba(100, 217, 255, 0.22);
+  border-radius: 12px;
+  background: rgba(7, 17, 32, 0.85);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3),
+              0 0 30px rgba(100, 217, 255, 0.08);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  user-select: none;
+}
+
+.terminal-preview-wrapper:hover {
+  border-color: rgba(100, 217, 255, 0.4);
+}
+
+.terminal-preview-wrapper:focus {
+  outline: 2px solid rgba(100, 217, 255, 0.5);
+  outline-offset: 2px;
+}
+
+.terminal-preview-wrapper:active {
+  transform: scale(0.99);
+}
+
+.terminal-preview-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 36px;
+  padding: 0 12px;
+  border-bottom: 1px solid rgba(126, 161, 214, 0.12);
+  background: rgba(19, 37, 62, 0.6);
+}
+
+.terminal-preview-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.terminal-preview-dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dot-red {
+  background: #ff5f56;
+}
+
+.dot-yellow {
+  background: #ffbd2e;
+}
+
+.dot-green {
+  background: #27c93f;
+}
+
+.terminal-preview-label {
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+  color: #8998b3;
+}
+
+.terminal-preview-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px;
+  font-family: ui-monospace, "SF Mono", "Cascadia Code", monospace;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.terminal-preview-prompt {
+  color: #64d9ff;
+  font-weight: 600;
+}
+
+.terminal-preview-text {
+  color: #9aaac0;
+}
+
+.terminal-preview-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 15px;
+  background: #34d399;
+  margin-left: 2px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .terminal-preview-wrapper {
+    max-width: 100%;
+  }
+
+  .terminal-preview-content {
+    padding: 12px 14px;
+    font-size: 12px;
+  }
+
+  .terminal-preview-text {
+    font-size: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .terminal-preview-wrapper {
+    transition: border-color 0.2s ease;
+  }
+
+  .terminal-preview-wrapper:hover {
+    transform: none;
+  }
+
+  .terminal-preview-wrapper:active {
+    transform: none;
+  }
+}

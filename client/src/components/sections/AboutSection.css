@@ -1,0 +1,140 @@
+/* About Section Styles */
+.about-section-premium {
+  position: relative;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 50px;
+  align-items: stretch;
+}
+
+.about-content-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 32px;
+  max-width: 500px;
+  padding-block: 28px;
+}
+
+.about-bio {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.about-bio-lead {
+  font-size: 20px;
+  line-height: 1.6;
+  color: #c6d1e2;
+  margin: 0;
+}
+
+.about-highlight {
+  color: #6da6ff;
+  font-weight: 600;
+}
+
+.about-bio-text {
+  font-size: 15px;
+  line-height: 1.75;
+  color: #8596b0;
+  margin: 0;
+}
+
+.about-highlights-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.about-highlight-card {
+  padding: 20px;
+  border: 1px solid rgba(126, 161, 214, 0.16);
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(15, 28, 50, 0.72), rgba(7, 16, 29, 0.66));
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.about-highlight-card:hover {
+  border-color: rgba(90, 151, 243, 0.33);
+  background: linear-gradient(145deg, rgba(15, 28, 50, 0.85), rgba(7, 16, 29, 0.78));
+  transform: translateY(-4px);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.15);
+}
+
+.about-highlight-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid rgba(100, 217, 255, 0.22);
+  background: rgba(100, 217, 255, 0.06);
+  color: #70dcff;
+  margin-bottom: 14px;
+}
+
+.about-highlight-content h4 {
+  margin: 0 0 8px;
+  font-size: 15px;
+  font-weight: 650;
+  color: #e8f2ff;
+}
+
+.about-highlight-content p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.65;
+  color: #7f91ad;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+
+  .about-content-card {
+    max-width: none;
+    justify-content: flex-start;
+    padding-block: 0;
+  }
+
+  .about-highlights-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .about-bio-lead {
+    font-size: 18px;
+  }
+
+  .about-bio-text {
+    font-size: 14px;
+  }
+
+  .about-highlight-card {
+    padding: 16px;
+  }
+
+  .about-highlight-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .about-highlight-content h4 {
+    font-size: 14px;
+  }
+
+  .about-highlight-content p {
+    font-size: 11px;
+  }
+}

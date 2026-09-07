@@ -27,7 +27,7 @@ const chatSessionSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-    expires: 2592000 // Auto-delete after 30 days (in seconds)
+    expires: 432000 // TTL: Auto-delete after 5 days (432000 seconds)
   }
 });
 

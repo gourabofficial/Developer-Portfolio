@@ -6,6 +6,7 @@ export const personal = {
   email: "gourabofficial@gmail.com",
   linkedin: "https://www.linkedin.com/in/gourab-ganguly/",
   github: "https://github.com/gourabofficial",
+  resume: "https://drive.google.com/file/d/1oaLuSmPXQkh6wO_52dl7AAI1YLFoBJ6p/view",
   photo: "https://github.com/gourabofficial.png?size=640",
   location: "West Bengal, India",
 } as const

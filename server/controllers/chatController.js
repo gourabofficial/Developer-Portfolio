@@ -1,595 +1,217 @@
 import { GoogleGenAI } from '@google/genai';
+import mongoose from 'mongoose';
 import ChatSession from '../models/ChatSession.js';
 import { SYSTEM_PROMPT } from '../config/systemPrompt.js';
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Gemini client — initialized ONCE at module load, reused for every request.
+// Never re-create this per-request; it adds ~200-400ms overhead each time.
+// ─────────────────────────────────────────────────────────────────────────────
+const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const MODEL_NAME = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 
-// =====================================================
-// GEMINI CONFIGURATION
-// =====================================================
+console.log(`🤖 Gemini client initialized — model: ${MODEL_NAME}`);
 
-// IMPORTANT:
-// Do not use a model name unless it is available
-// for your Gemini API key and installed SDK.
-//
-// You can also move this into your .env file:
-//
-// GEMINI_MODEL=your-available-model-name
-//
-const GEMINI_MODEL =
-  process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+// ─────────────────────────────────────────────────────────────────────────────
+// Helper: check DB is actually connected before trying to save
+// ─────────────────────────────────────────────────────────────────────────────
+function isDbConnected() {
+  return mongoose.connection.readyState === 1;
+}
 
-
-// =====================================================
-// CREATE GEMINI CLIENT
-// =====================================================
-
-const getGeminiAI = () => {
-  const apiKey = process.env.GEMINI_API_KEY;
-
-  // Validate API key
-  if (
-    !apiKey ||
-    typeof apiKey !== 'string' ||
-    apiKey.trim().length === 0
-  ) {
-    throw new Error(
-      'GEMINI_API_KEY is missing or empty'
-    );
-  }
-
-  return new GoogleGenAI({
-    apiKey: apiKey.trim()
-  });
-};
-
-
-// =====================================================
-// FALLBACK RESPONSE
-// =====================================================
-
-const FALLBACK_RESPONSE = {
-  message:
-    "Sorry, I'm having trouble responding right now. Please try again or contact Gourab directly.",
-  error: true
-};
-
-
-// =====================================================
+// ─────────────────────────────────────────────────────────────────────────────
 // POST /api/chat
-// =====================================================
-
+// ─────────────────────────────────────────────────────────────────────────────
 export const handleChat = async (req, res) => {
+  const requestStart = Date.now();
+  const { message, sessionId } = req.body;
+
+  // ── Step 1: validate input ──────────────────────────────────────────────
+  console.log(`\n📩 [handleChat] Request received`);
+  console.log(`   sessionId : ${sessionId || '(none)'}`);
+  console.log(`   message   : ${message ? message.substring(0, 80) : '(empty)'}...`);
+  console.log(`   DB state  : ${mongoose.connection.readyState} (1=connected)`);
+
+  if (!message || typeof message !== 'string' || !message.trim()) {
+    return res.status(400).json({ success: false, error: 'Message is required' });
+  }
+
+  if (!sessionId || typeof sessionId !== 'string' || !sessionId.trim()) {
+    return res.status(400).json({ success: false, error: 'sessionId is required' });
+  }
+
+  const cleanMessage = message.trim().substring(0, 2000);
+
   try {
+    // ── Step 2: load or create session from DB ────────────────────────────
+    let session = null;
 
-    const { message, sessionId } = req.body;
-
-
-    // =================================================
-    // VALIDATE MESSAGE
-    // =================================================
-
-    if (
-      !message ||
-      typeof message !== 'string' ||
-      message.trim().length === 0
-    ) {
-      return res.status(400).json({
-        success: false,
-        error:
-          'Message is required and must be a non-empty string'
-      });
+    if (isDbConnected()) {
+      const dbStart = Date.now();
+      console.log(`   [DB] Loading session...`);
+      try {
+        session = await ChatSession.findOne({ sessionId });
+        console.log(`   [DB] Session load: ${Date.now() - dbStart}ms — ${session ? `found (${session.messages.length} msgs)` : 'not found, will create'}`);
+      } catch (dbErr) {
+        // Non-fatal: log and continue without history
+        console.error(`   [DB] Session load FAILED:`, dbErr.message);
+      }
+    } else {
+      console.warn(`   [DB] Skipping session load — DB not connected (state: ${mongoose.connection.readyState})`);
     }
 
-
-    // =================================================
-    // VALIDATE SESSION ID
-    // =================================================
-
-    if (
-      !sessionId ||
-      typeof sessionId !== 'string' ||
-      sessionId.trim().length === 0
-    ) {
-      return res.status(400).json({
-        success: false,
-        error: 'Session ID is required'
-      });
+    // ── Step 3: build conversation history for Gemini ─────────────────────
+    // Gemini expects alternating user/model turns.
+    // We keep the last 10 exchanges (20 messages) to stay within token limits.
+    const history = [];
+    if (session && session.messages.length > 0) {
+      const recent = session.messages.slice(-20);
+      for (const msg of recent) {
+        history.push({
+          role: msg.role === 'user' ? 'user' : 'model',
+          parts: [{ text: msg.text }],
+        });
+      }
     }
 
+    // ── Step 4: call Gemini ────────────────────────────────────────────────
+    const geminiStart = Date.now();
+    console.log(`   [Gemini] Sending request with ${history.length} history messages...`);
 
-    // =================================================
-    // SANITIZE INPUT
-    // =================================================
-
-    const sanitizedMessage = message
-      .trim()
-      .slice(0, 2000);
-
-    const sanitizedSessionId = sessionId.trim();
-
-
-    // =================================================
-    // FIND OR CREATE CHAT SESSION
-    // =================================================
-
-    let session = await ChatSession.findOne({
-      sessionId: sanitizedSessionId
+    const chat = genAI.chats.create({
+      model: MODEL_NAME,
+      config: {
+        systemInstruction: SYSTEM_PROMPT,
+        maxOutputTokens: 1024,
+        temperature: 0.7,
+      },
+      history,
     });
 
+    const result = await chat.sendMessage({ message: cleanMessage });
+    const reply = result.text?.trim();
 
-    if (!session) {
+    console.log(`   [Gemini] Response received: ${Date.now() - geminiStart}ms — ${reply ? reply.substring(0, 60) : '(empty)'}...`);
 
-      session = new ChatSession({
-        sessionId: sanitizedSessionId,
-        messages: []
-      });
-
+    if (!reply) {
+      throw new Error('Gemini returned an empty response');
     }
 
+    // ── Step 5: save to DB (fire-and-forget, non-blocking) ─────────────────
+    // We respond to the client immediately after getting the AI reply.
+    // DB save happens asynchronously — a failure here does NOT affect the user.
+    if (isDbConnected()) {
+      const dbSaveStart = Date.now();
+      console.log(`   [DB] Attempting save for session: ${sessionId}`);
 
-    // =================================================
-    // BUILD GEMINI HISTORY
-    // =================================================
-
-    // Filter invalid messages before sending history
-    const history = session.messages
-      .filter((msg) => {
-
-        return (
-          msg &&
-          msg.text &&
-          typeof msg.text === 'string' &&
-          msg.text.trim().length > 0 &&
-          (
-            msg.role === 'user' ||
-            msg.role === 'assistant'
-          )
-        );
-
-      })
-      .map((msg) => ({
-
-        // Gemini uses "model", not "assistant"
-        role:
-          msg.role === 'assistant'
-            ? 'model'
-            : 'user',
-
-        parts: [
-          {
-            text: msg.text.trim()
-          }
-        ]
-
-      }));
-
-
-    let aiResponse;
-    let fallback = false;
-
-
-    // =================================================
-    // CALL GEMINI API
-    // =================================================
-
-    try {
-
-      const ai = getGeminiAI();
-
-
-      // Create Gemini chat
-      const chat = ai.chats.create({
-
-        model: GEMINI_MODEL,
-
-        config: {
-
-          systemInstruction: SYSTEM_PROMPT,
-
-          maxOutputTokens: 500,
-
-          temperature: 0.7,
-
-          topP: 0.8,
-
-          topK: 40
-
-        },
-
-        history
-
-      });
-
-
-      // Send current user message
-      const result = await chat.sendMessage({
-
-        message: sanitizedMessage
-
-      });
-
-
-      // Get Gemini response
-      aiResponse = result?.text;
-
-
-      // Validate response
-      if (
-        !aiResponse ||
-        typeof aiResponse !== 'string' ||
-        aiResponse.trim().length === 0
-      ) {
-
-        throw new Error(
-          'Gemini returned an empty response'
-        );
-
-      }
-
-
-      aiResponse = aiResponse.trim();
-
-
-    } catch (aiError) {
-
-
-      // =================================================
-      // GEMINI ERROR
-      // =================================================
-
-      console.error(
-        '❌ Gemini API Error:',
+      ChatSession.findOneAndUpdate(
+        { sessionId },
         {
-
-          model: GEMINI_MODEL,
-
-          message:
-            aiError?.message ||
-            'Unknown Gemini API error',
-
-          status:
-            aiError?.status ||
-            'Unknown',
-
-          code:
-            aiError?.code ||
-            'Unknown',
-
-          name:
-            aiError?.name ||
-            'Unknown',
-
-          sessionId: sanitizedSessionId
-
-        }
-      );
-
-
-      // ISSUE FIX:
-      // Do not return immediately.
-      //
-      // Instead, use fallback response and save
-      // both the user message and fallback response.
-
-      aiResponse = FALLBACK_RESPONSE.message;
-
-      fallback = true;
-
+          $push: {
+            messages: {
+              $each: [
+                { role: 'user',      text: cleanMessage, timestamp: new Date() },
+                { role: 'assistant', text: reply,        timestamp: new Date() },
+              ],
+            },
+          },
+          $setOnInsert: { sessionId, createdAt: new Date() },
+        },
+        { upsert: true, new: true }
+      )
+        .then(saved => {
+          console.log(`   [DB] Save SUCCESS: ${Date.now() - dbSaveStart}ms — session has ${saved.messages.length} total messages`);
+        })
+        .catch(dbErr => {
+          console.error(`   [DB] Save FAILED after ${Date.now() - dbSaveStart}ms:`);
+          console.error(`        Code    : ${dbErr.code || 'N/A'}`);
+          console.error(`        Message : ${dbErr.message}`);
+          console.error(`        Full err:`, dbErr);
+        });
+    } else {
+      console.warn(`   [DB] Skipping save — DB not connected (state: ${mongoose.connection.readyState})`);
     }
 
-
-    // =================================================
-    // SAVE USER MESSAGE
-    // =================================================
-
-    session.messages.push({
-
-      role: 'user',
-
-      text: sanitizedMessage,
-
-      timestamp: new Date()
-
-    });
-
-
-    // =================================================
-    // SAVE AI RESPONSE
-    // =================================================
-
-    session.messages.push({
-
-      role: 'assistant',
-
-      text: aiResponse,
-
-      timestamp: new Date()
-
-    });
-
-
-    // =================================================
-    // SAVE TO MONGODB
-    // =================================================
-
-    await session.save();
-
-
-    // =================================================
-    // RETURN RESPONSE
-    // =================================================
+    // ── Step 6: respond to client ──────────────────────────────────────────
+    const totalMs = Date.now() - requestStart;
+    console.log(`   ✅ Total request time: ${totalMs}ms\n`);
 
     return res.status(200).json({
-
       success: true,
-
-      reply: aiResponse,
-
-      sessionId: sanitizedSessionId,
-
-      fallback,
-
-      messageCount: session.messages.length
-
+      reply,
+      sessionId,
     });
 
-
-  } catch (error) {
-
-
-    // =================================================
-    // SERVER ERROR
-    // =================================================
-
-    console.error(
-      '❌ Chat Controller Error:',
-      {
-
-        message:
-          error?.message ||
-          'Unknown error',
-
-        stack:
-          error?.stack,
-
-        sessionId:
-          req.body?.sessionId
-
-      }
-    );
-
+  } catch (err) {
+    const totalMs = Date.now() - requestStart;
+    console.error(`   ❌ handleChat ERROR after ${totalMs}ms:`);
+    console.error(`      Message: ${err.message}`);
+    console.error(`      Stack:`, err.stack);
 
     return res.status(500).json({
-
       success: false,
-
-      error:
-        'Internal server error',
-
-      reply:
-        FALLBACK_RESPONSE.message
-
+      error: 'Failed to get AI response. Please try again.',
     });
-
   }
 };
 
-
-// =====================================================
-// GET /api/chat/:sessionId
-// =====================================================
-
+// ─────────────────────────────────────────────────────────────────────────────
+// GET /api/chat/:sessionId — retrieve history
+// ─────────────────────────────────────────────────────────────────────────────
 export const getChatHistory = async (req, res) => {
+  const { sessionId } = req.params;
+
+  if (!sessionId) {
+    return res.status(400).json({ success: false, error: 'sessionId is required' });
+  }
+
+  if (!isDbConnected()) {
+    return res.status(503).json({ success: false, error: 'Database not available' });
+  }
 
   try {
-
-    const { sessionId } = req.params;
-
-
-    // =================================================
-    // VALIDATE SESSION ID
-    // =================================================
-
-    if (
-      !sessionId ||
-      typeof sessionId !== 'string' ||
-      sessionId.trim().length === 0
-    ) {
-
-      return res.status(400).json({
-
-        success: false,
-
-        error:
-          'Session ID is required'
-
-      });
-
-    }
-
-
-    const sanitizedSessionId =
-      sessionId.trim();
-
-
-    // =================================================
-    // FIND SESSION
-    // =================================================
-
-    const session =
-      await ChatSession.findOne({
-
-        sessionId:
-          sanitizedSessionId
-
-      });
-
-
-    // =================================================
-    // SESSION NOT FOUND
-    // =================================================
+    const session = await ChatSession.findOne({ sessionId }).lean();
 
     if (!session) {
-
-      return res.status(404).json({
-
-        success: false,
-
-        error:
-          'Session not found'
-
-      });
-
+      return res.status(404).json({ success: false, error: 'Session not found' });
     }
 
-
-    // =================================================
-    // RETURN CHAT HISTORY
-    // =================================================
-
     return res.status(200).json({
-
       success: true,
-
-      sessionId:
-        sanitizedSessionId,
-
-      messages:
-        session.messages,
-
-      createdAt:
-        session.createdAt,
-
-      updatedAt:
-        session.updatedAt
-
+      sessionId,
+      messages: session.messages,
+      messageCount: session.messages.length,
     });
-
-
-  } catch (error) {
-
-
-    console.error(
-      '❌ Get Chat History Error:',
-      {
-
-        message:
-          error?.message,
-
-        stack:
-          error?.stack
-
-      }
-    );
-
-
-    return res.status(500).json({
-
-      success: false,
-
-      error:
-        'Internal server error'
-
-    });
-
+  } catch (err) {
+    console.error('[getChatHistory] Error:', err.message);
+    return res.status(500).json({ success: false, error: 'Failed to retrieve chat history' });
   }
-
 };
 
-
-// =====================================================
-// DELETE /api/chat/:sessionId
-// =====================================================
-
+// ─────────────────────────────────────────────────────────────────────────────
+// DELETE /api/chat/:sessionId — clear a session
+// ─────────────────────────────────────────────────────────────────────────────
 export const clearChatSession = async (req, res) => {
+  const { sessionId } = req.params;
 
-  try {
-
-    const { sessionId } = req.params;
-
-
-    // =================================================
-    // VALIDATE SESSION ID
-    // =================================================
-
-    if (
-      !sessionId ||
-      typeof sessionId !== 'string' ||
-      sessionId.trim().length === 0
-    ) {
-
-      return res.status(400).json({
-
-        success: false,
-
-        error:
-          'Session ID is required'
-
-      });
-
-    }
-
-
-    const sanitizedSessionId =
-      sessionId.trim();
-
-
-    // =================================================
-    // DELETE SESSION
-    // =================================================
-
-    const result =
-      await ChatSession.deleteOne({
-
-        sessionId:
-          sanitizedSessionId
-
-      });
-
-
-    // =================================================
-    // RETURN RESPONSE
-    // =================================================
-
-    return res.status(200).json({
-
-      success: true,
-
-      message:
-        'Chat session cleared successfully',
-
-      deletedCount:
-        result.deletedCount
-
-    });
-
-
-  } catch (error) {
-
-
-    console.error(
-      '❌ Clear Chat Session Error:',
-      {
-
-        message:
-          error?.message,
-
-        stack:
-          error?.stack
-
-      }
-    );
-
-
-    return res.status(500).json({
-
-      success: false,
-
-      error:
-        'Internal server error'
-
-    });
-
+  if (!sessionId) {
+    return res.status(400).json({ success: false, error: 'sessionId is required' });
   }
 
+  if (!isDbConnected()) {
+    return res.status(503).json({ success: false, error: 'Database not available' });
+  }
+
+  try {
+    const result = await ChatSession.deleteOne({ sessionId });
+
+    return res.status(200).json({
+      success: true,
+      message: result.deletedCount > 0 ? 'Session cleared' : 'Session not found (nothing to delete)',
+      deletedCount: result.deletedCount,
+    });
+  } catch (err) {
+    console.error('[clearChatSession] Error:', err.message);
+    return res.status(500).json({ success: false, error: 'Failed to clear session' });
+  }
 };
