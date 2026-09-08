@@ -32,9 +32,10 @@ const QUICK_ACTIONS = [
   'How can I contact you?',
 ];
 
-// Detect mobile once at module level (avoids SSR issues)
-const isMobileDevice = () =>
-  typeof window !== 'undefined' && window.innerWidth < 640;
+// True mobile check (recomputed per render so it reflects resize events)
+function isMobile() {
+  return typeof window !== 'undefined' && window.innerWidth < 640;
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Component
@@ -49,6 +50,9 @@ export function AIChatbot() {
   const [userHasMessaged, setUserHasMessaged] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
 
+  // visualViewport height — used on mobile to track keyboard resize precisely
+  const [vpHeight, setVpHeight] = useState<number | null>(null);
+
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const isOpenRef = useRef(false);
@@ -60,19 +64,59 @@ export function AIChatbot() {
     typeof navigator !== 'undefined' &&
     navigator.userAgent.toUpperCase().includes('MAC');
 
-  // Keep ref in sync with state
+  // ── Sync ref ─────────────────────────────────────────────────────────────
   useEffect(() => {
     isOpenRef.current = isOpen;
   }, [isOpen]);
 
+  // ── visualViewport listener — tracks keyboard open/close on mobile ────────
+  // When the soft keyboard opens, visualViewport.height shrinks to the visible
+  // area above it. We apply that height directly to the chat window so the
+  // three-zone flex layout (header / messages / input) always fits in the
+  // visible space and the input stays above the keyboard.
+  useEffect(() => {
+    if (!isOpen || !isMobile()) return;
+
+    const vv = window.visualViewport;
+    if (!vv) return;
+
+    const update = () => setVpHeight(vv.height);
+
+    // Set immediately when panel opens
+    update();
+
+    vv.addEventListener('resize', update);
+    vv.addEventListener('scroll', update);
+
+    return () => {
+      vv.removeEventListener('resize', update);
+      vv.removeEventListener('scroll', update);
+      // Reset when closed so desktop styles take over cleanly
+      setVpHeight(null);
+    };
+  }, [isOpen]);
+
   // ── Body scroll lock when open on mobile ─────────────────────────────────
   useEffect(() => {
-    if (isOpen && isMobileDevice()) {
+    if (isOpen && isMobile()) {
       const prev = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
-      return () => { document.body.style.overflow = prev; };
+      return () => {
+        document.body.style.overflow = prev;
+      };
     }
   }, [isOpen]);
+
+  // ── Scroll messages to bottom ────────────────────────────────────────────
+  const scrollToBottom = useCallback((behavior: ScrollBehavior = 'smooth') => {
+    const el = messagesContainerRef.current;
+    if (!el) return;
+    el.scrollTo({ top: el.scrollHeight, behavior });
+  }, []);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, scrollToBottom]);
 
   // ── Open / close ──────────────────────────────────────────────────────────
   const openChat = useCallback(() => {
@@ -87,6 +131,8 @@ export function AIChatbot() {
   }, []);
 
   const closeChat = useCallback(() => {
+    // Blur input first so mobile keyboard dismisses cleanly before panel exits
+    inputRef.current?.blur();
     setIsOpen(false);
     setShowBanner(false);
   }, []);
@@ -100,12 +146,18 @@ export function AIChatbot() {
     setUserHasMessaged(true);
     setIsOpen(prev => {
       const next = !prev;
-      if (next) { setShowBanner(false); setError(null); }
+      if (next) {
+        setShowBanner(false);
+        setError(null);
+      } else {
+        // Blur on close so keyboard dismisses
+        inputRef.current?.blur();
+      }
       return next;
     });
   }, []);
 
-  // ── Outside-click to close ────────────────────────────────────────────────
+  // ── Outside-click / tap to close ─────────────────────────────────────────
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent | TouchEvent) => {
       if (!isOpenRef.current) return;
@@ -123,10 +175,9 @@ export function AIChatbot() {
     };
   }, [closeChat]);
 
-  // ── Auto-open 5.5 s after mount — ONLY on non-mobile ─────────────────────
-  // On mobile the auto-open is jarring and blocks content immediately.
+  // ── Auto-open 5.5 s after mount — desktop only ────────────────────────────
   useEffect(() => {
-    if (autoOpened || isMobileDevice()) return;
+    if (autoOpened || isMobile()) return;
     const t = setTimeout(() => {
       setIsOpen(true);
       setAutoOpened(true);
@@ -167,25 +218,28 @@ export function AIChatbot() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  // ── Auto-scroll messages ─────────────────────────────────────────────────
-  const scrollToBottom = useCallback(() => {
-    if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTop =
-        messagesContainerRef.current.scrollHeight;
-    }
-  }, []);
-
-  useEffect(() => { scrollToBottom(); }, [messages, scrollToBottom]);
-
-  // ── Focus input when panel opens ─────────────────────────────────────────
+  // ── DO NOT auto-focus input on open ──────────────────────────────────────
+  // On mobile, auto-focus immediately triggers the keyboard before the panel
+  // animation finishes, causing a jarring layout shift. The user taps the
+  // input when they're ready — that's the expected native-app pattern.
+  // On desktop we still focus after the animation settles.
   useEffect(() => {
-    if (isOpen) {
-      // Delay on mobile so keyboard doesn't pop up until panel animation settles
-      const delay = isMobileDevice() ? 400 : 150;
-      const t = setTimeout(() => inputRef.current?.focus({ preventScroll: true }), delay);
-      return () => clearTimeout(t);
-    }
+    if (!isOpen) return;
+    if (isMobile()) return; // mobile: let user tap input deliberately
+
+    const t = setTimeout(() => {
+      inputRef.current?.focus({ preventScroll: true });
+    }, 200);
+    return () => clearTimeout(t);
   }, [isOpen]);
+
+  // ── On input focus (keyboard opened), scroll to bottom after delay ────────
+  const handleInputFocus = useCallback(() => {
+    // Wait ~300 ms for the keyboard animation to finish, then scroll so the
+    // last message is right above the keyboard / input bar.
+    const t = setTimeout(() => scrollToBottom('smooth'), 300);
+    return () => clearTimeout(t);
+  }, [scrollToBottom]);
 
   // ── Send message ─────────────────────────────────────────────────────────
   const sendMessage = useCallback(
@@ -198,10 +252,20 @@ export function AIChatbot() {
         autoCollapseTimerRef.current = null;
       }
       setUserHasMessaged(true);
-      setMessages(prev => [...prev, { role: 'user', text: msgText, timestamp: new Date() }]);
+      setMessages(prev => [
+        ...prev,
+        { role: 'user', text: msgText, timestamp: new Date() },
+      ]);
       setInputMessage('');
       setIsLoading(true);
       setError(null);
+
+      // Keep keyboard open after send — refocus input without delay
+      // (input is already focused on desktop; on mobile the browser keeps
+      // focus after form submit unless we explicitly blur, so just clear value)
+      requestAnimationFrame(() => {
+        inputRef.current?.focus({ preventScroll: true });
+      });
 
       try {
         const res = await fetch(`${API_URL}/api/chat`, {
@@ -250,23 +314,41 @@ export function AIChatbot() {
   };
 
   // ── Animation variants — snappier on mobile ───────────────────────────────
-  const isMobile = isMobileDevice();
+  const onMobile = isMobile();
 
   const windowVariants = {
-    initial:  isMobile
+    initial: onMobile
       ? { opacity: 0, y: '100%' }
       : { opacity: 0, y: 24, scale: 0.94 },
-    animate: isMobile
+    animate: onMobile
       ? { opacity: 1, y: 0 }
       : { opacity: 1, y: 0, scale: 1 },
-    exit:    isMobile
-      ? { opacity: 0, y: '100%', transition: { duration: 0.18, ease: [0.4, 0, 1, 1] as const } }
-      : { opacity: 0, y: 16, scale: 0.96, transition: { duration: 0.14, ease: [0.4, 0, 1, 1] as const } },
+    exit: onMobile
+      ? {
+          opacity: 0,
+          y: '100%',
+          transition: { duration: 0.2, ease: [0.4, 0, 1, 1] as const },
+        }
+      : {
+          opacity: 0,
+          y: 16,
+          scale: 0.96,
+          transition: { duration: 0.14, ease: [0.4, 0, 1, 1] as const },
+        },
   };
 
-  const windowTransition = isMobile
+  const windowTransition = onMobile
     ? { type: 'spring' as const, stiffness: 420, damping: 38 }
     : { type: 'spring' as const, stiffness: 380, damping: 36 };
+
+  // ── Build mobile window style driven by visualViewport ───────────────────
+  // vpHeight reflects the visible area (keyboard excluded).
+  // We subtract the FAB row height (4.25rem ≈ 68px) so the FAB stays visible.
+  const FAB_CLEARANCE = 68; // px — same as CSS `calc(100dvh - 4.25rem)`
+  const mobileWindowStyle: React.CSSProperties =
+    onMobile && vpHeight !== null
+      ? { height: `${vpHeight - FAB_CLEARANCE}px` }
+      : {};
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
@@ -281,7 +363,12 @@ export function AIChatbot() {
               className="cb-banner"
               initial={{ opacity: 0, y: 12, scale: 0.88 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 10, scale: 0.88, transition: { duration: 0.2, ease: [0.4, 0, 1, 1] } }}
+              exit={{
+                opacity: 0,
+                y: 10,
+                scale: 0.88,
+                transition: { duration: 0.2, ease: [0.4, 0, 1, 1] },
+              }}
               transition={{ type: 'spring', stiffness: 360, damping: 30 }}
               onClick={openChat}
               role="button"
@@ -326,7 +413,9 @@ export function AIChatbot() {
                 <svg width="23" height="23" viewBox="0 0 24 24" fill="none">
                   <path
                     d="M4 12c0-4.4 3.6-8 8-8s8 3.6 8 8-3.6 8-8 8c-1.1 0-2.1-.2-3-.6L5 20l1.1-3.8C4.8 15 4 13.6 4 12Z"
-                    stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinejoin="round"
                   />
                   <circle cx="9" cy="12" r="1" fill="currentColor" />
                   <circle cx="12" cy="12" r="1" fill="currentColor" />
@@ -347,6 +436,7 @@ export function AIChatbot() {
           <motion.div
             ref={windowRef}
             className="cb-window"
+            style={mobileWindowStyle}
             variants={windowVariants}
             initial="initial"
             animate="animate"
@@ -354,7 +444,7 @@ export function AIChatbot() {
             transition={windowTransition}
             onMouseDown={e => e.stopPropagation()}
           >
-            {/* Header */}
+            {/* ── Header (flex-shrink:0) ─────────────────────────────────── */}
             <div className="cb-header">
               <div className="cb-header-left">
                 <div className="cb-header-avatar">
@@ -394,7 +484,7 @@ export function AIChatbot() {
               </div>
             </div>
 
-            {/* Messages */}
+            {/* ── Messages (flex:1, overflow-y:auto) ────────────────────── */}
             <div className="cb-messages" ref={messagesContainerRef}>
               {messages.map((msg, i) => (
                 <motion.div
@@ -473,10 +563,11 @@ export function AIChatbot() {
                 </div>
               )}
 
-              <div aria-hidden style={{ height: 4 }} />
+              {/* Spacer so last message isn't flush against input bar */}
+              <div aria-hidden style={{ height: 4, flexShrink: 0 }} />
             </div>
 
-            {/* Input area */}
+            {/* ── Input bar (flex-shrink:0) ──────────────────────────────── */}
             <div className="cb-input-area">
               <form className="cb-form" onSubmit={handleSubmit}>
                 <input
@@ -485,13 +576,18 @@ export function AIChatbot() {
                   className="cb-input"
                   value={inputMessage}
                   onChange={e => setInputMessage(e.target.value)}
+                  onFocus={handleInputFocus}
                   placeholder="Ask me anything…"
                   disabled={isLoading}
                   maxLength={500}
                   aria-label="Chat message"
-                  /* inputMode keeps the standard keyboard on mobile */
                   inputMode="text"
                   autoComplete="off"
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                  spellCheck={false}
+                  // Tells mobile keyboard to show a "Send" action key
+                  enterKeyHint="send"
                 />
                 <button
                   type="submit"
