@@ -17,7 +17,6 @@ type Message = {
 // Constants
 // ─────────────────────────────────────────────────────────────────────────────
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-
 const SESSION_ID = `session-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
 
 const WELCOME_MESSAGE: Message = {
@@ -33,11 +32,14 @@ const QUICK_ACTIONS = [
   'How can I contact you?',
 ];
 
+// Detect mobile once at module level (avoids SSR issues)
+const isMobileDevice = () =>
+  typeof window !== 'undefined' && window.innerWidth < 640;
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Component
 // ─────────────────────────────────────────────────────────────────────────────
 export function AIChatbot() {
-  // ── Single source of truth for open/close ─────────────────────────────────
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([WELCOME_MESSAGE]);
   const [inputMessage, setInputMessage] = useState('');
@@ -49,11 +51,9 @@ export function AIChatbot() {
 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  // Ref so outside-click handler always reads current open state without stale closure
   const isOpenRef = useRef(false);
   const windowRef = useRef<HTMLDivElement>(null);
   const fabRef = useRef<HTMLButtonElement>(null);
-  // Ref to the auto-collapse timer so we can cancel it the instant the user types
   const autoCollapseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const isMac =
@@ -65,10 +65,17 @@ export function AIChatbot() {
     isOpenRef.current = isOpen;
   }, [isOpen]);
 
-  // ── Open/close handlers — no stale closures ───────────────────────────────
-  // Always use functional updater; never read isOpen directly in handlers.
+  // ── Body scroll lock when open on mobile ─────────────────────────────────
+  useEffect(() => {
+    if (isOpen && isMobileDevice()) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => { document.body.style.overflow = prev; };
+    }
+  }, [isOpen]);
+
+  // ── Open / close ──────────────────────────────────────────────────────────
   const openChat = useCallback(() => {
-    // Clicking the banner/FAB to open counts as deliberate interaction
     if (autoCollapseTimerRef.current) {
       clearTimeout(autoCollapseTimerRef.current);
       autoCollapseTimerRef.current = null;
@@ -84,10 +91,8 @@ export function AIChatbot() {
     setShowBanner(false);
   }, []);
 
-  // Toggle: uses functional updater so it NEVER reads stale state
   const toggleChat = useCallback((e?: React.MouseEvent | React.KeyboardEvent) => {
     e?.stopPropagation();
-    // Any deliberate FAB click cancels auto-collapse permanently
     if (autoCollapseTimerRef.current) {
       clearTimeout(autoCollapseTimerRef.current);
       autoCollapseTimerRef.current = null;
@@ -95,27 +100,21 @@ export function AIChatbot() {
     setUserHasMessaged(true);
     setIsOpen(prev => {
       const next = !prev;
-      if (next) {
-        setShowBanner(false);
-        setError(null);
-      }
+      if (next) { setShowBanner(false); setError(null); }
       return next;
     });
   }, []);
 
-  // ── Outside-click to close ─────────────────────────────────────────────────
+  // ── Outside-click to close ────────────────────────────────────────────────
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent | TouchEvent) => {
       if (!isOpenRef.current) return;
       const target = e.target as Node;
-      // Don't close if click is inside the chat window or on the FAB
       if (windowRef.current?.contains(target)) return;
       if (fabRef.current?.contains(target)) return;
       closeChat();
     };
 
-    // Use capture: false so element onClick fires first (with stopPropagation),
-    // then this fires — but if stopPropagation was called, this won't fire
     document.addEventListener('mousedown', handleOutsideClick);
     document.addEventListener('touchstart', handleOutsideClick, { passive: true });
     return () => {
@@ -124,9 +123,10 @@ export function AIChatbot() {
     };
   }, [closeChat]);
 
-  // ── Auto-open 5.5s after mount ─────────────────────────────────────────────
+  // ── Auto-open 5.5 s after mount — ONLY on non-mobile ─────────────────────
+  // On mobile the auto-open is jarring and blocks content immediately.
   useEffect(() => {
-    if (autoOpened) return;
+    if (autoOpened || isMobileDevice()) return;
     const t = setTimeout(() => {
       setIsOpen(true);
       setAutoOpened(true);
@@ -134,13 +134,11 @@ export function AIChatbot() {
     return () => clearTimeout(t);
   }, [autoOpened]);
 
-  // ── Auto-collapse 4s later if user hasn't interacted ──────────────────────
-  // Timer is stored in a ref so sendMessage can cancel it immediately on first keystroke.
+  // ── Auto-collapse 4 s later if user hasn't interacted ────────────────────
   useEffect(() => {
     if (!autoOpened || !isOpen || userHasMessaged) return;
 
     const t = setTimeout(() => {
-      // Double-check the user still hasn't sent anything before collapsing
       if (!userHasMessaged) {
         setIsOpen(false);
         setShowBanner(true);
@@ -156,7 +154,7 @@ export function AIChatbot() {
     };
   }, [autoOpened, isOpen, userHasMessaged]);
 
-  // ── Keyboard shortcut Ctrl/Cmd+K ──────────────────────────────────────────
+  // ── Keyboard shortcut Ctrl/Cmd+K ─────────────────────────────────────────
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
@@ -169,7 +167,7 @@ export function AIChatbot() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  // ── Auto-scroll messages (scoped — never touches page scroll) ─────────────
+  // ── Auto-scroll messages ─────────────────────────────────────────────────
   const scrollToBottom = useCallback(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop =
@@ -177,25 +175,24 @@ export function AIChatbot() {
     }
   }, []);
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages, scrollToBottom]);
+  useEffect(() => { scrollToBottom(); }, [messages, scrollToBottom]);
 
-  // ── Focus input when panel opens ──────────────────────────────────────────
+  // ── Focus input when panel opens ─────────────────────────────────────────
   useEffect(() => {
     if (isOpen) {
-      const t = setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 150);
+      // Delay on mobile so keyboard doesn't pop up until panel animation settles
+      const delay = isMobileDevice() ? 400 : 150;
+      const t = setTimeout(() => inputRef.current?.focus({ preventScroll: true }), delay);
       return () => clearTimeout(t);
     }
   }, [isOpen]);
 
-  // ── Send message ──────────────────────────────────────────────────────────
+  // ── Send message ─────────────────────────────────────────────────────────
   const sendMessage = useCallback(
     async (text?: string) => {
       const msgText = (text ?? inputMessage).trim();
       if (!msgText || isLoading) return;
 
-      // Cancel any pending auto-collapse immediately — user is actively chatting
       if (autoCollapseTimerRef.current) {
         clearTimeout(autoCollapseTimerRef.current);
         autoCollapseTimerRef.current = null;
@@ -239,7 +236,7 @@ export function AIChatbot() {
         setIsLoading(false);
       }
     },
-    [inputMessage, isLoading]
+    [inputMessage, isLoading],
   );
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -252,13 +249,32 @@ export function AIChatbot() {
     setError(null);
   };
 
-  // ── Render ─────────────────────────────────────────────────────────────────
+  // ── Animation variants — snappier on mobile ───────────────────────────────
+  const isMobile = isMobileDevice();
+
+  const windowVariants = {
+    initial:  isMobile
+      ? { opacity: 0, y: '100%' }
+      : { opacity: 0, y: 24, scale: 0.94 },
+    animate: isMobile
+      ? { opacity: 1, y: 0 }
+      : { opacity: 1, y: 0, scale: 1 },
+    exit:    isMobile
+      ? { opacity: 0, y: '100%', transition: { duration: 0.18, ease: [0.4, 0, 1, 1] as const } }
+      : { opacity: 0, y: 16, scale: 0.96, transition: { duration: 0.14, ease: [0.4, 0, 1, 1] as const } },
+  };
+
+  const windowTransition = isMobile
+    ? { type: 'spring' as const, stiffness: 420, damping: 38 }
+    : { type: 'spring' as const, stiffness: 380, damping: 36 };
+
+  // ── Render ────────────────────────────────────────────────────────────────
   return (
     <>
-      {/* ── FAB + Banner wrapper ─────────────────────────────────────────── */}
+      {/* FAB + banner wrapper */}
       <div className="cb-wrapper">
 
-        {/* Teaser banner pill */}
+        {/* Teaser banner */}
         <AnimatePresence>
           {showBanner && !isOpen && (
             <motion.div
@@ -291,9 +307,7 @@ export function AIChatbot() {
           )}
         </AnimatePresence>
 
-        {/* FAB — plain <button> instead of motion.button to avoid Framer
-            gesture system intercepting touch/click events on mobile.
-            Visual hover/active states are handled entirely in CSS.        */}
+        {/* FAB */}
         {!showBanner && (
           <button
             ref={fabRef}
@@ -307,15 +321,12 @@ export function AIChatbot() {
             {!isOpen && <span className="cb-fab-ring" aria-hidden />}
             {!isOpen && <span className="cb-fab-badge" aria-hidden />}
 
-            {/* Icon — CSS transition instead of Framer AnimatePresence */}
             <span className="cb-fab-icon-wrap" aria-hidden>
               <span className={`cb-fab-icon-chat${isOpen ? ' cb-fab-icon--hidden' : ''}`}>
                 <svg width="23" height="23" viewBox="0 0 24 24" fill="none">
                   <path
                     d="M4 12c0-4.4 3.6-8 8-8s8 3.6 8 8-3.6 8-8 8c-1.1 0-2.1-.2-3-.6L5 20l1.1-3.8C4.8 15 4 13.6 4 12Z"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinejoin="round"
+                    stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"
                   />
                   <circle cx="9" cy="12" r="1" fill="currentColor" />
                   <circle cx="12" cy="12" r="1" fill="currentColor" />
@@ -330,17 +341,17 @@ export function AIChatbot() {
         )}
       </div>
 
-      {/* ── Chat window ──────────────────────────────────────────────────── */}
+      {/* Chat window */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             ref={windowRef}
             className="cb-window"
-            initial={{ opacity: 0, y: 24, scale: 0.94 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 16, scale: 0.96, transition: { duration: 0.14, ease: [0.4, 0, 1, 1] } }}
-            transition={{ type: 'spring', stiffness: 380, damping: 36 }}
-            // Prevent clicks inside the window from bubbling to the outside-click handler
+            variants={windowVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={windowTransition}
             onMouseDown={e => e.stopPropagation()}
           >
             {/* Header */}
@@ -368,7 +379,7 @@ export function AIChatbot() {
                     aria-label="Clear conversation"
                     type="button"
                   >
-                    <Trash2 size={14} strokeWidth={2} />
+                    <Trash2 size={15} strokeWidth={2} />
                   </button>
                 )}
                 <button
@@ -378,7 +389,7 @@ export function AIChatbot() {
                   aria-label="Close chat"
                   type="button"
                 >
-                  <X size={14} strokeWidth={2.5} />
+                  <X size={17} strokeWidth={2.5} />
                 </button>
               </div>
             </div>
@@ -389,9 +400,9 @@ export function AIChatbot() {
                 <motion.div
                   key={i}
                   className={`cb-msg cb-msg--${msg.role}`}
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <div className="cb-msg-avatar" aria-hidden>
                     {msg.role === 'assistant' ? (
@@ -443,7 +454,7 @@ export function AIChatbot() {
                 </motion.div>
               )}
 
-              {/* Quick-action chips */}
+              {/* Quick actions */}
               {messages.length <= 1 && !isLoading && (
                 <div className="cb-quick">
                   <p className="cb-quick-label">Quick questions</p>
@@ -478,6 +489,9 @@ export function AIChatbot() {
                   disabled={isLoading}
                   maxLength={500}
                   aria-label="Chat message"
+                  /* inputMode keeps the standard keyboard on mobile */
+                  inputMode="text"
+                  autoComplete="off"
                 />
                 <button
                   type="submit"
@@ -485,7 +499,7 @@ export function AIChatbot() {
                   disabled={!inputMessage.trim() || isLoading}
                   aria-label="Send message"
                 >
-                  <Send size={15} strokeWidth={2.2} />
+                  <Send size={16} strokeWidth={2.2} />
                 </button>
               </form>
               <p className="cb-footer-hint">

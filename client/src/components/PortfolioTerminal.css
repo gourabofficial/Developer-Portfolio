@@ -1,4 +1,8 @@
-/* Portfolio Terminal Overlay — Full-Screen Modal */
+/* =============================================================================
+   Portfolio Terminal Overlay — Fully Responsive
+   ============================================================================= */
+
+/* ── Backdrop ────────────────────────────────────────────────────────────── */
 .portfolio-terminal-overlay {
   position: fixed;
   inset: 0;
@@ -8,62 +12,49 @@
   justify-content: center;
   background: rgba(5, 9, 20, 0.88);
   backdrop-filter: blur(12px);
-  animation: overlay-fade-in 0.2s ease-out;
+  -webkit-backdrop-filter: blur(12px);
+  animation: overlay-fade-in 0.18s ease-out;
+  /* Prevent scroll-through on mobile */
+  overscroll-behavior: none;
+  touch-action: none;
 }
 
 @keyframes overlay-fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
+/* ── Modal — DESKTOP base ────────────────────────────────────────────────── */
 .portfolio-terminal-modal {
   position: relative;
-  width: min(920px, 92vw);
-  max-height: 75vh;
+  width: min(920px, 88vw);
+  /* Use dvh so mobile browser chrome doesn't clip the modal */
+  max-height: min(75vh, 75dvh);
   display: flex;
   flex-direction: column;
   border-radius: 16px;
   border: 1px solid rgba(100, 217, 255, 0.25);
   background: linear-gradient(145deg, rgba(7, 17, 32, 0.98), rgba(5, 9, 20, 0.96));
-  box-shadow: 0 0 60px rgba(100, 217, 255, 0.15),
-              0 40px 100px rgba(0, 0, 0, 0.5);
+  box-shadow:
+    0 0 60px rgba(100, 217, 255, 0.15),
+    0 40px 100px rgba(0, 0, 0, 0.5);
   overflow: hidden;
-  animation: modal-slide-up 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  animation:
+    modal-slide-up 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    border-glow-pulse 3s ease-in-out 0.3s infinite;
 }
 
 @keyframes modal-slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(40px) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  from { opacity: 0; transform: translateY(32px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* Glowing border pulse */
 @keyframes border-glow-pulse {
-  0%, 100% {
-    box-shadow: 0 0 40px rgba(100, 217, 255, 0.12),
-                0 40px 100px rgba(0, 0, 0, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 60px rgba(100, 217, 255, 0.2),
-                0 40px 100px rgba(0, 0, 0, 0.5);
-  }
+  0%, 100% { box-shadow: 0 0 40px rgba(100, 217, 255, 0.12), 0 40px 100px rgba(0, 0, 0, 0.5); }
+  50%       { box-shadow: 0 0 60px rgba(100, 217, 255, 0.22), 0 40px 100px rgba(0, 0, 0, 0.5); }
 }
 
-.portfolio-terminal-modal {
-  animation: modal-slide-up 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-             border-glow-pulse 3s ease-in-out infinite;
-}
-
-/* Terminal Header */
+/* ── Header ──────────────────────────────────────────────────────────────── */
 .portfolio-terminal-header {
   display: flex;
   align-items: center;
@@ -78,6 +69,7 @@
 .terminal-mac-dots {
   display: flex;
   gap: 7px;
+  flex-shrink: 0;
 }
 
 .terminal-mac-dots span {
@@ -86,39 +78,38 @@
   border-radius: 50%;
 }
 
-.dot-red {
-  background: #ff5f56;
-}
-
-.dot-yellow {
-  background: #ffbd2e;
-}
-
-.dot-green {
-  background: #27c93f;
-}
+.dot-red    { background: #ff5f56; }
+.dot-yellow { background: #ffbd2e; }
+.dot-green  { background: #27c93f; }
 
 .terminal-header-title {
   flex: 1;
   margin: 0;
   font-family: ui-monospace, monospace;
-  font-size: 13px;
+  font-size: 12px;
   color: #8998b3;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
+/* Close button — 44x44 min tap target */
 .terminal-close-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   border: 1px solid rgba(126, 161, 214, 0.16);
-  border-radius: 8px;
+  border-radius: 10px;
   background: rgba(15, 30, 53, 0.6);
   color: #8998b3;
   cursor: pointer;
   transition: all 0.2s ease;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .terminal-close-btn:hover {
@@ -127,10 +118,14 @@
   color: #e8f2ff;
 }
 
-/* Terminal Body */
+.terminal-close-btn:active {
+  transform: scale(0.93);
+}
+
+/* ── Body ────────────────────────────────────────────────────────────────── */
 .portfolio-terminal-body {
   flex: 1;
-  padding: 24px;
+  padding: 20px 20px 16px;
   font-family: ui-monospace, "SF Mono", "Cascadia Code", monospace;
   font-size: 14px;
   line-height: 1.7;
@@ -138,94 +133,91 @@
   overflow-y: auto;
   overflow-x: hidden;
   cursor: text;
+  /* Momentum scroll on iOS */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
-/* Custom scrollbar */
-.portfolio-terminal-body::-webkit-scrollbar {
-  width: 10px;
-}
+/* Scrollbar */
+.portfolio-terminal-body::-webkit-scrollbar       { width: 6px; }
+.portfolio-terminal-body::-webkit-scrollbar-track  { background: rgba(12, 22, 40, 0.4); border-radius: 6px; }
+.portfolio-terminal-body::-webkit-scrollbar-thumb  { background: rgba(79, 140, 255, 0.25); border-radius: 6px; }
+.portfolio-terminal-body::-webkit-scrollbar-thumb:hover { background: rgba(79, 140, 255, 0.4); }
 
-.portfolio-terminal-body::-webkit-scrollbar-track {
-  background: rgba(12, 22, 40, 0.4);
-  border-radius: 10px;
-}
-
-.portfolio-terminal-body::-webkit-scrollbar-thumb {
-  background: rgba(79, 140, 255, 0.25);
-  border-radius: 10px;
-  border: 2px solid rgba(12, 22, 40, 0.4);
-}
-
-.portfolio-terminal-body::-webkit-scrollbar-thumb:hover {
-  background: rgba(79, 140, 255, 0.4);
-}
-
-/* Terminal Line Styles */
+/* ── Line types ──────────────────────────────────────────────────────────── */
 .terminal-output-line {
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
 
 .terminal-command-line {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: nowrap;
 }
 
 .terminal-prompt {
   color: #64d9ff;
   font-weight: 600;
   user-select: none;
+  flex-shrink: 0;
 }
 
 .terminal-command-text {
   color: #e8f2ff;
   font-weight: 500;
+  word-break: break-all;
 }
 
 .terminal-output-text {
   color: #9aaac0;
-  padding-left: 24px;
+  padding-left: 20px;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .terminal-welcome-text {
   color: #64d9ff;
   font-weight: 600;
-  font-size: 15px;
-  margin-bottom: 8px;
+  font-size: 14px;
+  margin-bottom: 6px;
 }
 
 .terminal-help-header {
   color: #70dcff;
   font-weight: 700;
-  font-size: 15px;
-  margin-top: 8px;
+  font-size: 14px;
+  margin-top: 6px;
 }
 
 .terminal-section-header {
   color: #8fc0ff;
   font-weight: 600;
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
 .terminal-error-text {
   color: #ff6b6b;
-  padding-left: 24px;
+  padding-left: 20px;
 }
 
-/* Input Wrapper */
+/* ── Input ───────────────────────────────────────────────────────────────── */
 .terminal-input-wrapper {
   margin-top: 8px;
 }
 
 .terminal-live-input {
   flex: 1;
+  min-width: 0;
   border: none;
   background: transparent;
   color: #e8f2ff;
   font-family: inherit;
-  font-size: inherit;
+  /* 16px prevents iOS Safari auto-zoom on focus */
+  font-size: 16px;
   outline: none;
   caret-color: transparent;
+  width: 100%;
 }
 
 .terminal-live-cursor {
@@ -234,35 +226,122 @@
   height: 16px;
   background: #34d399;
   margin-left: 2px;
+  vertical-align: -2px;
+  flex-shrink: 0;
   animation: cursor-blink 1s step-end infinite;
 }
 
 @keyframes cursor-blink {
-  0%, 50% {
-    opacity: 1;
-  }
-  51%, 100% {
-    opacity: 0;
+  0%, 50%  { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* ─── Tablet (max 1024px) ────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .portfolio-terminal-modal {
+    width: min(860px, 92vw);
   }
 }
 
-/* Responsive */
+/* ─── Small tablet / large mobile (max 768px) ───────────────────────────── */
 @media (max-width: 768px) {
   .portfolio-terminal-modal {
-    width: 96vw;
-    max-height: 85vh;
+    width: 94vw;
+    max-height: min(82vh, 82dvh);
+    border-radius: 14px;
   }
 
   .portfolio-terminal-body {
-    padding: 16px;
+    padding: 16px 14px 12px;
     font-size: 13px;
+    line-height: 1.65;
   }
 
   .terminal-header-title {
     font-size: 11px;
   }
+
+  .terminal-output-text {
+    padding-left: 16px;
+  }
+
+  .terminal-error-text {
+    padding-left: 16px;
+  }
+
+  /* Thinner scrollbar on small screens */
+  .portfolio-terminal-body::-webkit-scrollbar { width: 3px; }
 }
 
+/* ─── Mobile (max 640px) — near full-screen ─────────────────────────────── */
+@media (max-width: 640px) {
+  /* Align to bottom like a bottom-sheet */
+  .portfolio-terminal-overlay {
+    align-items: flex-end;
+  }
+
+  .portfolio-terminal-modal {
+    width: 100%;
+    /* Leave just a small sliver visible at top so backdrop is obvious */
+    max-height: calc(100dvh - 3rem);
+    border-radius: 18px 18px 0 0;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+    /* Override the slide-up animation to come from the bottom edge */
+    animation:
+      modal-slide-up-mobile 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+      border-glow-pulse 3s ease-in-out 0.28s infinite;
+  }
+
+  @keyframes modal-slide-up-mobile {
+    from { opacity: 0; transform: translateY(60px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .portfolio-terminal-body {
+    padding: 14px 12px 10px;
+    font-size: 13px;
+  }
+
+  /* Make sure input text never triggers iOS auto-zoom */
+  .terminal-live-input {
+    font-size: 16px;
+  }
+
+  /* Drag handle hint (visual only) */
+  .portfolio-terminal-header::before {
+    content: '';
+    position: absolute;
+    top: 7px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 36px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .portfolio-terminal-header {
+    position: relative;
+    padding-top: 4px;
+    height: 52px;
+  }
+}
+
+/* ─── Very small screens (max 375px) ────────────────────────────────────── */
+@media (max-width: 375px) {
+  .portfolio-terminal-body {
+    font-size: 12px;
+    padding: 12px 10px 8px;
+  }
+
+  .portfolio-terminal-modal {
+    max-height: calc(100dvh - 2.5rem);
+  }
+}
+
+/* ─── Reduced motion ─────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .portfolio-terminal-modal {
     animation: none;

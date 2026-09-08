@@ -1,5 +1,5 @@
 /* =============================================================================
-   AI Chatbot — Premium Dark Theme
+   AI Chatbot — Premium Dark Theme  ·  Fully Responsive
    ============================================================================= */
 
 /* ─── Design tokens ──────────────────────────────────────────────────────── */
@@ -35,9 +35,7 @@
   --cb-shadow-bubble: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
-/* ─── Wrapper ────────────────────────────────────────────────────────────── */
-/* position:fixed + pointer-events:none so the empty wrapper never blocks
-   page interaction; each interactive child opts-in with pointer-events:all */
+/* ─── FAB wrapper (pointer-events:none so empty space never blocks clicks) ── */
 .cb-wrapper {
   position: fixed;
   bottom: 1.75rem;
@@ -68,9 +66,10 @@
   overflow: visible;
   transition: border-color 0.2s, box-shadow 0.2s;
   -webkit-tap-highlight-color: transparent;
+  max-width: calc(100vw - 3.5rem);
 }
 
-/* Arrow notch — outer (border colour) */
+/* Arrow notch — outer */
 .cb-banner::after {
   content: '';
   position: absolute;
@@ -84,7 +83,7 @@
   z-index: 1;
 }
 
-/* Arrow notch — inner (fill colour) */
+/* Arrow notch — inner */
 .cb-banner::before {
   content: '';
   position: absolute;
@@ -117,6 +116,7 @@
   gap: 0.625rem;
   padding: 0.75rem 1.125rem;
   flex: 1;
+  min-width: 0;
 }
 
 .cb-banner-spark-wrap {
@@ -137,6 +137,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
+  min-width: 0;
 }
 
 .cb-banner-title {
@@ -146,6 +147,8 @@
   white-space: nowrap;
   letter-spacing: -0.015em;
   line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cb-banner-hint {
@@ -185,18 +188,13 @@
 }
 
 /* ─── FAB ────────────────────────────────────────────────────────────────── */
-/* Plain <button> — no Framer Motion wrapper — so native click/touch always
-   fires without the gesture system getting in the way.                       */
 .cb-fab {
-  /* opt-in to pointer events from the pointer-events:none wrapper */
   pointer-events: all;
-
   position: relative;
   width: 62px;
   height: 62px;
   border-radius: 50%;
   border: none;
-  /* cursor:pointer must be explicit — some resets clear it on <button> */
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -209,15 +207,12 @@
     inset 0 -8px 16px rgba(0, 0, 0, 0.55),
     0 12px 32px rgba(0, 0, 0, 0.55),
     0 2px 8px rgba(0, 0, 0, 0.4);
-  /* CSS transitions handle all hover/active visuals */
   transition: transform 0.2s ease, box-shadow 0.25s ease;
   outline: none;
-  /* Suppress native tap highlight on mobile */
   -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation; /* prevents 300ms click delay on mobile */
+  touch-action: manipulation;
 }
 
-/* Desktop hover */
 .cb-fab:hover {
   transform: translateY(-2px) scale(1.05);
   box-shadow:
@@ -227,7 +222,6 @@
     0 2px 10px rgba(0, 0, 0, 0.45);
 }
 
-/* Desktop + mobile pressed state — CSS :active fires on both */
 .cb-fab:active {
   transform: scale(0.93);
   transition-duration: 0.08s;
@@ -242,7 +236,7 @@
   outline-offset: 5px;
 }
 
-/* Spinning conic ring — only when closed */
+/* Spinning conic ring */
 .cb-fab-spin {
   position: absolute;
   inset: -2.5px;
@@ -267,7 +261,6 @@
 
 @keyframes cb-spin { to { transform: rotate(360deg); } }
 
-/* Glass sheen overlay */
 .cb-fab-glass {
   position: absolute;
   inset: 1px;
@@ -276,7 +269,6 @@
   pointer-events: none;
 }
 
-/* Breathing outer glow ring — only when closed */
 .cb-fab-ring {
   position: absolute;
   inset: -6px;
@@ -293,7 +285,6 @@
   100% { transform: scale(1);    opacity: 0.55; }
 }
 
-/* Amber notification dot — only when closed */
 .cb-fab-badge {
   position: absolute;
   top: -6px;
@@ -316,8 +307,6 @@
   50%       { transform: scale(1.15); opacity: 0.85; }
 }
 
-/* Icon container — CSS crossfade instead of Framer AnimatePresence,
-   so there's no animation state that can block click registration      */
 .cb-fab-icon-wrap {
   position: relative;
   display: flex;
@@ -339,11 +328,9 @@
 .cb-fab-icon-chat  { opacity: 1; transform: rotate(0deg) scale(1); }
 .cb-fab-icon-close { opacity: 0; transform: rotate(-90deg) scale(0.7); }
 
-/* When chat is open, swap icon visibility */
 .cb-fab--open .cb-fab-icon-chat  { opacity: 0; transform: rotate(90deg) scale(0.7); }
 .cb-fab--open .cb-fab-icon-close { opacity: 1; transform: rotate(0deg) scale(1); }
 
-/* Hidden helper — used by both icons */
 .cb-fab-icon--hidden {
   opacity: 0 !important;
   pointer-events: none;
@@ -371,7 +358,7 @@
   color: var(--cb-text-secondary);
 }
 
-/* ─── Chat window ────────────────────────────────────────────────────────── */
+/* ─── Chat window — DESKTOP base ─────────────────────────────────────────── */
 .cb-window {
   pointer-events: all;
   position: fixed;
@@ -397,16 +384,19 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 1.125rem;
+  padding: 0.875rem 1rem;
   background: linear-gradient(180deg, var(--cb-dark-700) 0%, var(--cb-dark-800) 100%);
   border-bottom: 1px solid var(--cb-dark-border);
   flex-shrink: 0;
+  min-height: 60px;
 }
 
 .cb-header-left {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  min-width: 0;
+  flex: 1;
 }
 
 .cb-header-avatar {
@@ -444,6 +434,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.125rem;
+  min-width: 0;
 }
 
 .cb-header-name {
@@ -453,37 +444,45 @@
   color: var(--cb-text-primary);
   letter-spacing: -0.01em;
   line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cb-header-sub {
   margin: 0;
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   color: var(--cb-text-secondary);
   display: flex;
   align-items: center;
   gap: 0.35rem;
   line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cb-online-dot {
   display: inline-block;
   width: 6px;
   height: 6px;
+  flex-shrink: 0;
   border-radius: 50%;
   background: var(--cb-online);
-  flex-shrink: 0;
 }
 
 .cb-header-actions {
   display: flex;
   align-items: center;
   gap: 0.25rem;
+  flex-shrink: 0;
 }
 
+/* Icon buttons — min 44x44 tap target */
 .cb-icon-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
   background: transparent;
   border: none;
   color: var(--cb-text-secondary);
@@ -496,7 +495,7 @@
   touch-action: manipulation;
 }
 
-.cb-icon-btn:hover { background: var(--cb-dark-600); color: var(--cb-text-primary); }
+.cb-icon-btn:hover  { background: var(--cb-dark-600); color: var(--cb-text-primary); }
 .cb-icon-btn:active { background: var(--cb-dark-500); transform: scale(0.93); }
 .cb-icon-btn:focus-visible { outline: 2px solid var(--cb-red); outline-offset: 2px; }
 
@@ -505,17 +504,17 @@
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 1.25rem 1rem;
+  padding: 1rem 0.875rem;
   display: flex;
   flex-direction: column;
-  gap: 0.875rem;
+  gap: 0.75rem;
   background: var(--cb-dark-900);
   scroll-behavior: smooth;
-  /* isolate scrolling from the page — critical on mobile */
   overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
-.cb-messages::-webkit-scrollbar        { width: 4px; }
+.cb-messages::-webkit-scrollbar        { width: 3px; }
 .cb-messages::-webkit-scrollbar-track  { background: transparent; }
 .cb-messages::-webkit-scrollbar-thumb  { background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
 .cb-messages::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.18); }
@@ -523,7 +522,7 @@
 /* Message row */
 .cb-msg {
   display: flex;
-  gap: 0.625rem;
+  gap: 0.5rem;
   align-items: flex-end;
   max-width: 100%;
 }
@@ -555,11 +554,13 @@
 
 .cb-msg-bubble {
   max-width: 78%;
-  padding: 0.75rem 1rem;
+  padding: 0.6875rem 0.875rem;
   border-radius: var(--cb-radius-md);
   font-size: 0.875rem;
   line-height: 1.6;
   box-shadow: var(--cb-shadow-bubble);
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .cb-msg--assistant .cb-msg-bubble {
@@ -582,7 +583,7 @@
   word-break: break-word;
 }
 
-/* Markdown content */
+/* Markdown */
 .cb-msg-markdown {
   font-size: 0.875rem;
   line-height: 1.6;
@@ -592,24 +593,17 @@
 
 .cb-msg-markdown > *:first-child { margin-top: 0; }
 .cb-msg-markdown > *:last-child  { margin-bottom: 0; }
-
 .cb-msg-markdown p { margin: 0 0 0.5rem; white-space: pre-wrap; }
 .cb-msg-markdown p:last-child { margin-bottom: 0; }
-
 .cb-msg-markdown ul,
 .cb-msg-markdown ol { margin: 0.375rem 0 0.5rem; padding-left: 1.25rem; }
-
 .cb-msg-markdown ul { list-style-type: disc; }
 .cb-msg-markdown ol { list-style-type: decimal; }
-
 .cb-msg-markdown li { margin-bottom: 0.2rem; line-height: 1.5; }
-
 .cb-msg-markdown strong,
 .cb-msg-markdown b { font-weight: 700; color: #fff; }
-
 .cb-msg-markdown em,
 .cb-msg-markdown i { font-style: italic; color: rgba(244, 244, 246, 0.85); }
-
 .cb-msg-markdown code {
   font-family: ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
   font-size: 0.8125rem;
@@ -618,7 +612,6 @@
   padding: 0.1rem 0.375rem;
   color: #fca5a5;
 }
-
 .cb-msg-markdown h1,
 .cb-msg-markdown h2,
 .cb-msg-markdown h3,
@@ -630,11 +623,10 @@
   margin: 0.375rem 0 0.25rem;
   color: #fff;
 }
-
 .cb-msg-markdown a { color: #fca5a5; text-decoration: underline; text-underline-offset: 2px; }
 .cb-msg-markdown a:hover { color: #fff; }
 
-/* Typing indicator */
+/* Typing dots */
 .cb-msg-bubble--typing {
   display: flex;
   align-items: center;
@@ -660,7 +652,7 @@
   30%            { transform: translateY(-8px); opacity: 1;    }
 }
 
-/* Error banner */
+/* Error */
 .cb-error {
   padding: 0.625rem 0.875rem;
   background: rgba(239, 68, 68, 0.12);
@@ -671,7 +663,7 @@
   text-align: center;
 }
 
-/* Quick-action chips */
+/* Quick chips */
 .cb-quick { margin-top: 0.5rem; }
 
 .cb-quick-label {
@@ -690,14 +682,15 @@
 }
 
 .cb-quick-btn {
-  padding: 0.625rem 0.875rem;
+  padding: 0.75rem 0.875rem;
   background: var(--cb-dark-600);
   border: 1px solid var(--cb-dark-border);
   border-radius: var(--cb-radius-sm);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: var(--cb-text-primary);
   cursor: pointer;
   text-align: left;
+  min-height: 44px;
   transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
   line-height: 1.4;
   -webkit-tap-highlight-color: transparent;
@@ -712,26 +705,31 @@
   background: var(--cb-dark-800);
   border-top: 1px solid var(--cb-dark-border);
   flex-shrink: 0;
+  /* Ensures it stays above the mobile keyboard */
+  position: relative;
+  z-index: 1;
 }
 
 .cb-form {
   display: flex;
   gap: 0.5rem;
-  padding: 0.875rem 1rem 0.625rem;
+  padding: 0.75rem 0.875rem 0.5rem;
 }
 
 .cb-input {
   flex: 1;
-  padding: 0.6875rem 0.875rem;
+  min-width: 0;
+  padding: 0.75rem 0.875rem;
   border-radius: var(--cb-radius-sm);
   border: 1px solid var(--cb-dark-border-strong);
   background: var(--cb-dark-700);
   color: var(--cb-text-primary);
-  font-size: 0.875rem;
+  /* 16px prevents iOS Safari auto-zoom on focus */
+  font-size: 16px;
   line-height: 1.5;
   outline: none;
   transition: border-color 0.18s, box-shadow 0.18s;
-  -webkit-text-size-adjust: 100%; /* prevent iOS zoom */
+  -webkit-text-size-adjust: 100%;
 }
 
 .cb-input::placeholder { color: var(--cb-text-muted); }
@@ -743,10 +741,10 @@
 
 .cb-input:disabled { opacity: 0.45; cursor: not-allowed; }
 
-/* Send button */
+/* Send button — min 44x44 */
 .cb-send {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--cb-radius-sm);
   background: linear-gradient(135deg, var(--cb-red) 0%, var(--cb-red-deep) 100%);
   color: #fff;
@@ -770,17 +768,21 @@
 /* Footer hint */
 .cb-footer-hint {
   margin: 0;
-  padding: 0 1rem 0.75rem;
+  padding: 0.25rem 0.875rem 0.625rem;
   font-size: 0.6875rem;
   color: var(--cb-text-muted);
   text-align: center;
   line-height: 1.4;
 }
 
-/* ─── Responsive ─────────────────────────────────────────────────────────── */
+/* ─── Tablet (max 768px) — shrink panel but keep floating ────────────────── */
 @media (max-width: 768px) {
-  .cb-wrapper  { bottom: 1.25rem; right: 1.25rem; }
-  .cb-fab      { width: 58px; height: 58px; }
+  .cb-wrapper {
+    bottom: 1.25rem;
+    right: 1.25rem;
+  }
+
+  .cb-fab { width: 58px; height: 58px; }
 
   .cb-banner-title { font-size: 0.875rem; }
   .cb-banner-hint  { font-size: 0.6875rem; }
@@ -788,32 +790,81 @@
   .cb-banner-body  { padding: 0.625rem 1rem; }
 
   .cb-window {
-    bottom: 5.5rem;
+    bottom: 5.25rem;
     right: 1rem;
-    left: 1rem;
-    width: auto;
+    width: 360px;
+    max-width: calc(100vw - 1.5rem);
     height: 520px;
+    max-height: calc(100dvh - 7rem);
   }
 }
 
-@media (max-width: 480px) {
-  .cb-wrapper { bottom: 1rem; right: 1rem; }
+/* ─── Mobile (max 640px) — full-width near-full-screen panel ─────────────── */
+@media (max-width: 640px) {
+  .cb-wrapper {
+    bottom: 1rem;
+    right: 1rem;
+  }
 
-  .cb-banner { max-width: calc(100vw - 2.5rem); }
+  .cb-fab { width: 56px; height: 56px; }
+
+  /* Banner: clip to safe width on small screens */
+  .cb-banner {
+    max-width: calc(100vw - 5rem);
+  }
   .cb-banner-title { font-size: 0.8125rem; }
-  .cb-banner-hint  { font-size: 0.625rem; }
-  .cb-banner-orb   { width: 42px; height: 42px; }
-  .cb-banner-body  { padding: 0.5625rem 0.875rem; gap: 0.5rem; }
+  .cb-banner-hint  { display: none; }          /* hide kbd hint on mobile */
+  .cb-banner-orb   { width: 44px; height: 44px; }
+  .cb-banner-body  { padding: 0.625rem 0.875rem; gap: 0.5rem; }
 
+  /* Window: stretches left edge-to-edge, slides up from bottom */
   .cb-window {
+    position: fixed;
     bottom: 0;
-    right: 0;
     left: 0;
+    right: 0;
     width: 100%;
-    height: calc(100svh - 4.5rem);
+    max-width: 100%;
+    /* 100dvh accounts for mobile browser chrome (address bar) appearing/disappearing */
+    height: calc(100dvh - 4.25rem);
     max-height: none;
     border-radius: var(--cb-radius-lg) var(--cb-radius-lg) 0 0;
     border-bottom: none;
+    border-left: none;
+    border-right: none;
+  }
+
+  /* Slightly larger text in messages on mobile */
+  .cb-msg-bubble {
+    font-size: 0.9375rem;
+    max-width: 82%;
+  }
+
+  .cb-msg-markdown { font-size: 0.9375rem; }
+
+  /* Footer hint hides on mobile to save vertical space */
+  .cb-footer-hint { display: none; }
+
+  /* Quick chips: 2 per row on wider phones */
+  .cb-quick-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.375rem;
+  }
+}
+
+/* ─── Very small screens (max 375px) ─────────────────────────────────────── */
+@media (max-width: 375px) {
+  .cb-window {
+    height: calc(100dvh - 4rem);
+  }
+
+  .cb-quick-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cb-msg-bubble {
+    max-width: 88%;
   }
 }
 

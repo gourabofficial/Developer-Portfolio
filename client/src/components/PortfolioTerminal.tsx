@@ -10,33 +10,33 @@ type TerminalLine = {
 }
 
 const WELCOME_LINES = [
-  { type: "welcome", text: "Welcome to my portfolio! 🚀" },
-  { type: "output", text: 'Type "help" to see all available commands.' },
-  { type: "output", text: "" },
+  { type: "welcome",  text: "Welcome to my portfolio! 🚀" },
+  { type: "output",   text: 'Type "help" to see all available commands.' },
+  { type: "output",   text: "" },
 ] as const
 
 const HELP_OUTPUT = [
-  { type: "help-header", text: "📖 Available Commands:" },
-  { type: "output", text: "─────────────────────────" },
-  { type: "output", text: "" },
+  { type: "help-header",    text: "📖 Available Commands:" },
+  { type: "output",         text: "─────────────────────────" },
+  { type: "output",         text: "" },
   { type: "section-header", text: "🧭 Navigation:" },
-  { type: "output", text: "  cd <section>     - Navigate to a section" },
-  { type: "output", text: "  ls / sections    - List all available sections" },
-  { type: "output", text: "  pwd              - Show current section" },
-  { type: "output", text: "" },
+  { type: "output",         text: "  cd <section>     - Navigate to a section" },
+  { type: "output",         text: "  ls / sections    - List all available sections" },
+  { type: "output",         text: "  pwd              - Show current section" },
+  { type: "output",         text: "" },
   { type: "section-header", text: "🌐 Social & Contact:" },
-  { type: "output", text: "  github           - Open GitHub profile" },
-  { type: "output", text: "  linkedin         - Open LinkedIn profile" },
-  { type: "output", text: "  email            - Send an email" },
-  { type: "output", text: "  resume           - View resume" },
-  { type: "output", text: "" },
+  { type: "output",         text: "  github           - Open GitHub profile" },
+  { type: "output",         text: "  linkedin         - Open LinkedIn profile" },
+  { type: "output",         text: "  email            - Send an email" },
+  { type: "output",         text: "  resume           - View resume" },
+  { type: "output",         text: "" },
   { type: "section-header", text: "🛠 Utilities:" },
-  { type: "output", text: "  clear            - Clear terminal" },
-  { type: "output", text: "  whoami           - About me" },
-  { type: "output", text: "  skills           - Tech stack" },
-  { type: "output", text: "  experience       - Work experience" },
-  { type: "output", text: "  projects         - View projects" },
-  { type: "output", text: "  contact          - Contact info" },
+  { type: "output",         text: "  clear            - Clear terminal" },
+  { type: "output",         text: "  whoami           - About me" },
+  { type: "output",         text: "  skills           - Tech stack" },
+  { type: "output",         text: "  experience       - Work experience" },
+  { type: "output",         text: "  projects         - View projects" },
+  { type: "output",         text: "  contact          - Contact info" },
 ]
 
 const SECTIONS = ["home", "about", "skills", "projects", "experience", "contact"]
@@ -54,78 +54,77 @@ export function PortfolioTerminal({ isOpen, onClose }: PortfolioTerminalProps) {
   const [commandHistory, setCommandHistory] = useState<string[]>([])
   const [historyIndex, setHistoryIndex] = useState(-1)
   const [isInitialized, setIsInitialized] = useState(false)
-  
+
   const inputRef = useRef<HTMLInputElement>(null)
   const terminalBodyRef = useRef<HTMLDivElement>(null)
+  const modalRef = useRef<HTMLDivElement>(null)
 
-  // Initialize terminal on first open
-  useEffect(() => {
-    if (isOpen && !isInitialized) {
-      setLines(WELCOME_LINES.map(l => ({ type: l.type as TerminalLine["type"], text: l.text })))
-      
-      // Auto-show help after welcome
-      setTimeout(() => {
-        executeCommand("help", true)
-      }, 500)
-      
-      setIsInitialized(true)
-    }
-  }, [isOpen, isInitialized])
-
-  // Focus input when modal opens
+  // ── Body scroll lock while open ─────────────────────────────────────────
   useEffect(() => {
     if (isOpen) {
-      setTimeout(() => {
-        inputRef.current?.focus()
-      }, 100)
+      const prev = document.body.style.overflow
+      document.body.style.overflow = "hidden"
+      return () => { document.body.style.overflow = prev }
     }
   }, [isOpen])
 
-  // Scroll to bottom when lines change
+  // ── Initialize on first open ────────────────────────────────────────────
+  useEffect(() => {
+    if (isOpen && !isInitialized) {
+      setLines(WELCOME_LINES.map(l => ({ type: l.type as TerminalLine["type"], text: l.text })))
+      setTimeout(() => executeCommand("help", true), 500)
+      setIsInitialized(true)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, isInitialized])
+
+  // ── Focus input when modal opens ────────────────────────────────────────
+  useEffect(() => {
+    if (isOpen) {
+      // Slight delay on mobile so panel animation settles before keyboard opens
+      const delay = window.innerWidth < 640 ? 350 : 120
+      const t = setTimeout(() => inputRef.current?.focus({ preventScroll: true }), delay)
+      return () => clearTimeout(t)
+    }
+  }, [isOpen])
+
+  // ── Scroll to bottom ────────────────────────────────────────────────────
   const scrollToBottom = useCallback(() => {
     if (terminalBodyRef.current) {
       terminalBodyRef.current.scrollTop = terminalBodyRef.current.scrollHeight
     }
   }, [])
 
-  useEffect(() => {
-    scrollToBottom()
-  }, [lines, scrollToBottom])
+  useEffect(() => { scrollToBottom() }, [lines, scrollToBottom])
 
-  // Get current section from pathname
+  // ── Current section ────────────────────────────────────────────────────
   const getCurrentSection = useCallback(() => {
     const path = location.pathname.slice(1) || "home"
     return path.split("/")[0]
   }, [location.pathname])
 
-  // Execute command
+  // ── Execute command ─────────────────────────────────────────────────────
   const executeCommand = useCallback((cmd: string, silent = false) => {
     const trimmedCmd = cmd.trim().toLowerCase()
-    
     if (!trimmedCmd) return
 
-    // Add command to history
     if (!silent) {
-      setCommandHistory((prev) => [...prev, cmd])
+      setCommandHistory(prev => [...prev, cmd])
       setHistoryIndex(-1)
-      setLines((prev) => [...prev, { type: "command", text: cmd }])
+      setLines(prev => [...prev, { type: "command", text: cmd }])
     }
 
-    // Handle commands
-    if (trimmedCmd === "clear") {
-      setLines([])
-      return
-    }
+    if (trimmedCmd === "clear") { setLines([]); return }
 
     if (trimmedCmd === "help") {
-      HELP_OUTPUT.forEach((line) => {
-        setLines((prev) => [...prev, { type: line.type as TerminalLine["type"], text: line.text }])
-      })
+      HELP_OUTPUT.forEach(line =>
+        setLines(prev => [...prev, { type: line.type as TerminalLine["type"], text: line.text }])
+      )
       return
     }
 
     if (trimmedCmd === "ls" || trimmedCmd === "sections") {
-      setLines((prev) => [
+      setLines(prev => [
         ...prev,
         { type: "output", text: "Available sections:" },
         { type: "output", text: "" },
@@ -137,28 +136,20 @@ export function PortfolioTerminal({ isOpen, onClose }: PortfolioTerminalProps) {
     }
 
     if (trimmedCmd === "pwd") {
-      const current = getCurrentSection()
-      setLines((prev) => [
-        ...prev,
-        { type: "output", text: `~/portfolio/${current}` },
-      ])
+      setLines(prev => [...prev, { type: "output", text: `~/portfolio/${getCurrentSection()}` }])
       return
     }
 
     if (trimmedCmd.startsWith("cd ")) {
       const section = trimmedCmd.slice(3).trim()
       if (SECTIONS.includes(section)) {
-        const route = section === "home" ? "/" : `/${section}`
-        navigate(route)
-        setLines((prev) => [
-          ...prev,
-          { type: "output", text: `Navigating to ${section}...` },
-        ])
+        navigate(section === "home" ? "/" : `/${section}`)
+        setLines(prev => [...prev, { type: "output", text: `Navigating to ${section}...` }])
         setTimeout(onClose, 600)
       } else {
-        setLines((prev) => [
+        setLines(prev => [
           ...prev,
-          { type: "error", text: `Section not found: ${section}` },
+          { type: "error",  text: `Section not found: ${section}` },
           { type: "output", text: 'Type "ls" to see available sections' },
         ])
       }
@@ -167,42 +158,30 @@ export function PortfolioTerminal({ isOpen, onClose }: PortfolioTerminalProps) {
 
     if (trimmedCmd === "github") {
       window.open(personal.github, "_blank")
-      setLines((prev) => [
-        ...prev,
-        { type: "output", text: "Opening GitHub profile..." },
-      ])
+      setLines(prev => [...prev, { type: "output", text: "Opening GitHub profile..." }])
       return
     }
 
     if (trimmedCmd === "linkedin") {
       window.open(personal.linkedin, "_blank")
-      setLines((prev) => [
-        ...prev,
-        { type: "output", text: "Opening LinkedIn profile..." },
-      ])
+      setLines(prev => [...prev, { type: "output", text: "Opening LinkedIn profile..." }])
       return
     }
 
     if (trimmedCmd === "email") {
       window.location.href = `mailto:${personal.email}`
-      setLines((prev) => [
-        ...prev,
-        { type: "output", text: `Opening email client for ${personal.email}...` },
-      ])
+      setLines(prev => [...prev, { type: "output", text: `Opening email client for ${personal.email}...` }])
       return
     }
 
     if (trimmedCmd === "resume") {
       window.open(personal.resume, "_blank", "noopener,noreferrer")
-      setLines((prev) => [
-        ...prev,
-        { type: "output", text: "Opening resume..." },
-      ])
+      setLines(prev => [...prev, { type: "output", text: "Opening resume..." }])
       return
     }
 
     if (trimmedCmd === "whoami") {
-      setLines((prev) => [
+      setLines(prev => [
         ...prev,
         { type: "output", text: `${personal.name} — ${personal.title}` },
         { type: "output", text: "SDE-1 @ Ancile" },
@@ -213,7 +192,7 @@ export function PortfolioTerminal({ isOpen, onClose }: PortfolioTerminalProps) {
     }
 
     if (trimmedCmd === "skills") {
-      setLines((prev) => [
+      setLines(prev => [
         ...prev,
         { type: "output", text: "Technical Stack:" },
         { type: "output", text: "" },
@@ -228,7 +207,7 @@ export function PortfolioTerminal({ isOpen, onClose }: PortfolioTerminalProps) {
     }
 
     if (trimmedCmd === "experience") {
-      setLines((prev) => [
+      setLines(prev => [
         ...prev,
         { type: "output", text: "Career Journey:" },
         { type: "output", text: "" },
@@ -242,7 +221,7 @@ export function PortfolioTerminal({ isOpen, onClose }: PortfolioTerminalProps) {
     }
 
     if (trimmedCmd === "projects") {
-      setLines((prev) => [
+      setLines(prev => [
         ...prev,
         { type: "output", text: "Featured Projects:" },
         { type: "output", text: "" },
@@ -257,7 +236,7 @@ export function PortfolioTerminal({ isOpen, onClose }: PortfolioTerminalProps) {
     }
 
     if (trimmedCmd === "contact") {
-      setLines((prev) => [
+      setLines(prev => [
         ...prev,
         { type: "output", text: "Contact Information:" },
         { type: "output", text: "" },
@@ -271,84 +250,90 @@ export function PortfolioTerminal({ isOpen, onClose }: PortfolioTerminalProps) {
       return
     }
 
-    // Command not found
-    setLines((prev) => [
+    setLines(prev => [
       ...prev,
-      { type: "error", text: `command not found: ${trimmedCmd}` },
+      { type: "error",  text: `command not found: ${trimmedCmd}` },
       { type: "output", text: 'Type "help" for available commands' },
     ])
   }, [navigate, onClose, getCurrentSection])
 
-  // Handle input submission
+  // ── Form submit ─────────────────────────────────────────────────────────
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!currentInput.trim()) return
-    
     executeCommand(currentInput)
     setCurrentInput("")
   }
 
-  // Handle keyboard navigation
+  // ── Keyboard navigation ─────────────────────────────────────────────────
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "ArrowUp") {
       e.preventDefault()
-      if (commandHistory.length === 0) return
-      
-      const newIndex = historyIndex === -1 ? commandHistory.length - 1 : Math.max(0, historyIndex - 1)
-      setHistoryIndex(newIndex)
-      setCurrentInput(commandHistory[newIndex])
+      if (!commandHistory.length) return
+      const idx = historyIndex === -1 ? commandHistory.length - 1 : Math.max(0, historyIndex - 1)
+      setHistoryIndex(idx)
+      setCurrentInput(commandHistory[idx])
     } else if (e.key === "ArrowDown") {
       e.preventDefault()
       if (historyIndex === -1) return
-      
-      const newIndex = historyIndex + 1
-      if (newIndex >= commandHistory.length) {
-        setHistoryIndex(-1)
-        setCurrentInput("")
-      } else {
-        setHistoryIndex(newIndex)
-        setCurrentInput(commandHistory[newIndex])
-      }
+      const idx = historyIndex + 1
+      if (idx >= commandHistory.length) { setHistoryIndex(-1); setCurrentInput("") }
+      else { setHistoryIndex(idx); setCurrentInput(commandHistory[idx]) }
     } else if (e.key === "Escape") {
       onClose()
     }
   }
 
-  // Focus input when clicking terminal body
-  const handleTerminalClick = () => {
-    inputRef.current?.focus()
+  // ── Backdrop tap to close (works on touch) ──────────────────────────────
+  const handleOverlayPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    // Only close if the tap landed directly on the backdrop (not the modal)
+    if (e.target === e.currentTarget) {
+      e.preventDefault()
+      onClose()
+    }
   }
 
   if (!isOpen) return null
 
   return (
-    <div className="portfolio-terminal-overlay" onClick={onClose}>
-      <div 
-        className="portfolio-terminal-modal" 
-        onClick={(e) => e.stopPropagation()}
+    <div
+      className="portfolio-terminal-overlay"
+      onPointerDown={handleOverlayPointerDown}
+      /* Also handle keyboard-triggered close on the backdrop */
+      onKeyDown={e => e.key === "Escape" && onClose()}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Portfolio Terminal"
+    >
+      <div
+        ref={modalRef}
+        className="portfolio-terminal-modal"
+        /* Stop pointer events bubbling to the backdrop */
+        onPointerDown={e => e.stopPropagation()}
       >
-        {/* Terminal Header */}
+        {/* Header */}
         <div className="portfolio-terminal-header">
-          <div className="terminal-mac-dots">
+          <div className="terminal-mac-dots" aria-hidden>
             <span className="dot-red" />
             <span className="dot-yellow" />
             <span className="dot-green" />
           </div>
-          <p className="terminal-header-title">Portfolio Terminal - home</p>
-          <button 
+          <p className="terminal-header-title">Portfolio Terminal</p>
+          <button
             onClick={onClose}
             className="terminal-close-btn"
             aria-label="Close terminal"
+            type="button"
           >
             <X size={16} />
           </button>
         </div>
 
-        {/* Terminal Body */}
-        <div 
+        {/* Body */}
+        <div
           ref={terminalBodyRef}
           className="portfolio-terminal-body"
-          onClick={handleTerminalClick}
+          onClick={() => inputRef.current?.focus({ preventScroll: true })}
         >
           {lines.map((line, index) => (
             <div key={index} className="terminal-output-line">
@@ -371,7 +356,7 @@ export function PortfolioTerminal({ isOpen, onClose }: PortfolioTerminalProps) {
             </div>
           ))}
 
-          {/* Interactive Input */}
+          {/* Input line */}
           <form onSubmit={handleSubmit} className="terminal-input-wrapper">
             <div className="terminal-command-line">
               <span className="terminal-prompt">$</span>
@@ -379,14 +364,17 @@ export function PortfolioTerminal({ isOpen, onClose }: PortfolioTerminalProps) {
                 ref={inputRef}
                 type="text"
                 value={currentInput}
-                onChange={(e) => setCurrentInput(e.target.value)}
+                onChange={e => setCurrentInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 className="terminal-live-input"
                 autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
                 spellCheck={false}
                 aria-label="Terminal command input"
+                inputMode="text"
               />
-              <span className="terminal-live-cursor" />
+              <span className="terminal-live-cursor" aria-hidden />
             </div>
           </form>
         </div>

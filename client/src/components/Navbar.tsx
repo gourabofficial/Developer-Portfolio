@@ -7,7 +7,7 @@ import { personal } from "@/data"
 const links = [
   { label: "Home", to: "/" },
   { label: "About", to: "/about" },
-  {label: "Skills", to: "/skills"},
+  { label: "Skills", to: "/skills" },
   { label: "Experience", to: "/experience" },
   { label: "My Work", to: "/projects" },
 ]
@@ -20,34 +20,44 @@ export const Navbar = () => {
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
     onScroll()
-    window.addEventListener("scroll", onScroll)
+    window.addEventListener("scroll", onScroll, { passive: true })
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
 
-  // Close mobile menu when route changes
+  // Close mobile menu on route change
   useEffect(() => {
     setOpen(false)
   }, [location.pathname])
 
-  const isActive = (path: string) => {
-    if (path === "/") {
-      return location.pathname === "/"
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = ""
     }
+    return () => { document.body.style.overflow = "" }
+  }, [open])
+
+  const isActive = (path: string) => {
+    if (path === "/") return location.pathname === "/"
     return location.pathname.startsWith(path)
   }
 
   return (
     <header className={`site-header ${scrolled ? "scrolled" : ""}`}>
       <nav className="nav-shell" aria-label="Main navigation">
-        <Link className="brand" to="/" aria-label="Gourab Ganguly home">
-          <span>GG</span>
+        {/* Brand / logo */}
+        <Link className="brand" to="/" aria-label="Gourab Ganguly home" onClick={() => setOpen(false)}>
+          <span aria-hidden="true">GG</span>
           <p>
             Gourab Ganguly
             <small>Software developer</small>
           </p>
         </Link>
-        
-        <div className={`nav-links ${open ? "open" : ""}`}>
+
+        {/* Desktop + mobile nav links */}
+        <div className={`nav-links ${open ? "open" : ""}`} role="navigation">
           {links.map(({ label, to }) => (
             <Link
               key={to}
@@ -58,8 +68,39 @@ export const Navbar = () => {
               {label}
             </Link>
           ))}
+          {/* Social links shown inside mobile menu */}
+          <div className="mobile-nav-footer">
+            <a
+              href={personal.github}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="GitHub"
+              className="mobile-social-link"
+            >
+              <GithubIcon width={18} height={18} />
+              <span>GitHub</span>
+            </a>
+            <a
+              href={personal.linkedin}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="LinkedIn"
+              className="mobile-social-link"
+            >
+              <LinkedinIcon width={18} height={18} />
+              <span>LinkedIn</span>
+            </a>
+            <Link
+              to="/contact"
+              onClick={() => setOpen(false)}
+              className="mobile-cta-link"
+            >
+              Let's talk ↗
+            </Link>
+          </div>
         </div>
 
+        {/* Desktop right actions */}
         <div className="nav-actions">
           <a
             href={personal.github}
@@ -80,12 +121,15 @@ export const Navbar = () => {
           <Link className="nav-cta" to="/contact" onClick={() => setOpen(false)}>
             Let's talk <span>↗</span>
           </Link>
+
+          {/* Hamburger — mobile only */}
           <button
             onClick={() => setOpen(!open)}
             aria-expanded={open}
-            aria-label="Toggle navigation"
+            aria-label={open ? "Close navigation" : "Open navigation"}
+            aria-controls="mobile-nav"
           >
-            {open ? <X /> : <Menu />}
+            {open ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </nav>
