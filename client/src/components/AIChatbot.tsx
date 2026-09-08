@@ -74,6 +74,8 @@ export function AIChatbot() {
   // area above it. We apply that height directly to the chat window so the
   // three-zone flex layout (header / messages / input) always fits in the
   // visible space and the input stays above the keyboard.
+  // On mobile the panel is truly full-screen (no FAB clearance), so we use
+  // vpHeight directly with no subtraction.
   useEffect(() => {
     if (!isOpen || !isMobile()) return;
 
@@ -157,10 +159,13 @@ export function AIChatbot() {
     });
   }, []);
 
-  // ── Outside-click / tap to close ─────────────────────────────────────────
+  // ── Outside-click / tap to close — desktop only ──────────────────────────
+  // On mobile the panel is full-screen so there's no meaningful "outside"
+  // area to tap. Close is handled exclusively by the header X button.
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent | TouchEvent) => {
       if (!isOpenRef.current) return;
+      if (isMobile()) return; // mobile: full-screen, header X closes
       const target = e.target as Node;
       if (windowRef.current?.contains(target)) return;
       if (fabRef.current?.contains(target)) return;
@@ -318,16 +323,16 @@ export function AIChatbot() {
 
   const windowVariants = {
     initial: onMobile
-      ? { opacity: 0, y: '100%' }
+      ? { opacity: 1, y: '100%' }          // slide up from below — no fade, feels native
       : { opacity: 0, y: 24, scale: 0.94 },
     animate: onMobile
       ? { opacity: 1, y: 0 }
       : { opacity: 1, y: 0, scale: 1 },
     exit: onMobile
       ? {
-          opacity: 0,
+          opacity: 1,
           y: '100%',
-          transition: { duration: 0.2, ease: [0.4, 0, 1, 1] as const },
+          transition: { type: 'spring' as const, stiffness: 500, damping: 42 },
         }
       : {
           opacity: 0,
@@ -338,16 +343,16 @@ export function AIChatbot() {
   };
 
   const windowTransition = onMobile
-    ? { type: 'spring' as const, stiffness: 420, damping: 38 }
+    ? { type: 'spring' as const, stiffness: 460, damping: 40 }
     : { type: 'spring' as const, stiffness: 380, damping: 36 };
 
   // ── Build mobile window style driven by visualViewport ───────────────────
-  // vpHeight reflects the visible area (keyboard excluded).
-  // We subtract the FAB row height (4.25rem ≈ 68px) so the FAB stays visible.
-  const FAB_CLEARANCE = 68; // px — same as CSS `calc(100dvh - 4.25rem)`
+  // On mobile the window is truly full-screen (no FAB clearance needed —
+  // the FAB is hidden while the panel is open on mobile, so we can use the
+  // full viewport height). vpHeight already excludes the soft keyboard.
   const mobileWindowStyle: React.CSSProperties =
     onMobile && vpHeight !== null
-      ? { height: `${vpHeight - FAB_CLEARANCE}px` }
+      ? { height: `${vpHeight}px` }
       : {};
 
   // ── Render ────────────────────────────────────────────────────────────────
@@ -394,8 +399,9 @@ export function AIChatbot() {
           )}
         </AnimatePresence>
 
-        {/* FAB */}
-        {!showBanner && (
+        {/* FAB — hidden on mobile while the full-screen panel is open so it
+             doesn't overlap the input bar. Close is handled by the header X. */}
+        {!showBanner && !(onMobile && isOpen) && (
           <button
             ref={fabRef}
             className={`cb-fab${isOpen ? ' cb-fab--open' : ''}`}
@@ -452,10 +458,10 @@ export function AIChatbot() {
                   <span className="cb-header-avatar-dot" aria-hidden />
                 </div>
                 <div className="cb-header-info">
-                  <p className="cb-header-name">AI Assistant</p>
+                  <p className="cb-header-name">Gourab&apos;s AI Assistant</p>
                   <p className="cb-header-sub">
                     <span className="cb-online-dot" aria-hidden />
-                    Online · Ask anything about Gourab
+                    Online · Ask me anything
                   </p>
                 </div>
               </div>
