@@ -219,43 +219,30 @@ export function InteractiveTerminal() {
     const command = COMMANDS[trimmedCmd as keyof typeof COMMANDS]
     
     if (command) {
-      command.output.forEach((line) => {
-        setLines((prev) => [...prev, { type: "output", text: line }])
-      })
+      // Batch all output lines into a single state update
+      const newLines = command.output.map<TerminalLine>(line => ({ type: "output", text: line }))
+      setLines(prev => [...prev, ...newLines])
     } else {
       // Command not found - show error with suggestions
       const suggestions = findSimilarCommands(trimmedCmd)
       
-      setLines((prev) => [
-        ...prev,
+      const errorLines: TerminalLine[] = [
         { type: "error", text: `command not found: ${trimmedCmd}` },
-      ])
-      
+      ]
+
       if (suggestions.length > 0) {
-        setLines((prev) => [
-          ...prev,
+        errorLines.push(
           { type: "output", text: "" },
           { type: "output", text: "Did you mean:" },
-        ])
-        
-        suggestions.forEach((suggestion) => {
-          setLines((prev) => [
-            ...prev,
-            { type: "output", text: `  → ${suggestion}`, color: "suggestion" },
-          ])
-        })
-        
-        setLines((prev) => [
-          ...prev,
+          ...suggestions.map<TerminalLine>(s => ({ type: "output", text: `  → ${s}`, color: "suggestion" })),
           { type: "output", text: "" },
           { type: "output", text: "Type 'help' to see all available commands." },
-        ])
+        )
       } else {
-        setLines((prev) => [
-          ...prev,
-          { type: "output", text: "Type 'help' to see all available commands." },
-        ])
+        errorLines.push({ type: "output", text: "Type 'help' to see all available commands." })
       }
+
+      setLines(prev => [...prev, ...errorLines])
     }
   }, [findSimilarCommands])
 
@@ -331,12 +318,14 @@ export function InteractiveTerminal() {
     }
   }, [isBootSequenceComplete, isTyping])
 
-  // Reduced motion: skip animation
+  // Reduced motion: skip animation — batch all lines in a single setState call
   useEffect(() => {
     if (prefersReducedMotion && bootSequenceIndex === 0) {
-      BOOT_SEQUENCE.forEach((seq) => {
-        setLines((prev) => [...prev, { type: seq.type as TerminalLine["type"], text: seq.text }])
-      })
+      const allLines = BOOT_SEQUENCE.map<TerminalLine>(seq => ({
+        type: seq.type as TerminalLine["type"],
+        text: seq.text,
+      }))
+      setLines(allLines)
       setBootSequenceIndex(BOOT_SEQUENCE.length)
       setIsTyping(false)
     }

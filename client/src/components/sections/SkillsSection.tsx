@@ -134,6 +134,8 @@ export const SkillsSection = () => {
         }
         .stack-marquee-track {
           animation: stack-marquee-scroll 34s linear infinite;
+          /* Compositor hint: promote to own GPU layer before animation starts */
+          will-change: transform;
         }
       `}</style>
     </section>

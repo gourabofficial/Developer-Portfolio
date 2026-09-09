@@ -1,4 +1,3 @@
-import { motion } from "framer-motion"
 import { useReducedMotion } from "@/hooks/useReducedMotion"
 import "./TerminalPreview.css"
 
@@ -10,8 +9,13 @@ export function TerminalPreview({ onClick }: TerminalPreviewProps) {
   const prefersReducedMotion = useReducedMotion()
 
   return (
-    <motion.div
-      className="terminal-preview-wrapper"
+    // Plain div — enter animation is handled by the parent HeroSection fade.
+    // Hover scale is a CSS transform, keeping it off the JS thread entirely.
+    <div
+      className={[
+        "terminal-preview-wrapper",
+        prefersReducedMotion ? "" : "terminal-preview-wrapper--interactive",
+      ].join(" ")}
       onClick={onClick}
       role="button"
       tabIndex={0}
@@ -22,18 +26,6 @@ export function TerminalPreview({ onClick }: TerminalPreviewProps) {
           onClick()
         }
       }}
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: 0.65 }}
-      whileHover={
-        prefersReducedMotion
-          ? undefined
-          : {
-              scale: 1.02,
-              boxShadow: "0 12px 40px rgba(100, 217, 255, 0.18)",
-              transition: { duration: 0.2 },
-            }
-      }
     >
       {/* Mac-style dots */}
       <div className="terminal-preview-header">
@@ -49,26 +41,15 @@ export function TerminalPreview({ onClick }: TerminalPreviewProps) {
       <div className="terminal-preview-content">
         <span className="terminal-preview-prompt">→ ~ $</span>
         <span className="terminal-preview-text">Click to open terminal OR (Press Ctrl+`)</span>
-        <motion.span
-          className="terminal-preview-cursor"
-          animate={
-            prefersReducedMotion
-              ? {}
-              : {
-                  opacity: [1, 0, 1],
-                }
-          }
-          transition={
-            prefersReducedMotion
-              ? {}
-              : {
-                  duration: 1,
-                  repeat: Infinity,
-                  ease: "linear",
-                }
-          }
+        {/* Pure CSS blink — no JS/RAF overhead */}
+        <span
+          className={[
+            "terminal-preview-cursor",
+            prefersReducedMotion ? "terminal-preview-cursor--static" : "",
+          ].join(" ")}
+          aria-hidden="true"
         />
       </div>
-    </motion.div>
+    </div>
   )
 }

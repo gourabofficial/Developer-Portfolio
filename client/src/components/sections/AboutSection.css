@@ -56,7 +56,11 @@
   border: 1px solid rgba(126, 161, 214, 0.16);
   border-radius: 12px;
   background: linear-gradient(145deg, rgba(15, 28, 50, 0.72), rgba(7, 16, 29, 0.66));
-  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  /* Specific GPU-friendly properties only — no layout recalc */
+  transition: border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+              background 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .about-highlight-card:hover {
@@ -136,5 +140,11 @@
 
   .about-highlight-content p {
     font-size: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-highlight-card:hover {
+    transform: none;
   }
 }

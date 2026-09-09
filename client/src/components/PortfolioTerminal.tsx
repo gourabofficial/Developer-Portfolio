@@ -117,9 +117,11 @@ export function PortfolioTerminal({ isOpen, onClose }: PortfolioTerminalProps) {
     if (trimmedCmd === "clear") { setLines([]); return }
 
     if (trimmedCmd === "help") {
-      HELP_OUTPUT.forEach(line =>
-        setLines(prev => [...prev, { type: line.type as TerminalLine["type"], text: line.text }])
-      )
+      const helpLines = HELP_OUTPUT.map(line => ({
+        type: line.type as TerminalLine["type"],
+        text: line.text,
+      }))
+      setLines(prev => [...prev, ...helpLines])
       return
     }
 

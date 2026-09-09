@@ -244,20 +244,24 @@
 .terminal-suggestion {
   color: #64d9ff;
   font-weight: 500;
+  /* Use translate instead of padding to avoid layout recalculation */
   position: relative;
-  padding-left: 24px;
-  transition: all 0.2s ease;
-  cursor: pointer;
-  display: inline-block;
-  border-radius: 4px;
   padding: 2px 8px 2px 24px;
   margin: 2px 0;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-block;
+  /* Only compositor-friendly properties */
+  transition: color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+  /* One-shot appear animation */
+  animation: suggestion-appear 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .terminal-suggestion:hover {
   color: #8fedff;
   background: rgba(100, 217, 255, 0.08);
-  padding-left: 28px;
+  /* Use translate — no padding change */
+  transform: translateX(4px);
 }
 
 .terminal-suggestion:active {
@@ -271,27 +275,12 @@
   left: 8px;
   color: #4f8cff;
   font-weight: 700;
-  transition: all 0.2s ease;
+  /* Only opacity transition — no left/position change */
+  transition: color 0.2s ease;
 }
 
 .terminal-suggestion:hover::before {
-  left: 10px;
   color: #64d9ff;
-  animation: arrow-bounce 0.6s ease infinite;
-}
-
-@keyframes arrow-bounce {
-  0%, 100% {
-    transform: translateX(0);
-  }
-  50% {
-    transform: translateX(4px);
-  }
-}
-
-/* Add a subtle pulse effect to draw attention */
-.terminal-suggestion {
-  animation: suggestion-appear 0.4s ease forwards;
 }
 
 @keyframes suggestion-appear {
@@ -304,6 +293,8 @@
     transform: translateX(0);
   }
 }
+
+/* Arrow bounce removed — it animated `left`, a layout property */
 
 /* Interactive Input */
 .terminal-input-form {
@@ -401,8 +392,9 @@
     box-shadow: 0 30px 90px rgba(0, 0, 0, 0.35), 0 0 70px rgba(48, 113, 219, 0.08);
   }
 
-  .terminal-suggestion:hover::before {
-    animation: none;
+  /* No hover motion on suggestions */
+  .terminal-suggestion:hover {
+    transform: none;
   }
 
   .terminal-suggestion {

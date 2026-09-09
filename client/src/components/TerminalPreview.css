@@ -9,12 +9,19 @@
               0 0 30px rgba(100, 217, 255, 0.08);
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  /* Specific compositor-friendly properties only */
+  transition: border-color 0.25s ease,
+              transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.25s ease;
   user-select: none;
+  /* Hint to browser: this element will be transformed */
+  will-change: transform;
 }
 
-.terminal-preview-wrapper:hover {
+.terminal-preview-wrapper--interactive:hover {
   border-color: rgba(100, 217, 255, 0.4);
+  transform: scale(1.02);
+  box-shadow: 0 12px 40px rgba(100, 217, 255, 0.18);
 }
 
 .terminal-preview-wrapper:focus {
@@ -90,6 +97,19 @@
   height: 15px;
   background: #34d399;
   margin-left: 2px;
+  /* Pure CSS blink — zero JS cost */
+  animation: terminal-cursor-blink 1s steps(2) infinite;
+}
+
+/* Static variant for prefers-reduced-motion */
+.terminal-preview-cursor--static {
+  animation: none;
+  opacity: 1;
+}
+
+@keyframes terminal-cursor-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
 }
 
 /* Responsive */
@@ -111,13 +131,20 @@
 @media (prefers-reduced-motion: reduce) {
   .terminal-preview-wrapper {
     transition: border-color 0.2s ease;
+    will-change: auto;
   }
 
-  .terminal-preview-wrapper:hover {
+  .terminal-preview-wrapper--interactive:hover {
     transform: none;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(100, 217, 255, 0.08);
   }
 
   .terminal-preview-wrapper:active {
     transform: none;
+  }
+
+  .btn-primary::before {
+    display: none;
   }
 }

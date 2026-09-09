@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gganguly.in/sitemap.xml

@@ -119,10 +119,28 @@ export const Navbar = () => {
 
   // ── Scroll detection ──────────────────────────────────────────────────────
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20)
-    onScroll()
+    // Read initial state immediately (no paint needed).
+    setScrolled(window.scrollY > 20)
+
+    let rafId: number | null = null
+
+    const onScroll = () => {
+      // Coalesce rapid scroll events into one RAF callback.
+      // This prevents setState from firing faster than the browser can paint.
+      if (rafId !== null) return
+      rafId = requestAnimationFrame(() => {
+        rafId = null
+        const shouldBeScrolled = window.scrollY > 20
+        // Only trigger a re-render when the value actually changes.
+        setScrolled((prev) => (prev === shouldBeScrolled ? prev : shouldBeScrolled))
+      })
+    }
+
     window.addEventListener("scroll", onScroll, { passive: true })
-    return () => window.removeEventListener("scroll", onScroll)
+    return () => {
+      window.removeEventListener("scroll", onScroll)
+      if (rafId !== null) cancelAnimationFrame(rafId)
+    }
   }, [])
 
   // ── Close on route change ─────────────────────────────────────────────────

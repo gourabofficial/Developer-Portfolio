@@ -1,15 +1,21 @@
 import { useEffect, useState } from 'react'
 
 /**
- * Hook to respect user's motion preferences
- * Returns true if user prefers reduced motion
+ * Hook to respect user's motion preferences.
+ * Reads synchronously on first render to avoid a flicker/re-render
+ * for users who have prefers-reduced-motion enabled.
  */
 export const useReducedMotion = () => {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+  // Initialise synchronously so the first render already has the correct value.
+  // window.matchMedia is always available in a browser context; during SSR it
+  // would fall back to `false` (safe default).
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  })
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setPrefersReducedMotion(mediaQuery.matches)
 
     const handleChange = (event: MediaQueryListEvent) => {
       setPrefersReducedMotion(event.matches)
