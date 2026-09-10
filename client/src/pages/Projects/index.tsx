@@ -61,10 +61,7 @@ function FeaturedCard({
         <div className="absolute inset-0 bg-gradient-to-t from-[#050914]/85 via-transparent to-transparent" />
 
         {/* Featured badge */}
-        <span className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-[rgba(100,217,255,.35)] bg-[rgba(100,217,255,.08)] text-[#64d9ff] text-[10px] font-semibold uppercase tracking-wider">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#64d9ff] animate-pulse" aria-hidden />
-          Featured
-        </span>
+      
 
         {/* Category */}
         <span className="absolute bottom-3 left-3 px-2.5 py-1 rounded-full bg-[rgba(9,18,33,.82)] border border-[rgba(105,150,219,.2)] text-[#8fa3c1] text-[10px] font-semibold uppercase tracking-wider backdrop-blur-sm">
