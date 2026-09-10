@@ -1,7 +1,7 @@
 import { HeroSection } from "@/components/sections/HeroSection"
 import { AboutSection } from "@/components/sections/AboutSection"
 import { SkillsSection } from "@/components/sections/SkillsSection"
-import { ProjectsSection } from "@/components/sections/ProjectsSection"
+import { HomeFeaturedProjects } from "@/components/sections/HomeFeaturedProjects"
 import { ServicesSection } from "@/components/sections/ServicesSection"
 // import { PrinciplesSection } from "@/components/sections/PrinciplesSection"
 // import { FocusSection } from "@/components/sections/FocusSection"
@@ -14,7 +14,7 @@ export const Home = () => {
       <HeroSection />
       <AboutSection />
       <SkillsSection />
-      <ProjectsSection />
+      <HomeFeaturedProjects limit={6} />
       <ServicesSection />
       {/* <PrinciplesSection /> */}
       {/* <FocusSection /> */}
