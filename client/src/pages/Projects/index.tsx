@@ -2,6 +2,7 @@ import { useState } from "react"
 import { motion, useReducedMotion, type Variants } from "framer-motion"
 
 
+
 import { FeaturedCard, StandardCard } from "@/components/ProjectCard"
 import { projects } from "@/data"
 
