@@ -1,8 +1,3 @@
-/**
- * /admin route — password-gated admin panel.
- * On mount, checks if an existing session cookie is valid (GET /api/admin/me).
- * If valid → show panel directly. If not → show login form.
- */
 import { useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { adminMe } from '@/lib/adminApi';
@@ -23,7 +18,7 @@ export function Admin() {
 
   if (auth === 'checking') {
     return (
-      <div className="admin-center-screen" aria-label="Checking session…">
+      <div className="admin-center-screen">
         <Loader2 size={32} className="admin-spinner" />
       </div>
     );

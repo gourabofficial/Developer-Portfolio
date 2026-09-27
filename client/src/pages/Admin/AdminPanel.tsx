@@ -1,125 +1,90 @@
-/**
- * AdminPanel — shown after successful login.
- * Renders upload slots for hero photo, resume, and all project thumbnails.
- */
-import { useEffect, useState } from 'react';
-import { LogOut, ImageIcon, FileText, LayoutGrid, Loader2 } from 'lucide-react';
-import { adminLogout, getAdminProjects, type AdminProject } from '@/lib/adminApi';
-import { cloudinaryImage, cloudinaryRaw, PUBLIC_IDS } from '@/lib/cloudinary';
-import { projects } from '@/data/projects';
-import { UploadSlot } from './UploadSlot';
+import { useState } from 'react';
+import { LogOut, ImageIcon, FileText, LayoutGrid } from 'lucide-react';
+import { adminLogout } from '@/lib/adminApi';
+import { HeroTab }     from './tabs/HeroTab';
+import { ResumeTab }   from './tabs/ResumeTab';
+import { ProjectsTab } from './tabs/ProjectsTab';
+
+type Tab = 'hero' | 'resume' | 'projects';
+
+const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
+  { id: 'hero',     label: 'Hero Photo',  icon: <ImageIcon size={15} /> },
+  { id: 'resume',   label: 'Resume',      icon: <FileText  size={15} /> },
+  { id: 'projects', label: 'Projects',    icon: <LayoutGrid size={15} /> },
+];
 
 type Props = { onLogout: () => void };
 
 export function AdminPanel({ onLogout }: Props) {
-  const [adminProjects, setAdminProjects] = useState<AdminProject[]>([]);
-  const [loadingProjects, setLoadingProjects] = useState(true);
-  const [projectsError, setProjectsError] = useState('');
-
-  useEffect(() => {
-    getAdminProjects()
-      .then((r) => setAdminProjects(r.projects))
-      .catch((err: unknown) =>
-        setProjectsError(err instanceof Error ? err.message : 'Failed to load projects'),
-      )
-      .finally(() => setLoadingProjects(false));
-  }, []);
+  const [tab, setTab] = useState<Tab>('projects');
 
   async function handleLogout() {
     try { await adminLogout(); } catch { /* ignore */ }
     onLogout();
   }
 
-  // Hero image URL (current)
-  const heroUrl    = cloudinaryImage(PUBLIC_IDS.hero,   { width: 480, transforms: 'c_fill,g_face,ar_1:1' });
-  const resumeUrl  = cloudinaryRaw(PUBLIC_IDS.resume);
-
   return (
-    <div className="admin-panel">
-      {/* Header */}
-      <header className="admin-panel-header">
-        <div>
-          <h1 className="admin-panel-title">Admin Panel</h1>
-          <p className="admin-panel-sub">Portfolio asset management</p>
+    <div className="ap-root">
+      {/* ── Sidebar ───────────────────────────────────────────────── */}
+      <aside className="ap-sidebar">
+        <div className="ap-sidebar-brand">
+          <div className="ap-brand-dot" />
+          <span className="ap-brand-name">GG.dev</span>
         </div>
-        <button className="admin-btn-ghost" onClick={handleLogout} aria-label="Logout">
-          <LogOut size={16} aria-hidden />
-          Logout
-        </button>
-      </header>
 
-      <main className="admin-panel-body">
+        <nav className="ap-nav" aria-label="Admin navigation">
+          <p className="ap-nav-label">Content</p>
+          {TABS.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => setTab(t.id)}
+              className={`ap-nav-item ${tab === t.id ? 'active' : ''}`}
+              aria-current={tab === t.id ? 'page' : undefined}
+            >
+              <span className="ap-nav-icon" aria-hidden>{t.icon}</span>
+              {t.label}
+            </button>
+          ))}
+        </nav>
 
-        {/* ── Hero Photo ──────────────────────────────────────────────── */}
-        <section className="admin-section">
-          <div className="admin-section-heading">
-            <ImageIcon size={18} aria-hidden />
-            <h2>Hero Profile Photo</h2>
+        <div className="ap-sidebar-footer">
+          <button className="ap-logout" onClick={handleLogout} aria-label="Log out">
+            <LogOut size={14} aria-hidden />
+            Log out
+          </button>
+        </div>
+      </aside>
+
+      {/* ── Main ──────────────────────────────────────────────────── */}
+      <main className="ap-main">
+        {/* Mobile header */}
+        <header className="ap-mobile-header">
+          <div className="ap-mobile-tabs" role="tablist">
+            {TABS.map((t) => (
+              <button
+                key={t.id}
+                role="tab"
+                aria-selected={tab === t.id}
+                type="button"
+                onClick={() => setTab(t.id)}
+                className={`ap-mobile-tab ${tab === t.id ? 'active' : ''}`}
+              >
+                {t.icon}
+                {t.label}
+              </button>
+            ))}
           </div>
-          <UploadSlot
-            label="Profile Photo"
-            hint="Replaces portfolio/hero-profile on Cloudinary. JPEG/PNG/WebP, max 10 MB."
-            currentUrl={heroUrl}
-            slot="hero"
-            accept="image/*"
-          />
-        </section>
+          <button className="ap-logout-mobile" onClick={handleLogout} aria-label="Log out">
+            <LogOut size={14} />
+          </button>
+        </header>
 
-        {/* ── Resume ──────────────────────────────────────────────────── */}
-        <section className="admin-section">
-          <div className="admin-section-heading">
-            <FileText size={18} aria-hidden />
-            <h2>Resume</h2>
-          </div>
-          <UploadSlot
-            label="Resume PDF"
-            hint="Replaces portfolio/resume on Cloudinary. PDF only."
-            currentUrl={resumeUrl}
-            slot="resume"
-            accept="application/pdf"
-          />
-        </section>
-
-        {/* ── Project Thumbnails ──────────────────────────────────────── */}
-        <section className="admin-section">
-          <div className="admin-section-heading">
-            <LayoutGrid size={18} aria-hidden />
-            <h2>Project Thumbnails</h2>
-          </div>
-
-          {loadingProjects && (
-            <div className="admin-loading">
-              <Loader2 size={20} className="admin-spinner" />
-              <span>Loading projects…</span>
-            </div>
-          )}
-
-          {projectsError && (
-            <p className="upload-status error" role="alert">{projectsError}</p>
-          )}
-
-          {!loadingProjects && !projectsError && (
-            <div className="admin-projects-grid">
-              {projects.map((proj) => {
-                // Find the corresponding adminProject entry for its current URL
-                const ap = adminProjects.find((a) => a.id === proj.id);
-                const currentUrl = ap?.thumbnailUrl
-                  ?? cloudinaryImage(PUBLIC_IDS.project(proj.id), { width: 640, transforms: 'c_fill,ar_16:9' });
-
-                return (
-                  <UploadSlot
-                    key={proj.id}
-                    label={proj.title}
-                    hint={`ID: ${proj.id}`}
-                    currentUrl={currentUrl}
-                    slot={{ type: 'project', id: proj.id }}
-                    accept="image/*"
-                  />
-                );
-              })}
-            </div>
-          )}
-        </section>
+        <div className="ap-content">
+          {tab === 'hero'     && <HeroTab />}
+          {tab === 'resume'   && <ResumeTab />}
+          {tab === 'projects' && <ProjectsTab />}
+        </div>
       </main>
     </div>
   );

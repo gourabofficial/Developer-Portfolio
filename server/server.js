@@ -7,6 +7,8 @@ import { connectDatabase } from './config/database.js';
 import chatRoutes from './routes/chat.js';
 import adminRoutes from './routes/admin.js';
 import uploadRoutes from './routes/upload.js';
+import projectRoutes from './routes/projects.js';
+import resumeRoutes from './routes/resume.js';
 import { chatRateLimiter, generalRateLimiter } from './middleware/rateLimiter.js';
 
 // ── Validate env vars ──────────────────────────────────────────────────────
@@ -101,9 +103,11 @@ app.get('/api/health', (_req, res) => {
 });
 
 // ── Routes ─────────────────────────────────────────────────────────────────
-app.use('/api/chat', chatRateLimiter, chatRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/upload', uploadRoutes);
+app.use('/api/chat',     chatRateLimiter, chatRoutes);
+app.use('/api/admin',    adminRoutes);
+app.use('/api/upload',   uploadRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/resume',   resumeRoutes);
 
 // 404
 app.use((req, res) => {

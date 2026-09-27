@@ -40,8 +40,10 @@ router.post('/sign', (req, res) => {
       publicId = getPublicId('resume');
       resourceType = 'raw'; // PDF
     } else if (slot?.type === 'project') {
-      if (!PROJECT_IDS.includes(slot.id)) {
-        return res.status(400).json({ success: false, error: `Unknown project id: ${slot.id}` });
+      // Accept any non-empty slug string — validation against a fixed list is
+      // no longer needed now that projects live in MongoDB and can be created dynamically.
+      if (!slot.id || typeof slot.id !== 'string' || slot.id.trim().length === 0) {
+        return res.status(400).json({ success: false, error: 'project slot requires a non-empty id' });
       }
       publicId = getPublicId(slot);
     } else {

@@ -1043,6 +1043,19 @@ main{display:block;position:relative}
   margin-bottom: 48px;
 }
 
+/* Loading / error placeholder */
+@keyframes projects-spin { to { transform: rotate(360deg); } }
+.projects-spinner { animation: projects-spin .8s linear infinite; }
+.projects-state-placeholder {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 48px 0;
+  color: #627590;
+  font-size: .9rem;
+}
+.projects-state-error { color: #f87171; }
+
 .projects-dot {
   position: absolute;
   left: -40px;

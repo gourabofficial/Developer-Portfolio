@@ -9,6 +9,7 @@ import { AnimatedRole } from "@/components/AnimatedRole"
 import { PortfolioTerminal } from "@/components/PortfolioTerminal"
 import { personal } from "@/data"
 import { useReducedMotion } from "@/hooks/useReducedMotion"
+import { useResumeUrl } from "@/hooks/useResumeUrl"
 import { cloudinaryImage, PUBLIC_IDS } from "@/lib/cloudinary"
 import "./HeroSection.css"
 
@@ -19,6 +20,7 @@ const PROFILE_SRC_BLUR = cloudinaryImage(PUBLIC_IDS.hero, { width: 32,  transfor
 export function HeroSection() {
   const prefersReducedMotion = useReducedMotion()
   const [isTerminalOpen, setIsTerminalOpen] = useState(false)
+  const { url: resumeUrl } = useResumeUrl()
 
   // Consistent fade helpers
   const fade = (delay: number, axis: "x" | "y" = "y", distance = 15) =>
@@ -64,10 +66,11 @@ export function HeroSection() {
 
               <motion.div {...fade(0.65)} className="hero-actions-clean">
                 <a
-                  href={personal.resume}
+                  href={resumeUrl || personal.resume || '#'}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-primary"
+                  aria-disabled={!resumeUrl && !personal.resume}
                 >
                   <Download size={16} />
                   <span>MY RESUME</span>
