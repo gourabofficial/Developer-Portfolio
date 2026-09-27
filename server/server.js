@@ -1,13 +1,20 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import { connectDatabase } from './config/database.js';
 import chatRoutes from './routes/chat.js';
+import adminRoutes from './routes/admin.js';
+import uploadRoutes from './routes/upload.js';
 import { chatRateLimiter, generalRateLimiter } from './middleware/rateLimiter.js';
 
 // ── Validate env vars ──────────────────────────────────────────────────────
-const requiredEnvVars = ['MONGO_URI', 'GEMINI_API_KEY', 'FRONTEND_ORIGIN'];
+const requiredEnvVars = [
+  'MONGO_URI', 'GEMINI_API_KEY', 'FRONTEND_ORIGIN',
+  'CLOUDINARY_CLOUD_NAME', 'CLOUDINARY_API_KEY', 'CLOUDINARY_API_SECRET',
+  'ADMIN_PASSWORD',
+];
 const missingEnvVars = requiredEnvVars.filter(v => !process.env[v]);
 if (missingEnvVars.length > 0) {
   console.error('❌ Missing required environment variables:', missingEnvVars.join(', '));
@@ -44,13 +51,16 @@ app.use(cors({
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
 }));
 
 // Body parsing
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Cookie parser (needed for admin JWT cookie)
+app.use(cookieParser());
 
 // General rate limiter
 app.use(generalRateLimiter);
@@ -92,6 +102,8 @@ app.get('/api/health', (_req, res) => {
 
 // ── Routes ─────────────────────────────────────────────────────────────────
 app.use('/api/chat', chatRateLimiter, chatRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // 404
 app.use((req, res) => {

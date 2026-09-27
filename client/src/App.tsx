@@ -10,8 +10,14 @@ import { Home } from "@/pages/Home"
 import { Projects } from "@/pages/Projects"
 import { ProjectDetail } from "@/pages/Projects/ProjectDetail"
 import { ContactSection } from "./components/sections/ContactSection"
+import { Admin } from "@/pages/Admin"
 
 const router = createBrowserRouter([
+  {
+    // Admin panel — outside RootLayout so no navbar/footer/chatbot shows
+    path: "/admin",
+    element: <Admin />,
+  },
   {
     path: "/",
     element: <RootLayout />,

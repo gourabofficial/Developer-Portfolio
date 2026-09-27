@@ -1,3 +1,5 @@
+import { cloudinaryImage, cloudinaryRaw, PUBLIC_IDS } from '@/lib/cloudinary';
+
 export const personal = {
   name: "Gourab Ganguly",
   title: "Software Developer",
@@ -6,7 +8,7 @@ export const personal = {
   email: "gourabofficial@gmail.com",
   linkedin: "https://www.linkedin.com/in/gourab-ganguly/",
   github: "https://github.com/gourabofficial",
-  resume: "https://drive.google.com/file/d/1oaLuSmPXQkh6wO_52dl7AAI1YLFoBJ6p/view",
-  photo: "https://github.com/gourabofficial.png?size=640",
+  resume: cloudinaryRaw(PUBLIC_IDS.resume),
+  photo: cloudinaryImage(PUBLIC_IDS.hero, { width: 480, transforms: 'c_fill,g_face,ar_1:1' }),
   location: "West Bengal, India",
 } as const

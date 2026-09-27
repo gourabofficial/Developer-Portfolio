@@ -3,15 +3,18 @@ import { motion } from "framer-motion"
 import { Download, Mail } from "lucide-react"
 import { SiGithub } from "react-icons/si"
 import { FaLinkedin } from "react-icons/fa";
-// import{  } from "lucide-react"
-import profilePhoto from "@/assets/profil.jpg"
 import { FloatingParticles } from "@/components/FloatingParticles"
 import { TerminalPreview } from "@/components/TerminalPreview"
 import { AnimatedRole } from "@/components/AnimatedRole"
 import { PortfolioTerminal } from "@/components/PortfolioTerminal"
 import { personal } from "@/data"
 import { useReducedMotion } from "@/hooks/useReducedMotion"
+import { cloudinaryImage, PUBLIC_IDS } from "@/lib/cloudinary"
 import "./HeroSection.css"
+
+// Optimised Cloudinary profile photo URLs
+const PROFILE_SRC      = cloudinaryImage(PUBLIC_IDS.hero, { width: 480, transforms: 'c_fill,g_face,ar_1:1' });
+const PROFILE_SRC_BLUR = cloudinaryImage(PUBLIC_IDS.hero, { width: 32,  transforms: 'c_fill,g_face,ar_1:1,e_blur:800' });
 
 export function HeroSection() {
   const prefersReducedMotion = useReducedMotion()
@@ -110,7 +113,21 @@ export function HeroSection() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
-                  <img src={profilePhoto} alt="Gourab Ganguly" className="profile-img-new" />
+                  {/* Blur placeholder shown while the full image loads */}
+                  <div
+                    className="profile-img-placeholder"
+                    style={{ backgroundImage: `url(${PROFILE_SRC_BLUR})` }}
+                    aria-hidden="true"
+                  />
+                  <img
+                    src={PROFILE_SRC}
+                    alt="Gourab Ganguly"
+                    className="profile-img-new"
+                    loading="lazy"
+                    decoding="async"
+                    width={480}
+                    height={480}
+                  />
                 </motion.div>
               </div>
             </motion.div>

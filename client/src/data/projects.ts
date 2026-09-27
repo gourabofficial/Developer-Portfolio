@@ -1,3 +1,10 @@
+import { cloudinaryImage, PUBLIC_IDS } from '@/lib/cloudinary';
+
+// Helper: build an optimised Cloudinary URL for a project thumbnail
+function projectThumb(id: string): string {
+  return cloudinaryImage(PUBLIC_IDS.project(id), { width: 640, transforms: 'c_fill,ar_16:9' });
+}
+
 export type Project = {
   id: string
   title: string
@@ -39,7 +46,7 @@ export const projects: Project[] = [
     featured: true,
     accent: "ERP // 01",
     category: "Enterprise",
-    thumbnail: "/project-thumbnails/tea.png",
+    thumbnail: projectThumb("TEA-ERP-System"),
     repoUrl: "",
     liveUrl: "www.teaerp.com",
   },
@@ -63,7 +70,7 @@ export const projects: Project[] = [
     featured: true,
     accent: "LMS // 02",
     category: "Full Stack",
-    thumbnail: "/project-thumbnails/lms.png",
+    thumbnail: projectThumb("LMS-Platfrom"),
     repoUrl: "https://github.com/gourabofficial/LMS-Udemy-Type",
     liveUrl: "https://advanced-lms.vercel.app/",
   },
@@ -86,7 +93,7 @@ export const projects: Project[] = [
     featured: true,
     accent: "TRIP // 03",
     category: "SAAS",
-    thumbnail: "/project-thumbnails/planmytrip.png",
+    thumbnail: projectThumb("Plan-My-Trip"),
     repoUrl: "https://github.com/gourabofficial/PlanMyTrip-Saas-Product",
     liveUrl: "https://plan-my-trip-saas-product.vercel.app/",
   },
@@ -104,7 +111,7 @@ export const projects: Project[] = [
     ],
     accent: "AI // 04",
     category: "AI Integration",
-    thumbnail: "/project-thumbnails/Aiinterview.png",
+    thumbnail: projectThumb("AI-Interview-Platform"),
   },
   {
     id: "Task-Management",
@@ -121,7 +128,7 @@ export const projects: Project[] = [
     ],
     accent: "TASK // 05",
     category: "Utility",
-    thumbnail: "/project-thumbnails/task.png",
+    thumbnail: projectThumb("Task-Management"),
     repoUrl: "https://github.com/gourabofficial/TaskManagementSystem",
     liveUrl: "",
   },
@@ -140,7 +147,7 @@ export const projects: Project[] = [
     ],
     accent: "FAKIRA // 06",
     category: "Full Stack Saas",
-    thumbnail: "/project-thumbnails/fakira .png",
+    thumbnail: projectThumb("Project-Fakira"),
     repoUrl: "https://github.com/gourabofficial/Project_Fakira",
     liveUrl: "https://project-fakira.vercel.app/",
   },
@@ -158,7 +165,7 @@ export const projects: Project[] = [
     ],
     accent: "URL // 07",
     category: "Utility",
-    thumbnail: "/project-thumbnails/url.png",
+    thumbnail: projectThumb("Url-Shortener"),
     repoUrl: "https://github.com/gourabofficial/URL-Shortener",
     liveUrl: "https://url-shortener-nu-ashen.vercel.app/",
   },
@@ -176,7 +183,7 @@ export const projects: Project[] = [
     ],
     accent: " ECOMMERCE // 08",  
     category: "Full Stack ",
-    thumbnail: "/project-thumbnails/ecommerceplatfrom.png",
+    thumbnail: projectThumb("E-Commerce-Platform Marbel Theme "),
     repoUrl: "https://github.com/gourabofficial/Cosmic-Heroes---E-commerce-Platform",
     liveUrl: "https://zidio-project-ivory.vercel.app/",
   },
@@ -194,7 +201,7 @@ export const projects: Project[] = [
     ],
     accent: "   own extension // 09",  
     category: "Utility",
-    thumbnail: "/project-thumbnails/extension.png",
+    thumbnail: projectThumb("Own Extension"),
     repoUrl: "https://github.com/gourabofficial/Own-Extensions",
     liveUrl: "",
   },
