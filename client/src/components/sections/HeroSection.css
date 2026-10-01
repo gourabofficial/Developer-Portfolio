@@ -300,6 +300,9 @@
   transition: transform 0.4s ease;
   position: relative;
   z-index: 1;
+  object-fit: cover;
+  image-rendering: -webkit-optimize-contrast; /* sharper on Webkit/Blink */
+  image-rendering: crisp-edges;
 }
 
 /* Blur-up placeholder — shown behind the real image while it loads */

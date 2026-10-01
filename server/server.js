@@ -37,8 +37,15 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // CORS
+// FRONTEND_ORIGIN can be a comma-separated list for multiple allowed origins
+// e.g. "https://gganguly.in,https://www.gganguly.in"
 const allowedOrigins = [
-  process.env.FRONTEND_ORIGIN,
+  ...(process.env.FRONTEND_ORIGIN ?? '')
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean),
+  'https://gganguly.in',
+  'https://www.gganguly.in',
   'http://localhost:5173',
   'http://localhost:3000',
   'http://127.0.0.1:5173',

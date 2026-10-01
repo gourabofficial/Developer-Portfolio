@@ -13,11 +13,15 @@ import { requireAdmin } from '../middleware/adminAuth.js';
 const router = express.Router();
 
 const COOKIE_NAME = 'admin_token';
+// In production the frontend (gganguly.in) and the API (Vercel) are on
+// different origins, so the cookie MUST be SameSite=None + Secure.
+// Locally (same origin / http) we keep Lax so it works without HTTPS.
+const IS_PROD = process.env.NODE_ENV === 'production';
 const COOKIE_OPTS = {
   httpOnly: true,
-  sameSite: 'strict',
-  secure: process.env.NODE_ENV === 'production',
-  maxAge: 4 * 60 * 60 * 1000, // 4 hours
+  sameSite: IS_PROD ? 'none' : 'lax',
+  secure:   IS_PROD,           // SameSite=None requires Secure
+  maxAge:   4 * 60 * 60 * 1000, // 4 hours
 };
 
 // ── Login ──────────────────────────────────────────────────────────────────
@@ -52,7 +56,7 @@ router.get('/me', requireAdmin, (_req, res) => {
 
 // ── Logout ─────────────────────────────────────────────────────────────────
 router.post('/logout', (_req, res) => {
-  res.clearCookie(COOKIE_NAME, { httpOnly: true, sameSite: 'strict', secure: process.env.NODE_ENV === 'production' });
+  res.clearCookie(COOKIE_NAME, { httpOnly: true, sameSite: IS_PROD ? 'none' : 'lax', secure: IS_PROD });
   res.json({ success: true });
 });
 

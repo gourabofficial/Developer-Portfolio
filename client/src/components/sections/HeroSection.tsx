@@ -10,12 +10,15 @@ import { PortfolioTerminal } from "@/components/PortfolioTerminal"
 import { personal } from "@/data"
 import { useReducedMotion } from "@/hooks/useReducedMotion"
 import { useResumeUrl } from "@/hooks/useResumeUrl"
-import { cloudinaryImage, PUBLIC_IDS } from "@/lib/cloudinary"
 import "./HeroSection.css"
 
-// Optimised Cloudinary profile photo URLs
-const PROFILE_SRC      = cloudinaryImage(PUBLIC_IDS.hero, { width: 480, transforms: 'c_fill,g_face,ar_1:1' });
-const PROFILE_SRC_BLUR = cloudinaryImage(PUBLIC_IDS.hero, { width: 32,  transforms: 'c_fill,g_face,ar_1:1,e_blur:800' });
+// High-quality Cloudinary URLs.
+// q_100 = lossless quality, fl_progressive = progressive JPEG for better perceived load,
+// c_limit = downscale only (never crop or upscale), w_1200 covers retina @ 2x display size.
+const PROFILE_SRC =
+  'https://res.cloudinary.com/eimtnwdh/image/upload/q_100,fl_progressive,c_limit,w_1200/v1790784379/portfolio/hero-profile.jpg';
+const PROFILE_SRC_BLUR =
+  'https://res.cloudinary.com/eimtnwdh/image/upload/q_auto,w_40,c_limit,e_blur:600/v1790784379/portfolio/hero-profile.jpg';
 
 export function HeroSection() {
   const prefersReducedMotion = useReducedMotion()
@@ -126,7 +129,7 @@ export function HeroSection() {
                     src={PROFILE_SRC}
                     alt="Gourab Ganguly"
                     className="profile-img-new"
-                    loading="lazy"
+                    loading="eager"
                     decoding="async"
                     width={480}
                     height={480}
